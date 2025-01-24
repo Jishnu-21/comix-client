@@ -1,0 +1,65 @@
+// src/Assets/Css/ProductPage/ProductFilters.scss
+@import '../variables.scss';
+
+.product-filters {
+  background-color: $header-bg;
+  padding: 10px;
+  border-radius: 8px;
+
+
+  @media (max-width: 768px) {
+    display: none;
+  }
+
+  .accordion {
+    .accordion-item {
+      border: none;
+      margin-bottom: 10px;
+      background-color: transparent;
+    }
+
+    .accordion-button {
+      background-color: $highlight-color;
+      color: $black;
+      font-weight: bolder;
+      border-radius: 8px;
+      padding: 15px 20px;
+      box-shadow: none;
+
+      &:not(.collapsed) {
+        background-color: $highlight-color;
+        color: $black;
+        box-shadow: none;
+      }
+
+      &::after {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%23000'%3e%3cpath fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/%3e%3c/svg%3e");
+      }
+    }
+
+    .accordion-body {
+      background-color: $header-bg;
+      padding: 15px;
+      border-radius: 0 0 8px 8px;
+    }
+
+    .list-group-item {
+      background-color: transparent;
+      color: white;
+      border: none;
+      font-size: 1rem;
+      padding: 10px 0;
+
+      &:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+        color: $highlight-color;
+        cursor: pointer;
+      }
+    }
+  }
+
+  // Remove the Browse by Popular Category Section for now
+  .browse-category {
+    display: none;
+  }
+}

@@ -1,0 +1,319 @@
+import React, { useState, useEffect, forwardRef } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faShare, faStar } from '@fortawesome/free-solid-svg-icons';
+import { FaHeart } from "react-icons/fa";
+import axios from 'axios';
+import { API_URL } from '../../config/api';
+import { useDispatch } from 'react-redux';
+import { updateCartItemCount } from '../../features/cart/cartSlice';
+import { addToGuestCart } from '../../services/guestCartService';
+import '../../Assets/Css/ProductDetail/ProductDetailInfo.scss';
+import { toast } from 'sonner';
+
+const ProductDetailInfo = forwardRef(({ product, isMobile }, ref) => {
+  const dispatch = useDispatch();
+  const [isAddingToCart, setIsAddingToCart] = useState(false);
+  const [isFavorite, setIsFavorite] = useState(false);
+  const [offers, setOffers] = useState([]);
+  const [showAllOffers, setShowAllOffers] = useState(false);
+  const [selectedVariant, setSelectedVariant] = useState(null);
+  const [showCartNotification, setShowCartNotification] = useState(false);
+  const [expandedOffers, setExpandedOffers] = useState({});
+
+  useEffect(() => {
+    fetchOffers();
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (user) {
+      checkIfFavorite(user.user.id, product._id);
+    }
+    // Set initial variant
+    if (product.variants && product.variants.length > 0) {
+      setSelectedVariant(product.variants[0]);
+    }
+  }, [product._id]);
+
+  const checkIfFavorite = async (userId, productId) => {
+    try {
+      const response = await axios.get(`${API_URL}/favorites/check`, {
+        params: { user_id: userId, product_id: productId }
+      });
+      setIsFavorite(response.data.isFavorite);
+    } catch (error) {
+      console.error('Error checking favorite status:', error);
+    }
+  };
+
+  const fetchOffers = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/offers`);
+      setOffers(response.data.offers);
+    } catch (error) {
+      console.error('Error fetching offers:', error);
+    }
+  };
+
+  const handleShare = () => {
+    if (navigator.share) {
+      navigator.share({
+        title: product.name,
+        text: `Check out ${product.name}`,
+        url: window.location.href
+      })
+      .then(() => toast.success('Shared successfully!', { position: 'bottom-right' }))
+      .catch((error) => console.log('Error sharing:', error));
+    } else {
+      // Fallback for browsers that don't support native sharing
+      navigator.clipboard.writeText(window.location.href)
+        .then(() => toast.success('Link copied to clipboard!', { position: 'bottom-right' }))
+        .catch(() => toast.error('Failed to copy link', { position: 'bottom-right' }));
+    }
+  };
+
+  const handleVariantSelect = (variant) => {
+    setSelectedVariant(variant);
+  };
+
+  const handleAddToBag = async () => {
+    if (!selectedVariant) {
+      toast.error('Please select a variant', { position: 'bottom-right' });
+      return;
+    }
+
+    try {
+      setIsAddingToCart(true);
+
+      if (selectedVariant.stock_quantity < 1) {
+        toast.error('Selected variant is out of stock', { position: 'bottom-right' });
+        return;
+      }
+
+      const userString = localStorage.getItem('user');
+      
+      if (!userString) {
+        const updatedCart = addToGuestCart(
+          product,
+          selectedVariant,
+          1
+        );
+        
+        const newCount = updatedCart.reduce((sum, item) => sum + item.quantity, 0);
+        dispatch(updateCartItemCount(newCount));
+        
+        toast.success('Added to cart successfully!', { position: 'bottom-right' });
+        showCartSuccessNotification();
+        return;
+      }
+
+      const user = JSON.parse(userString);
+      const response = await axios.post(`${API_URL}/cart/add`, {
+        user_id: user.user.id,
+        product_id: product._id,
+        variant_name: selectedVariant.name,
+        quantity: 1
+      });
+
+      if (response.data.cartItem) {
+        toast.success('Added to cart successfully!', { position: 'bottom-right' });
+        showCartSuccessNotification();
+        const newCount = await fetchCartItemCount(user.user.id);
+        dispatch(updateCartItemCount(newCount));
+      }
+    } catch (error) {
+      console.error('Add to cart error:', error);
+      toast.error(error.response?.data?.message || 'Failed to add to cart', { position: 'bottom-right' });
+    } finally {
+      setIsAddingToCart(false);
+    }
+  };
+
+  const fetchCartItemCount = async (userId) => {
+    try {
+      const userString = localStorage.getItem('user');
+      
+      if (!userString) {
+        // For guest users, get cart from localStorage
+        const guestCart = JSON.parse(localStorage.getItem('guestCart') || '[]');
+        return guestCart.reduce((sum, item) => sum + item.quantity, 0);
+      }
+
+      // For logged-in users, get cart from API
+      const response = await axios.get(`${API_URL}/cart/${userId}`);
+      return response.data.cartItems.reduce((sum, item) => sum + item.quantity, 0);
+    } catch (error) {
+      console.error('Failed to fetch cart item count:', error);
+      return 0;
+    }
+  };
+
+  const handleToggleFavorite = async () => {
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (!user) {
+      toast.error('Please log in to manage favorites', { position: 'bottom-right' });
+      return;
+    }
+
+    try {
+      if (isFavorite) {
+        await axios.delete(`${API_URL}/favorites/delete`, {
+          data: {
+            user_id: user.user.id,
+            product_id: product._id
+          }
+        });
+        setIsFavorite(false);
+        toast.success('Product removed from favorites!', { position: 'bottom-right' });
+      } else {
+        await axios.post(`${API_URL}/favorites/add`, {
+          user_id: user.user.id,
+          product_id: product._id
+        });
+        setIsFavorite(true);
+        toast.success('Product added to favorites!', { position: 'bottom-right' });
+      }
+    } catch (error) {
+      console.error('Error toggling favorite:', error);
+      toast.error('Failed to update favorites. Please try again.', { position: 'bottom-right' });
+    }
+  };
+
+  const showCartSuccessNotification = () => {
+    setShowCartNotification(true);
+    setTimeout(() => {
+      setShowCartNotification(false);
+    }, 3000);
+  };
+
+  const handleViewCart = (e) => {
+    e.preventDefault();
+    window.location.href = '/cart';
+  };
+
+  const handleOfferClick = (offerId) => {
+    setExpandedOffers(prev => ({
+      ...prev,
+      [offerId]: !prev[offerId]
+    }));
+  };
+
+  const regularPrice = selectedVariant ? selectedVariant.price : 0;
+  const memberPrice = Math.floor(regularPrice * 0.8);
+  const displayedOffers = showAllOffers ? offers : offers.slice(0, 2);
+
+  return (
+    <div className="product-detail-info">
+      <div className="product-header">
+        <div className="title-section">
+          <h1 className="product-name">{product.name}</h1>
+        </div>
+        <button className="share-button" onClick={handleShare}>
+          <FontAwesomeIcon icon={faShare} />
+          <span>Share</span>
+        </button>
+      </div>
+
+      <div className="variants-section">
+        {product.variants && product.variants.map((variant) => (
+          <button
+            key={variant._id}
+            className={`variant-btn ${selectedVariant?._id === variant._id ? 'active' : ''}`}
+            onClick={() => handleVariantSelect(variant)}
+          >
+            {variant.name}
+          </button>
+        ))}
+      </div>
+
+      <div className="price-section">
+        <div className="regular-price">${regularPrice}</div>
+        <div className="membership-offer">
+          <div className="price-info">
+            <span className="label">PRICE</span>
+            <span className="amount">${memberPrice}</span>
+          </div>
+          <div className="offer-text">(SAVE 20%) + FREE Shipping</div>
+          <button className="join-now-btn">JOIN NOW</button>
+        </div>
+      </div>
+
+      {offers && offers.length > 0 && (
+        <div className="offers-section">
+          <h3 className="section-title">AVAILABLE OFFER!</h3>
+          <ul className="offers-list">
+            {displayedOffers.map((offer, index) => (
+              <li key={offer.id || index} className="offer-item">
+                <div className="offer-header">
+                  <span>{offer.description}</span>
+                  <button 
+                    className="know-more-btn"
+                    onClick={() => handleOfferClick(offer.id || index)}
+                  >
+                    {expandedOffers[offer.id || index] ? 'Show Less' : 'Know More'}
+                  </button>
+                </div>
+                <div className={`offer-details ${expandedOffers[offer.id || index] ? 'expanded' : ''}`}>
+                  <div className="details-content">
+                    <p className="discount">Discount: {offer.discount_percentage}% off</p>
+                    <p className="terms">Terms: {offer.terms}</p>
+                    <p className="note">* This offer can be applied at checkout</p>
+                  </div>
+                </div>
+              </li>
+            ))}
+          </ul>
+          {offers.length > 2 && (
+            <button 
+              className="view-more-btn"
+              onClick={() => setShowAllOffers(!showAllOffers)}
+            >
+              {showAllOffers ? '- View Less' : '+ View More'}
+            </button>
+          )}
+        </div>
+      )}
+
+      {!isMobile && (
+        <div className="action-buttons-container">
+          <button 
+            className={`wishlist-btn ${isFavorite ? 'active' : ''}`}
+            onClick={handleToggleFavorite}
+            toast={isFavorite ? 'Removed from favorites' : 'Added to favorites'}
+          >
+            <FaHeart />
+          </button>
+          <button 
+            className="add-to-bag-btn"
+            onClick={handleAddToBag}
+            disabled={isAddingToCart || !selectedVariant}
+          >
+            {isAddingToCart ? 'Adding...' : 'Add to Bag'}
+          </button>
+        </div>
+      )}
+
+      {showCartNotification && (
+        <div className="cart-notification">
+          <div className="notification-content">
+            <div className="product-info">
+              <img src={product.image_urls[0]} alt={product.name} className="product-image" />
+              <div className="product-details">
+                <h4>{product.name}</h4>
+                <p className="variant">{selectedVariant?.name}</p>
+                <p className="price">${regularPrice}</p>
+              </div>
+            </div>
+            <div className="action-buttons">
+              <button className="view-cart-btn" onClick={handleViewCart}>
+                View Cart
+              </button>
+              <button className="buy-now-btn" onClick={() => window.location.href = '/checkout'}>
+                Buy Now
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+});
+
+export default ProductDetailInfo;

@@ -1,0 +1,30 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500&display=swap'); // Import Montserrat font
+
+.section-header {
+    text-align: center; // Center the text
+    padding: 20px 0; // Add some padding for spacing
+    width: 100%;
+}
+
+.heading-container {
+    display: flex; // Use flexbox for alignment
+    align-items: center; // Center items vertically
+    justify-content: center; // Center items horizontally
+    flex-wrap: nowrap;
+    gap: 15px;
+}
+
+.decor-icon {
+    width: 40px; // Fixed width
+    height: 40px; // Fixed height
+    object-fit: contain; // Maintain aspect ratio
+    display: block;
+}
+
+.section-heading {
+    font-family: 'Montserrat', sans-serif; // Apply Montserrat font
+    font-size: 22px; // Set font size to 22px
+    color: black; // Text color
+    margin: 0;
+    white-space: nowrap;
+}

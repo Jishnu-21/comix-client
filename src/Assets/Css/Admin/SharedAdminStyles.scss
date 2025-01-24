@@ -1,0 +1,274 @@
+// Variables
+$primary-color: #2563eb;
+$secondary-color: #1e40af;
+$background-color: #ffffff;
+$text-color: #1e293b;
+$text-secondary: #64748b;
+$border-color: #e2e8f0;
+$success-color: #10b981;
+$danger-color: #ef4444;
+$warning-color: #f59e0b;
+$info-color: #0ea5e9;
+$shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+$radius: 8px;
+$transition: all 0.3s ease;
+
+// Mixins
+@mixin flex-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+@mixin content-container {
+  position: relative;
+  padding: 20px;
+  background-color: $background-color;
+  border-radius: $radius;
+  box-shadow: $shadow;
+}
+
+@mixin header-section {
+  @include flex-between;
+  margin-bottom: 20px;
+
+  h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: $text-color;
+  }
+
+  .add-button {
+    padding: 10px 20px;
+    background-color: $primary-color;
+    color: white;
+    border: none;
+    border-radius: $radius;
+    cursor: pointer;
+    transition: $transition;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    &:hover {
+      background-color: $secondary-color;
+    }
+
+    svg {
+      width: 16px;
+      height: 16px;
+    }
+  }
+}
+
+@mixin table-container {
+  margin-top: 20px;
+  overflow-x: auto;
+  background-color: $background-color;
+  border-radius: $radius;
+  box-shadow: $shadow;
+}
+
+@mixin table-styles {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+
+  th, td {
+    padding: 12px 16px;
+    border-bottom: 1px solid $border-color;
+  }
+
+  th {
+    background-color: #f8fafc;
+    font-weight: 600;
+    color: $text-color;
+  }
+
+  td {
+    color: $text-secondary;
+  }
+
+  tbody tr {
+    transition: $transition;
+
+    &:hover {
+      background-color: #f8fafc;
+    }
+
+    &:last-child td {
+      border-bottom: none;
+    }
+  }
+}
+
+@mixin loading-spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  gap: 16px;
+
+  .spinner {
+    animation: spin 1s linear infinite;
+    color: $primary-color;
+    font-size: 24px;
+  }
+
+  p {
+    color: $text-secondary;
+  }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@mixin error-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  gap: 16px;
+  color: $danger-color;
+
+  .retry-button {
+    padding: 8px 16px;
+    background-color: $primary-color;
+    color: white;
+    border: none;
+    border-radius: $radius;
+    cursor: pointer;
+    transition: $transition;
+
+    &:hover {
+      background-color: $secondary-color;
+    }
+  }
+}
+
+@mixin icon-button {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: $radius;
+  cursor: pointer;
+  transition: $transition;
+  color: white;
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+@mixin modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+@mixin modal-content {
+  background-color: $background-color;
+  border-radius: $radius;
+  padding: 24px;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+@mixin button-base {
+  padding: 8px 16px;
+  border: none;
+  border-radius: $radius;
+  cursor: pointer;
+  transition: $transition;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+@mixin primary-button {
+  background-color: $primary-color;
+  color: white;
+
+  &:hover {
+    background-color: $secondary-color;
+  }
+}
+
+@mixin secondary-button {
+  background-color: #e2e8f0;
+  color: $text-color;
+
+  &:hover {
+    background-color: #cbd5e1;
+  }
+}
+
+@mixin danger-button {
+  background-color: $danger-color;
+  color: white;
+
+  &:hover {
+    background-color: darken($danger-color, 10%);
+  }
+}
+
+@mixin empty-state {
+  text-align: center;
+  padding: 40px;
+  background-color: #f8fafc;
+  border-radius: $radius;
+  border: 1px dashed $border-color;
+  margin-top: 20px;
+
+  p {
+    color: #64748b;
+    font-size: 1rem;
+    margin-bottom: 16px;
+  }
+}
+
+@mixin responsive-layout {
+  @media (max-width: 768px) {
+    .header-section {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 16px;
+    }
+
+    .add-button {
+      width: 100%;
+      justify-content: center;
+    }
+
+    table {
+      display: block;
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  body {
+    overflow-y: auto;
+  }
+}

@@ -1,0 +1,102 @@
+.voucher-section {
+    margin: 20px 0;
+  
+    p {
+      font-size: 17px;
+      margin-bottom: 15px;
+      color: #000;
+  
+      .optional {
+        color: #999;
+        font-size: 16px;
+      }
+    }
+  
+    form {
+      display: flex;
+      max-width: 400px;
+    }
+  
+    input {
+      flex-grow: 1;
+      padding: 12px 15px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 16px;
+      margin-right: 10px;
+  
+      &::placeholder {
+        color: #999;
+      }
+    }
+  
+    button {
+      padding: 12px 20px;
+      background-color: #000;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 18px;
+      min-width: 120px;
+  
+      &:hover {
+        background-color: #333;
+      }
+    }
+  }
+
+  .offer-section {
+    margin: 15px 0;
+
+    .offer-buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    select {
+      width: 100%;
+      padding: 8px;
+      border-radius: 4px;
+      border: 1px solid #ddd;
+      margin-top: 10px;
+    }
+
+    .apply-offer-btn,
+    .remove-offer-btn {
+      padding: 8px 16px;
+      border-radius: 4px;
+      border: none;
+      cursor: pointer;
+    }
+
+    .apply-offer-btn {
+      background-color: #4CAF50;
+      color: white;
+      
+      &:hover {
+        background-color: #45a049;
+      }
+    }
+
+    .remove-offer-btn {
+      background-color: #f44336;
+      color: white;
+      
+      &:hover {
+        background-color: #da190b;
+      }
+    }
+
+    .applied-offer-message {
+      margin-top: 10px;
+      color: #4CAF50;
+      font-weight: 500;
+    }
+
+    .error-message {
+      color: #f44336;
+      margin-top: 10px;
+    }
+  }

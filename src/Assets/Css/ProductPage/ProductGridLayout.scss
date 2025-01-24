@@ -1,0 +1,139 @@
+.pagination {
+    display: flex;
+    justify-content: center;
+    padding-left: 0;
+    list-style: none;
+  
+    .page-item {
+      margin: 0 10px; // Slight space between page items
+  
+      &.active {
+        background-color: black; // Black background for active page
+        border-radius: 50%; // Circular active page
+        width: 40px;
+        height: 40px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+  
+        .page-link {
+          color: yellow; // Yellow text for active page
+          background-color: transparent; // No background
+          border: none;
+          outline: none; // Remove outline
+          box-shadow: none; // Remove the blue focus box (specific to certain browsers)
+        }
+      }
+  
+      .page-link {
+        color: black; // Default black color for page numbers
+        text-align: center;
+        padding: 8px;
+        border: none; // No borders
+        background-color: transparent; // Transparent background
+        outline: none; // Remove outline when focused
+        box-shadow: none; // Remove any focus blue box
+        display: flex; // Center content
+        justify-content: center; // Center content
+        align-items: center; // Center content
+        height: 100%; // Ensure full height for centering
+      }
+    }
+  }
+
+.section-subtitle{
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.section-title{
+    font-weight: bold;
+    font-size: 44px;
+
+    @media (max-width: 768px) {
+        font-size: 32px;
+    }
+
+    @media (max-width: 576px) {
+        font-size: 24px;
+    }
+}
+
+.view-all-button{
+  font-size: 16px;
+  cursor: pointer;
+  height: 40px;
+  width: 105px;
+
+  &:hover{
+    background-color: #555;
+  }
+}
+
+@media (max-width: 768px) {
+    .view-all-button {
+      margin-top: 10px; // Add margin for spacing
+      align-self: flex-start; // Align to the left in the flex context
+    }
+  
+    .d-flex {
+      flex-direction: column; // Stack elements vertically on small screens
+      align-items: flex-start; // Align items to the left
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .sort-by {
+      display: none;
+    }
+}
+@media (max-width: 576px) {
+  .product-grid-layout .row {
+    display: flex;
+    flex-wrap: wrap; // Allow wrapping of cards
+  }
+
+  .product-grid-layout .col-6 {
+    flex: 0 0 50%; // Two cards per row on mobile
+    max-width: 50%; // Ensure max width is 50%
+  }
+}
+
+// Mobile grid layout
+@media (max-width: 767px) {
+  .product-grid-layout {
+    .container {
+      max-width: 100%;
+      padding: 0 8px;
+    }
+
+    .row {
+      margin: 0 -8px;
+
+      // Hide filters on mobile
+      > div[class*='col-lg-4'] {
+        display: none;
+      }
+
+      // Main content area
+      > div[class*='col-lg-8'] {
+        flex: 0 0 100%;
+        max-width: 100%;
+        padding: 0;
+
+        .row {
+          display: flex;
+          flex-wrap: wrap;
+          margin: 0 -4px;
+
+          > [class*='col-'] {  // Target all column classes
+            flex: 0 0 50%;
+            max-width: 50%;
+            padding: 4px;
+            display: block !important;
+          }
+        }
+      }
+    }
+  }
+}

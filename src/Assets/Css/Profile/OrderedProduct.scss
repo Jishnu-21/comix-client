@@ -1,0 +1,201 @@
+@import '../variables.scss';
+
+.ordered-product {
+  display: flex;
+  border: 1px solid #e0e0e0;
+  margin-bottom: 20px;
+  padding: 15px;
+  background-color: #fff;
+}
+
+.product-image-container {
+  width: 100px;
+  height: 100px;
+  margin-right: 15px;
+}
+
+.product-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.product-info {
+  flex-grow: 1;
+}
+
+.product-title {
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.product-seller {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 5px;
+}
+
+.product-price {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.original-price {
+  text-decoration: line-through;
+  color: #888;
+  margin-left: 10px;
+  font-weight: normal;
+}
+
+.ask-question {
+  color: #0066c0;
+  text-decoration: none;
+  font-size: 14px;
+  display: block;
+  margin-bottom: 10px;
+}
+
+.product-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.buy-again,
+.action-button {
+  flex: 1 1 auto;
+  min-width: 120px;
+  padding: 5px 10px;
+  font-size: 14px;
+  cursor: pointer;
+  text-align: center;
+}
+
+.buy-again {
+  background-color: #f0c14b;
+  border: 1px solid #a88734;
+  color: #111;
+}
+
+.action-button {
+  background-color: #f0f2f2;
+  border: 1px solid #cdcdcd;
+  color: #111;
+}
+
+@media (max-width: 768px) {
+  .ordered-product {
+    flex-direction: column;
+  }
+
+  .product-actions {
+    flex-direction: column;
+    align-items: stretch;
+    margin-top: 15px;
+  }
+
+  .buy-again,
+  .action-button {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+}
+
+.primary-button {
+  background-color: #f0c14b;
+  border: 1px solid #a88734;
+  color: #111;
+  padding: 10px 20px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: darken(#f0c14b, 10%);
+    color: #111; // Keep the text color the same on hover
+  }
+}
+
+.action-buttons {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.cancel-button, .refund-button {
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  border: none;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.cancel-button {
+  background-color: #dc3545;
+  color: white;
+  
+  &:hover {
+    background-color: #c82333;
+  }
+}
+
+.refund-button {
+  background-color: #ffc107;
+  color: #000;
+  
+  &:hover {
+    background-color: #e0a800;
+  }
+}
+
+.refund-status, .order-status {
+  .status-badge {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.9em;
+    
+    &.pending {
+      background-color: #ffc107;
+      color: #000;
+    }
+    
+    &.approved {
+      background-color: #28a745;
+      color: white;
+    }
+    
+    &.completed {
+      background-color: #17a2b8;
+      color: white;
+    }
+    
+    &.rejected {
+      background-color: #dc3545;
+      color: white;
+    }
+  }
+}
+
+.confirm-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+
+  .modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 90%;
+  }
+}
