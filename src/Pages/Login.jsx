@@ -335,7 +335,7 @@ const Login = () => {
 
     <div className="login-page">
 
-      <img src="/logo.png" alt="Brand Logo" className="brand-logo" />
+      <img src="Mask group.png" alt="Brand Logo" className="brand-logo" />
 
       <div className="login-container">
 
