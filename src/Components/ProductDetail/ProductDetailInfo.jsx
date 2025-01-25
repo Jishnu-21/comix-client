@@ -9,9 +9,11 @@ import { updateCartItemCount } from '../../features/cart/cartSlice';
 import { addToGuestCart } from '../../services/guestCartService';
 import '../../Assets/Css/ProductDetail/ProductDetailInfo.scss';
 import { toast } from 'sonner';
+import { useNavigate } from 'react-router-dom';
 
 const ProductDetailInfo = forwardRef(({ product, isMobile }, ref) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [isAddingToCart, setIsAddingToCart] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
   const [offers, setOffers] = useState([]);
@@ -19,6 +21,7 @@ const ProductDetailInfo = forwardRef(({ product, isMobile }, ref) => {
   const [selectedVariant, setSelectedVariant] = useState(null);
   const [showCartNotification, setShowCartNotification] = useState(false);
   const [expandedOffers, setExpandedOffers] = useState({});
+  const [deviceType, setDeviceType] = useState('desktop');
 
   useEffect(() => {
     fetchOffers();
@@ -30,6 +33,23 @@ const ProductDetailInfo = forwardRef(({ product, isMobile }, ref) => {
     if (product.variants && product.variants.length > 0) {
       setSelectedVariant(product.variants[0]);
     }
+
+    const handleResize = () => {
+      const width = window.innerWidth;
+      if (width < 768) {
+        setDeviceType('mobile');
+      } else if (width >= 768 && width < 1024) {
+        setDeviceType('tablet');
+      } else if (width >= 1024 && width < 1366) {
+        setDeviceType('ipadPro');
+      } else {
+        setDeviceType('desktop');
+      }
+    };
+
+    handleResize(); // Initial check
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, [product._id]);
 
   const checkIfFavorite = async (userId, productId) => {
@@ -99,7 +119,6 @@ const ProductDetailInfo = forwardRef(({ product, isMobile }, ref) => {
         const newCount = updatedCart.reduce((sum, item) => sum + item.quantity, 0);
         dispatch(updateCartItemCount(newCount));
         
-        toast.success('Added to cart successfully!', { position: 'bottom-right' });
         showCartSuccessNotification();
         return;
       }
@@ -185,7 +204,12 @@ const ProductDetailInfo = forwardRef(({ product, isMobile }, ref) => {
 
   const handleViewCart = (e) => {
     e.preventDefault();
-    window.location.href = '/cart';
+    navigate('/cart');
+  };
+
+  const handleBuyNow = (e) => {
+    e.preventDefault();
+    navigate('/checkout');
   };
 
   const handleOfferClick = (offerId) => {
@@ -199,8 +223,16 @@ const ProductDetailInfo = forwardRef(({ product, isMobile }, ref) => {
   const memberPrice = Math.floor(regularPrice * 0.8);
   const displayedOffers = showAllOffers ? offers : offers.slice(0, 2);
 
+  // Only expose these methods for mobile view
+  React.useImperativeHandle(ref, () => ({
+    handleToggleFavorite: deviceType === 'mobile' ? handleToggleFavorite : null,
+    handleAddToBag: deviceType === 'mobile' ? handleAddToBag : null,
+    isFavorite: deviceType === 'mobile' ? isFavorite : null,
+    isAddingToCart: deviceType === 'mobile' ? isAddingToCart : null
+  }));
+
   return (
-    <div className="product-detail-info">
+    <div className={`product-detail-info ${deviceType}`}>
       <div className="product-header">
         <div className="title-section">
           <h1 className="product-name">{product.name}</h1>
@@ -271,12 +303,11 @@ const ProductDetailInfo = forwardRef(({ product, isMobile }, ref) => {
         </div>
       )}
 
-      {!isMobile && (
+      {deviceType !== 'mobile' && (
         <div className="action-buttons-container">
           <button 
             className={`wishlist-btn ${isFavorite ? 'active' : ''}`}
             onClick={handleToggleFavorite}
-            toast={isFavorite ? 'Removed from favorites' : 'Added to favorites'}
           >
             <FaHeart />
           </button>
@@ -305,7 +336,7 @@ const ProductDetailInfo = forwardRef(({ product, isMobile }, ref) => {
               <button className="view-cart-btn" onClick={handleViewCart}>
                 View Cart
               </button>
-              <button className="buy-now-btn" onClick={() => window.location.href = '/checkout'}>
+              <button className="buy-now-btn" onClick={handleBuyNow}>
                 Buy Now
               </button>
             </div>

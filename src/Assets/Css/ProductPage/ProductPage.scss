@@ -1,41 +1,236 @@
 .product-page {
-    .container {
-        width: 100%;
-        max-width: 1400px;
-        margin: 0 auto;
-        padding: 0;
+  .container {
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 15px;
 
-        @media (min-width: 1920px) {
-            max-width: 1500px;
-        }
-
-        @media (max-width: 768px) {
-            padding: 0 15px;
-        }
+    // Extra extra large devices (≥1400px)
+    @media (min-width: 1400px) {
+      max-width: 1320px;
+      padding: 0 20px;
     }
 
-    .banner-section {
-        width: 100%;
-        margin-top: 0;
-
-        @media (max-width: 768px) {
-            // Removed margin-top
-        }
+    // Extra large devices (≥1200px)
+    @media (min-width: 1200px) and (max-width: 1399px) {
+      max-width: 1140px;
     }
-}
 
-.search-bar {
-    width: 100%; // Make the search bar full width
-    padding: 10px; // Add some padding for better touch targets
-    font-size: 1rem; // Set a base font size
+    // Large devices (≥992px)
+    @media (min-width: 992px) and (max-width: 1199px) {
+      max-width: 960px;
+    }
+
+    // Medium devices (≥768px)
+    @media (min-width: 768px) and (max-width: 991px) {
+      max-width: 720px;
+      padding: 0 12px;
+    }
+
+    // Small devices (≥576px)
+    @media (min-width: 576px) and (max-width: 767px) {
+      max-width: 540px;
+      padding: 0 10px;
+    }
+
+    // Extra small devices (<576px)
+    @media (max-width: 575px) {
+      padding: 0 8px;
+    }
+  }
+
+  .banner-section {
+    width: 100%;
+    margin-top: 0;
+    
+    img {
+      width: 100%;
+      height: auto;
+      object-fit: cover;
+    }
 
     @media (max-width: 768px) {
-        padding: 8px; // Adjust padding for smaller screens
-        font-size: 0.9rem; // Slightly reduce font size for mobile
+      margin-bottom: 20px;
+    }
+  }
+
+  .main-content {
+    display: flex;
+    gap: 30px;
+    margin-top: 30px;
+
+    // Large devices and below
+    @media (max-width: 991px) {
+      flex-direction: column;
+      gap: 20px;
+      margin-top: 20px;
+    }
+  }
+
+  .filters-section {
+    width: 280px;
+    flex-shrink: 0;
+
+    // Extra large devices
+    @media (min-width: 1200px) {
+      width: 300px;
     }
 
-    @media (max-width: 576px) {
-        padding: 6px; // Further adjust padding for mobile
-        font-size: 0.8rem; // Further reduce font size for mobile
+    // Large devices
+    @media (min-width: 992px) and (max-width: 1199px) {
+      width: 260px;
     }
+
+    // Medium devices and below
+    @media (max-width: 991px) {
+      width: 100%;
+      position: sticky;
+      top: 70px;
+      z-index: 10;
+    }
+  }
+
+  .products-section {
+    flex: 1;
+    min-width: 0; // Prevent flex item from overflowing
+
+    .product-grid {
+      display: grid;
+      gap: 30px;
+      padding: 20px 0;
+
+      // Extra extra large devices (≥1400px)
+      @media (min-width: 1400px) {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 30px;
+      }
+
+      // Extra large devices (≥1200px)
+      @media (min-width: 1200px) and (max-width: 1399px) {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 25px;
+      }
+
+      // Large devices (≥992px)
+      @media (min-width: 992px) and (max-width: 1199px) {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+      }
+
+      // Medium devices (≥768px)
+      @media (min-width: 768px) and (max-width: 991px) {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+        padding: 15px 0;
+      }
+
+      // Small devices (≥576px)
+      @media (min-width: 576px) and (max-width: 767px) {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+        padding: 12px 0;
+      }
+
+      // Extra small devices (<576px)
+      @media (max-width: 575px) {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        padding: 10px 0;
+      }
+    }
+  }
+
+  .search-bar {
+    width: 100%;
+    padding: 15px;
+    margin: 20px 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: white;
+
+    @media (max-width: 991px) {
+      padding: 12px;
+      margin: 15px 0;
+    }
+
+    @media (max-width: 575px) {
+      padding: 10px;
+      margin: 10px 0;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 1rem;
+
+      @media (max-width: 575px) {
+        padding: 10px;
+        font-size: 0.875rem;
+      }
+    }
+  }
+
+  // Product card styles
+  .product-card {
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .product-image {
+      width: 100%;
+      aspect-ratio: 1;
+      object-fit: cover;
+    }
+
+    .product-info {
+      padding: 15px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+
+      @media (max-width: 575px) {
+        padding: 10px;
+      }
+
+      h3 {
+        font-size: 1.1rem;
+        margin-bottom: 8px;
+
+        @media (max-width: 991px) {
+          font-size: 1rem;
+        }
+
+        @media (max-width: 575px) {
+          font-size: 0.875rem;
+        }
+      }
+
+      .price {
+        font-weight: 600;
+        font-size: 1.2rem;
+        color: #1E1E2C;
+
+        @media (max-width: 991px) {
+          font-size: 1.1rem;
+        }
+
+        @media (max-width: 575px) {
+          font-size: 1rem;
+        }
+      }
+    }
+  }
 }

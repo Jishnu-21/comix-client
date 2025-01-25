@@ -206,35 +206,65 @@ const ProductDetail = () => {
             </div>
           </>
         ) : (
-          <div className="row">
-            {/* Product Images Section */}
-            <div className="col-xl-5 col-lg-6 col-md-12 col-sm-12">
-              {/* Desktop/iPad Image Gallery (visible from 768px up) */}
-              <div className="d-none d-md-block">
-                <ProductImageGallery images={product.image_urls} />
-                <div className="image-comparison-container">
-                  <h2 className='kavya'>Before and After</h2>
-                  <ImageComparisonSlider 
-                    beforeImage={beforeImage}
-                    afterImage={afterImage}
-                    height="400px"
-                  />
+          <>
+            {/* iPad Air and Mini Layout */}
+            <div className="ipad-air-mini-layout d-none d-md-block d-lg-none">
+              <div className="row">
+                <div className="col-md-12">
+                  <div className="product-content">
+                    <div className="product-gallery-section">
+                      <MobileImageSlider images={product.image_urls} />
+                    </div>
+                    <div className="product-info-wrapper">
+                      <ProductDetailInfo product={product} />
+                      <ProductDropdownInfo
+                        description={product.description}
+                        ingredients={product.ingredients}
+                        faqs={product.faqs || []}
+                        additionalDetails={product.additionalDetails}
+                        productId={product._id}
+                      />
+                      <div className="image-comparison-container">
+                        <h2 className='kavya'>Before and After</h2>
+                        <ImageComparisonSlider 
+                          beforeImage={beforeImage}
+                          afterImage={afterImage}
+                          height="400px"
+                        />
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
 
-            {/* Product Info Section */}
-            <div className="col-xl-7 col-lg-6 col-md-12 col-sm-12">
-              <ProductDetailInfo product={product} />
-              <ProductDropdownInfo
-                description={product.description}
-                ingredients={product.ingredients}
-                faqs={product.faqs || []}
-                additionalDetails={product.additionalDetails}
-                productId={product._id}
-              />
+            {/* Desktop and iPad Pro Layout */}
+            <div className="desktop-ipadpro-layout d-none d-lg-block">
+              <div className="row">
+                <div className="col-xl-5 col-lg-6 col-md-12 col-sm-12">
+                  <ProductImageGallery images={product.image_urls} />
+                  <div className="image-comparison-container">
+                    <h2 className='kavya'>Before and After</h2>
+                    <ImageComparisonSlider 
+                      beforeImage={beforeImage}
+                      afterImage={afterImage}
+                      height="400px"
+                    />
+                  </div>
+                </div>
+                <div className="col-xl-7 col-lg-6 col-md-12 col-sm-12">
+                  <ProductDetailInfo product={product} />
+                  <ProductDropdownInfo
+                    description={product.description}
+                    ingredients={product.ingredients}
+                    faqs={product.faqs || []}
+                    additionalDetails={product.additionalDetails}
+                    productId={product._id}
+                  />
+                </div>
+              </div>
             </div>
-          </div>
+          </>
         )}
         {/* Recently Viewed Products Section - Visible on both mobile and desktop */}
         {!isMobile && recentlyVisited.length > 0 && (

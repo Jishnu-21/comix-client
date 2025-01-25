@@ -58,3 +58,194 @@
         }
     }
 }
+
+.hero-banner {
+    height: 500px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    background-color: #f5f5f5;
+    width: 100%;
+    z-index: 1;
+    margin-top: 80px; // Added to prevent header overlap
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(to left, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.2));
+        z-index: 2;
+    }
+
+    .banner-content {
+        position: relative;
+        z-index: 3;
+        text-align: right;
+        padding-right: 5%;
+        width: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        justify-content: center;
+    }
+
+    @media (min-width: 1920px) {
+        height: 600px;
+    }
+
+    // Desktop styles
+    @media (min-width: 1367px) {
+        margin-top: 90px;
+        
+        .banner-content {
+            padding-right: 8%;
+        }
+    }
+
+    // iPad Pro styles
+    @media (min-width: 1024px) and (max-width: 1366px) {
+        height: 500px;
+        margin-top: 85px;
+
+        .banner-content {
+            padding-right: 6%;
+        }
+    }
+
+    // iPad/Tablet styles
+    @media (min-width: 768px) and (max-width: 1023px) {
+        height: 450px;
+        margin-top: 80px;
+
+        .banner-content {
+            padding-right: 4%;
+        }
+
+        &::before {
+            background: rgba(0, 0, 0, 0.3);
+        }
+    }
+
+    // Mobile styles
+    @media (max-width: 767px) {
+        height: 300px;
+        margin-top: 70px;
+
+        .banner-content {
+            padding: 0 15px;
+            justify-content: flex-end;
+            padding-bottom: 30px;
+        }
+    }
+
+    @media (max-width: 576px) {
+        height: 250px;
+        margin-top: 65px;
+
+        .banner-content {
+            padding: 0 15px;
+            padding-bottom: 20px;
+        }
+    }
+
+    .main-heading {
+        color: white;
+        font-size: 3.5rem;
+        font-weight: bold;
+        margin-bottom: 1.5rem;
+        text-align: right;
+        max-width: 600px;
+        line-height: 1.2;
+        
+        @media (min-width: 768px) and (max-width: 1024px) {
+            font-size: 3rem;
+            margin-bottom: 1.2rem;
+        }
+
+        @media (max-width: 767px) {
+            font-size: 1.8rem;
+            margin-bottom: 0.8rem;
+            max-width: 100%;
+            line-height: 1.2;
+        }
+
+        @media (max-width: 576px) {
+            font-size: 1.5rem;
+            margin-bottom: 0.6rem;
+            line-height: 1.1;
+        }
+    }
+
+    .sub-heading {
+        color: white;
+        font-size: 1.2rem;
+        max-width: 500px;
+        text-align: right;
+        margin: 0;
+        opacity: 0.9;
+        line-height: 1.6;
+
+        @media (min-width: 768px) and (max-width: 1024px) {
+            font-size: 1.1rem;
+            max-width: 500px;
+        }
+
+        @media (max-width: 767px) {
+            font-size: 0.9rem;
+            max-width: 100%;
+            line-height: 1.3;
+            margin-bottom: 0;
+        }
+
+        @media (max-width: 576px) {
+            font-size: 0.8rem;
+            line-height: 1.2;
+        }
+    }
+
+    .date-range {
+        background: rgba(51, 51, 51, 0.8);
+        color: white;
+        padding: 6px 15px;
+        border-radius: 4px;
+        margin-bottom: 1rem;
+        font-size: 1rem;
+
+        @media (max-width: 767px) {
+            font-size: 0.9rem;
+            padding: 4px 12px;
+            margin-bottom: 0.8rem;
+        }
+
+        @media (max-width: 576px) {
+            font-size: 0.8rem;
+            padding: 4px 10px;
+            margin-bottom: 0.6rem;
+        }
+    }
+}
+
+// Animation for text
+.main-heading, .sub-heading {
+    animation: slideInFromRight 0.8s ease-out;
+}
+
+@keyframes slideInFromRight {
+    from {
+        transform: translateX(50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}

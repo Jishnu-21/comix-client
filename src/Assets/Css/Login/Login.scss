@@ -80,10 +80,44 @@
       display: grid;
       gap: 2rem;
       align-items: center;
+      justify-items: center;
+    }
+  }
+
+  .login-page {
+    min-height: 100vh;
+    background-image: linear-gradient(rgba(30, 30, 44, 0.9), rgba(30, 30, 44, 0.9)), url('../../../../public/Sign up.jpg');
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    overflow: hidden;
+  
+    // Decorative Elements
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 12rem;
+      height: 12rem;
+      background: rgba(168, 85, 247, 0.1);
+      border-radius: 9999px;
+      filter: blur(24px);
+    }
+  
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 5rem;
+      left: 5rem;
+      width: 8rem;
+      height: 8rem;
+      background: rgba(168, 85, 247, 0.1);
+      border-radius: 9999px;
+      filter: blur(16px);
     }
   }
 }
-
 .login-container {
   position: relative;
   width: 100%;
@@ -93,11 +127,28 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  align-items: flex-start;
-  
+  align-items: center;
+
+  // Mobile styles
   @media (max-width: 767px) {
-    margin: 100px auto 70px;
-    padding: 0 15px;
+    margin: 80px auto 50px;
+    padding: 0 20px;
+    max-width: 90%;
+
+    .logo {
+      width: 180px;
+      margin: 0 auto 2rem;
+    }
+
+    form {
+      width: 100%;
+    }
+  }
+
+  // Ensure logo is centered for all devices
+  .logo {
+    display: block;
+    margin: 0 auto 2rem;
   }
 }
 
@@ -107,7 +158,7 @@
   height: auto;
   margin: 0 auto 2rem;
   display: block;
-  
+
   @media (max-width: 767px) {
     width: 80px;
     margin: 0 auto 1.5rem;
@@ -126,7 +177,7 @@
   height: auto;
   display: flex;
   position: relative;
-  bottom: 40px;
+  bottom: 80px;
   flex-direction: column;
   justify-content: flex-start;
   padding: 0;
@@ -315,7 +366,7 @@
   .login-page {
     .container {
       padding: 2rem;
-      
+
       .content-wrapper {
         max-width: 500px;
         margin: 0 auto;
@@ -353,7 +404,7 @@
       right: 0;
       width: 50%;
       height: 100vh;
-      
+
       img {
         width: 100%;
         height: 100%;
@@ -597,9 +648,9 @@
 
 .form-check-container {
   display: flex;
-  justify-content: space-between; /* Aligns items on the same line */
-  align-items: center; /* Vertically centers the items */
-  margin-top: 0.5rem; /* Optional: adds some space above */
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 0.5rem;
 }
 
 .verify-otp-container{
@@ -686,16 +737,16 @@
   width: 100%;
   max-width: 400px;
   margin: 0 auto;
-  
+
   .form-group {
     margin-bottom: 1.5rem;
   }
-  
+
   .reset-password-btn {
     width: 100%;
     padding: 12px;
     margin-top: 1rem;
-    
+
     &:disabled {
       opacity: 0.7;
       cursor: not-allowed;
@@ -706,4 +757,164 @@
 .reset-password-text {
   text-align: center;
   margin-bottom: 1.5rem;
+}
+
+
+
+ // IPad and Tablet Specific Styles
+ @media (min-width: 768px) and (max-width: 1024px) {
+  .login-page {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+
+    .container {
+      width: 100%;
+      max-width: 600px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 2rem;
+    }
+
+    .login-container {
+      position: relative;
+      top: 30px;
+      left:00px;
+      width: 100%;
+      max-width: 500px;
+      margin: 0 auto;
+      padding: 3rem;
+      background-color: rgba(30, 30, 44, 0.6);
+      border-radius: 16px;
+    }
+
+    .brand-logo {
+      width: 150px;
+      top: 250px;
+      right: 120px;
+      margin-bottom: 2.5rem;
+    }
+
+    .login-image-container {
+      display: none;
+    }
+
+    .welcome-text {
+      font-size: 1.8rem;
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+
+    .form-control {
+      font-size: 1.1rem;
+      padding: 1rem;
+    }
+
+    .login-btn, .google-divider .btn {
+      height: 54px;
+      font-size: 1.1rem;
+    }
+  }
+}
+// iPad Mini Specific Styles (768px to 1024px, but with smaller adjustments)
+@media (min-width: 768px) and (max-width: 1024px) and (max-height: 1024px) {
+  .login-page {
+    .container {
+      max-width: 500px; // Slightly smaller max-width for iPad Mini
+    }
+
+    .login-container {
+      left: 230px;
+      max-width: 450px; // Slightly smaller max-width for iPad Mini
+      padding: 2.5rem; // Adjust padding for smaller screens
+    }
+
+    .brand-logo {
+      width: 140px; // Slightly smaller logo for iPad Mini
+      margin-bottom: 2rem; // Adjust margin for smaller screens
+      top: 150px;
+      right: 650px;
+    }
+
+    .welcome-text {
+      font-size: 1.6rem; // Slightly smaller font size for iPad Mini
+      margin-bottom: 2rem;
+    }
+
+    .form-control {
+      font-size: 1rem; // Slightly smaller font size for iPad Mini
+      padding: 0.9rem;
+    }
+
+    .login-btn, .google-divider .btn {
+      height: 50px; // Slightly smaller button height for iPad Mini
+      font-size: 1rem; // Slightly smaller font size for iPad Mini
+    }
+  }
+}
+
+
+@media (min-width: 1024px) and (max-width: 1366px) {
+  .login-page {
+    .container {
+      max-width: 100%; // Allow the container to take up the full width
+      padding: 2rem; // Add some padding to the sides
+    }
+
+    .login-container {
+      top: 450px;
+      left: 250px;
+      max-width: 600px; // Make the form compact, similar to mobile
+      width: 100%; // Ensure it stretches to fill the container
+      padding: 2rem; // Moderate padding for spacing
+      background-color: rgba(30, 30, 44, 0.6);
+      border-radius: 12px; // Moderate border radius
+      margin: 0 auto; // Center the form horizontally
+    }
+
+    .brand-logo {
+     top: 280px;
+     right: 130px;
+      width: 200px; // Smaller logo, similar to mobile
+      margin-bottom: 2rem; // Moderate margin for spacing
+    }
+
+    .welcome-text {
+      font-size: 1.5rem; // Moderate font size for the welcome text
+      margin-bottom: 2rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem; // Moderate spacing between form fields
+    }
+
+    .form-control {
+      font-size: 1rem; // Moderate font size for input fields
+      padding: 1rem; // Moderate padding for input fields
+      border-radius: 8px; // Moderate border radius for input fields
+    }
+
+    .password-toggle-btn {
+      right: 1rem; // Adjust position of the password toggle button
+    }
+
+    .login-btn, .google-divider .btn {
+      height: 50px; // Moderate button height
+      font-size: 1rem; // Moderate font size for buttons
+      border-radius: 8px; // Moderate border radius for buttons
+      margin-top: 1.5rem; // Moderate margin above the button
+    }
+
+    .signup-divider {
+      margin: 1.5rem 0; // Moderate margin around the divider
+      font-size: 1rem; // Moderate font size for the divider text
+    }
+
+    .signup-link {
+      font-size: 1rem; // Moderate font size for the signup link
+    }
+  }
 }

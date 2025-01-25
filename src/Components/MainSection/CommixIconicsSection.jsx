@@ -20,7 +20,11 @@ const CommixIconicsSection = () => {
         settings: {
           slidesToShow: 1,
           slidesToScroll: 1,
-          initialSlide: 1
+          initialSlide: 1,
+          centerMode: true,
+          centerPadding: '0',
+          dots: false,
+          arrows: false
         }
       }
     ]
@@ -37,7 +41,7 @@ const CommixIconicsSection = () => {
       <div className="heading-container">
         <img src={require('../../Assets/Image/bloomLeft.png')} alt="Flower Icon" className="decor-icon left-icon" />
         <h2 className="section-heading">
-          <span className="decor-line">COMMIX ICONICS PRODUCTS</span>
+          <span className="decor-line">COMIX ICONICS PRODUCTS</span>
         </h2>
         <img src={require('../../Assets/Image/bloomRight.png')} alt="Flower Icon" className="decor-icon right-icon"/>
       </div>
@@ -45,7 +49,7 @@ const CommixIconicsSection = () => {
       <div className="slider-container">
         <Slider {...productSliderSettings}>
           {products.map((product, index) => (
-            <div key={index} className="product-card">
+            <div key={index} className="product-cards">
               <img src={require(`../../Assets/Image/${product.image}`)} alt={product.name} className="product-image" />
               <h4>HAIRCARE</h4>
               <h3>{product.name}</h3>

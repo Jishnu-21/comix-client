@@ -171,8 +171,11 @@ const ProductGridLayout = ({ searchTerm, sortOption, setSortOption }) => {
           <p className="section-subtitle">
             Top Seller
           </p>
-          <h2 className="section-title">
+          <h2 className="section-title d-none d-md-block">
             Explore Our Best Collections
+          </h2>
+          <h2 className="section-title d-md-none">
+            Best Collections
           </h2>
         </div>
         <div className="col-lg-2 col-md-3 col-sm-12 d-flex justify-content-end align-items-center">

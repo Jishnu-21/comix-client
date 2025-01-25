@@ -1,13 +1,28 @@
-import React from "react";
+import React, { useState } from 'react';
 import { Link } from "react-router-dom";
 import "../../Assets/Css/ProductPage/ProductFilters.scss"; // Import the SCSS file for this component
 
 const ProductFilters = () => {
-  return (
+  const [openSection, setOpenSection] = useState(null);
+  const [minPrice, setMinPrice] = useState('');
+  const [maxPrice, setMaxPrice] = useState('');
+
+  const toggleSection = (section) => {
+    setOpenSection(openSection === section ? null : section);
+  };
+
+  const handlePriceChange = (e, type) => {
+    const value = e.target.value.replace(/[^0-9]/g, '');
+    if (type === 'min') setMinPrice(value);
+    else setMaxPrice(value);
+  };
+
+  // Desktop version remains the same
+  const DesktopFilter = () => (
     <div className="product-filters p-4">
       <div className="accordion" id="filterAccordion">
         {/* Categories Filter */}
-        <div className="accordion-item">
+        <div className={`accordion-item ${openSection === 'categories' ? 'open' : ''}`}>
           <h2 className="accordion-header" id="headingOne">
             <button
               className="accordion-button collapsed"
@@ -16,13 +31,14 @@ const ProductFilters = () => {
               data-bs-target="#collapseOne"
               aria-expanded="false"
               aria-controls="collapseOne"
+              onClick={() => toggleSection('categories')}
             >
               Categories
             </button>
           </h2>
           <div
             id="collapseOne"
-            className="accordion-collapse collapse"
+            className={`accordion-collapse collapse ${openSection === 'categories' ? 'show' : ''}`}
             aria-labelledby="headingOne"
             data-bs-parent="#filterAccordion"
           >
@@ -38,7 +54,7 @@ const ProductFilters = () => {
         </div>
 
         {/* Skin Type Filter */}
-        <div className="accordion-item">
+        <div className={`accordion-item ${openSection === 'skinType' ? 'open' : ''}`}>
           <h2 className="accordion-header" id="headingTwo">
             <button
               className="accordion-button collapsed"
@@ -47,13 +63,14 @@ const ProductFilters = () => {
               data-bs-target="#collapseTwo"
               aria-expanded="false"
               aria-controls="collapseTwo"
+              onClick={() => toggleSection('skinType')}
             >
               Skin Type
             </button>
           </h2>
           <div
             id="collapseTwo"
-            className="accordion-collapse collapse"
+            className={`accordion-collapse collapse ${openSection === 'skinType' ? 'show' : ''}`}
             aria-labelledby="headingTwo"
             data-bs-parent="#filterAccordion"
           >
@@ -69,7 +86,7 @@ const ProductFilters = () => {
         </div>
 
         {/* Price Range Filter */}
-        <div className="accordion-item">
+        <div className={`accordion-item ${openSection === 'price' ? 'open' : ''}`}>
           <h2 className="accordion-header" id="headingThree">
             <button
               className="accordion-button collapsed"
@@ -78,69 +95,148 @@ const ProductFilters = () => {
               data-bs-target="#collapseThree"
               aria-expanded="false"
               aria-controls="collapseThree"
+              onClick={() => toggleSection('price')}
             >
               Price Range
             </button>
           </h2>
           <div
             id="collapseThree"
-            className="accordion-collapse collapse"
+            className={`accordion-collapse collapse ${openSection === 'price' ? 'show' : ''}`}
             aria-labelledby="headingThree"
             data-bs-parent="#filterAccordion"
           >
             <div className="accordion-body">
-              <ul className="list-group">
-                <li className="list-group-item">Under $50</li>
-                <li className="list-group-item">$50 - $100</li>
-                <li className="list-group-item">Over $100</li>
+              <div className="price-range">
+                <div className="price-inputs">
+                  <input
+                    type="text"
+                    placeholder="Min"
+                    value={minPrice}
+                    onChange={(e) => handlePriceChange(e, 'min')}
+                  />
+                  <input
+                    type="text"
+                    placeholder="Max"
+                    value={maxPrice}
+                    onChange={(e) => handlePriceChange(e, 'max')}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="browse-category">
+        <h3>Browse by Popular Category</h3>
+        <div className="category-tags">
+          <Link to="/cleansers">Cleansers</Link>
+          <Link to="/face-mask">Face Mask</Link>
+          <Link to="/lipstick">Lipstick</Link>
+          <Link to="/sunscreens">Sunscreens</Link>
+          <Link to="/face-moisturizers">Face Moisturizers</Link>
+          <Link to="/mascara">Mascara</Link>
+          <Link to="/foundations">Foundations</Link>
+        </div>
+      </div>
+    </div>
+  );
+
+  // New iPad/Tablet version
+  const TabletFilter = () => (
+    <div className="tablet-filter">
+      <div className="filter-buttons mb-3">
+        <button 
+          className="filter-btn" 
+          data-bs-toggle="collapse" 
+          data-bs-target="#categoriesCollapse" 
+          aria-expanded="false"
+        >
+          Categories
+        </button>
+        <button 
+          className="filter-btn" 
+          data-bs-toggle="collapse" 
+          data-bs-target="#skinTypeCollapse" 
+          aria-expanded="false"
+        >
+          Skin Type
+        </button>
+        <button 
+          className="filter-btn" 
+          data-bs-toggle="collapse" 
+          data-bs-target="#priceCollapse" 
+          aria-expanded="false"
+        >
+          Price Range
+        </button>
+      </div>
+
+      <div className="row">
+        <div className="col">
+          <div className="collapse" id="categoriesCollapse">
+            <div className="filter-card">
+              <h3>Categories</h3>
+              <ul className="filter-list">
+                <li>Skincare</li>
+                <li>Makeup</li>
+                <li>Haircare</li>
+                <li>Bodycare</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div className="col">
+          <div className="collapse" id="skinTypeCollapse">
+            <div className="filter-card">
+              <h3>Skin Type</h3>
+              <ul className="filter-list">
+                <li>All Skin Types</li>
+                <li>Oily</li>
+                <li>Dry</li>
+                <li>Combination</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div className="col">
+          <div className="collapse" id="priceCollapse">
+            <div className="filter-card">
+              <h3>Price Range</h3>
+              <ul className="filter-list">
+                <li>Under $50</li>
+                <li>$50 - $100</li>
+                <li>Over $100</li>
               </ul>
             </div>
           </div>
         </div>
       </div>
-      <div className="browse-category mt-4 p-2">
-        <h3 className="mb-3">Browse by Popular Category</h3>
-        <div className="container">
-          <div className="row category-tags">
-            <div className="col-lg-6 col-md-6 col-sm-12 mb-3">
-              <Link to="/cleansers" className="tag p-3 w-100">
-                Cleansers
-              </Link>
-            </div>
-            <div className="col-lg-6 col-md-6 col-sm-12 mb-3">
-              <Link to="/face-mask" className="tag p-3 w-100">
-                Face Mask
-              </Link>
-            </div>
-            <div className="col-lg-6 col-md-6 col-sm-12 mb-3">
-              <Link to="/lipstick" className="tag p-3 w-100">
-                Lipstick
-              </Link>
-            </div>
-            <div className="col-lg-6 col-md-6 col-sm-12 mb-3">
-              <Link to="/sunscreens" className="tag p-3 w-100">
-                Sunscreens
-              </Link>
-            </div>
-            <div className="col-lg-12 col-md-6 col-sm-12 mb-3">
-              <Link to="/face-moisturizers" className="tag p-3 w-100">
-                Face Moisturizers
-              </Link>
-            </div>
-            <div className="col-lg-6 col-md-6 col-sm-12 mb-3">
-              <Link to="/mascara" className="tag p-3 w-100">
-                Mascara
-              </Link>
-            </div>
-            <div className="col-lg-6 col-md-6 col-sm-12 mb-3">
-              <Link to="/foundations" className="tag p-3 w-100">
-                Foundations
-              </Link>
-            </div>
-          </div>
+
+      <div className="browse-category mt-4">
+        <h3>Browse by Popular Category</h3>
+        <div className="category-tags">
+          <Link to="/cleansers">Cleansers</Link>
+          <Link to="/face-mask">Face Mask</Link>
+          <Link to="/lipstick">Lipstick</Link>
+          <Link to="/sunscreens">Sunscreens</Link>
+          <Link to="/face-moisturizers">Face Moisturizers</Link>
+          <Link to="/mascara">Mascara</Link>
+          <Link to="/foundations">Foundations</Link>
         </div>
       </div>
     </div>
+  );
+
+  return (
+    <>
+      <div className="d-none d-lg-block">
+        <DesktopFilter />
+      </div>
+      <div className="d-lg-none">
+        <TabletFilter />
+      </div>
+    </>
   );
 };
 

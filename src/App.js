@@ -87,7 +87,7 @@ function App() {
 
   // List of routes that don't need header padding
   const noHeaderRoutes = [
-    '/login',
+    '/login','/cart', 
     '/signup',
     '/admin-login',
     '/admin',

@@ -116,6 +116,10 @@ const ProductGridLayout = ({ searchTerm, sortOption, setSortOption }) => {
   // Check if the screen size is mobile
   const isMobile = window.innerWidth <= 768; // Adjust the breakpoint as needed
 
+  // Check for iPad
+  const isIpad = window.innerWidth >= 768 && window.innerWidth <= 1024;
+  const isPortrait = window.innerHeight > window.innerWidth;
+
   return (
     <div className="product-grid-layout container mt-5">
       <div className="row">
@@ -188,28 +192,42 @@ const ProductGridLayout = ({ searchTerm, sortOption, setSortOption }) => {
         </div>
       </div>
 
-      <div className="section-heading mt-5 pt-4">
+      {/* Best Sellers Section */}
+      <div className="section-heading mt-5">
         <div className="top-seller">TOP SELLER</div>
-        <h2>Explore Our Best Collections</h2>
+        <h2 className="section-title">
+          {window.innerWidth <= 767 ? 'Best Collections' : 'Explore Our Best Collections'}
+        </h2>
       </div>
 
-      <div className="row mt-4">
-        {isMobile ? (
-          <MobileBestSellers bestSellers={bestSellers} />
-        ) : (
-          bestSellers.map((product) => (
-            <div key={product._id} className="col-xl-3 col-lg-4 col-md-6 col-sm-6">
-              <CardComponent
-                image={product.image_urls[0]} // Adjusted to use the correct image field
-                title={product.name}
-                price={product.variants && product.variants.length > 0 ? product.variants[0].price : 'N/A'} // Ensure variants exist
-                description={product.description}
-                slug={product.slug} // Pass the slug
-              />
-            </div>
-          ))
-        )}
-      </div>
+      {isMobile ? (
+        <MobileBestSellers bestSellers={bestSellers} />
+      ) : (
+        <div className="best-sellers-grid">
+          <div className="row">
+            {bestSellers.slice(0, isIpad && isPortrait ? 4 : 4).map((product) => (
+              <div 
+                key={product._id} 
+                className={`${
+                  isIpad 
+                    ? isPortrait 
+                      ? 'col-md-6' 
+                      : 'col-lg-4'
+                    : 'col-xl-3 col-lg-4 col-md-6'
+                }`}
+              >
+                <CardComponent
+                  image={product.image_urls[0]}
+                  title={product.name}
+                  price={product.variants?.[0]?.price || 'N/A'}
+                  description={product.description}
+                  slug={product.slug}
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

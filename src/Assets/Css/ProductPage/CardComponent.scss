@@ -90,3 +90,267 @@
     margin: 0;
   }
 }
+
+// iPad Pro (1024px to 1366px)
+@media (min-width: 1024px) and (max-width: 1366px) {
+  .product-card {
+    margin-bottom: 20px; // Reduce margin between cards
+
+    .card-image-container {
+      margin-bottom: 10px; // Reduce margin below the image
+    }
+
+    .card-content {
+      padding: 12px; // Reduce padding inside the card
+
+      .price-tag {
+        top: 12px; // Adjust position of the price tag
+        right: 12px;
+        font-size: 12px; // Reduce font size of the price tag
+        padding: 3px 6px; // Reduce padding of the price tag
+      }
+
+      .card-title {
+        font-size: 14px; // Reduce font size of the title
+        padding-right: 60px; // Adjust padding for the title
+      }
+
+      .card-description {
+        font-size: 12px; // Reduce font size of the description
+      }
+    }
+  }
+
+  .section-heading {
+    margin-bottom: 30px; // Reduce margin below the section heading
+
+    .top-seller {
+      font-size: 12px; // Reduce font size of the top seller text
+      margin-bottom: 8px; // Reduce margin below the top seller text
+    }
+
+    h2 {
+      font-size: 24px; // Reduce font size of the heading
+    }
+  }
+}
+
+// iPad Mini (768px to 1024px, with smaller height)
+@media (min-width: 768px) and (max-width: 1024px) and (max-height: 1024px) {
+  .product-card {
+    margin-bottom: 20px; // Reduce margin between cards
+
+    .card-image-container {
+      margin-bottom: 10px; // Reduce margin below the image
+    }
+
+    .card-content {
+      padding: 12px; // Reduce padding inside the card
+
+      .price-tag {
+        top: 12px; // Adjust position of the price tag
+        right: 12px;
+        font-size: 12px; // Reduce font size of the price tag
+        padding: 3px 6px; // Reduce padding of the price tag
+      }
+
+      .card-title {
+        font-size: 14px; // Reduce font size of the title
+        padding-right: 60px; // Adjust padding for the title
+      }
+
+      .card-description {
+        font-size: 12px; // Reduce font size of the description
+      }
+    }
+  }
+
+  .section-heading {
+    margin-bottom: 30px; // Reduce margin below the section heading
+
+    .top-seller {
+      font-size: 12px; // Reduce font size of the top seller text
+      margin-bottom: 8px; // Reduce margin below the top seller text
+    }
+
+    h2 {
+      font-size: 24px; // Reduce font size of the heading
+    }
+  }
+}
+
+// General iPad and Tablet Styles (768px to 1024px)
+@media (min-width: 768px) and (max-width: 1024px) {
+  .product-card {
+    margin-bottom: 20px; // Reduce margin between cards
+
+    .card-image-container {
+      margin-bottom: 10px; // Reduce margin below the image
+    }
+
+    .card-content {
+      padding: 12px; // Reduce padding inside the card
+
+      .price-tag {
+        top: 12px; // Adjust position of the price tag
+        right: 12px;
+        font-size: 12px; // Reduce font size of the price tag
+        padding: 3px 6px; // Reduce padding of the price tag
+      }
+
+      .card-title {
+        font-size: 14px; // Reduce font size of the title
+        padding-right: 60px; // Adjust padding for the title
+      }
+
+      .card-description {
+        font-size: 12px; // Reduce font size of the description
+      }
+    }
+  }
+
+  .section-heading {
+    margin-bottom: 30px; // Reduce margin below the section heading
+
+    .top-seller {
+      font-size: 12px; // Reduce font size of the top seller text
+      margin-bottom: 8px; // Reduce margin below the top seller text
+    }
+
+    h2 {
+      font-size: 24px; // Reduce font size of the heading
+    }
+  }
+}
+
+// iPad Pro (1024px to 1366px)
+@media (min-width: 1024px) and (max-width: 1366px) {
+  .product-card {
+    margin-bottom: 20px; // Reduce margin between cards
+
+    .card-image-container {
+      margin-bottom: 10px; // Reduce margin below the image
+    }
+
+    .card-content {
+      padding: 12px; // Reduce padding inside the card
+
+      .price-tag {
+        top: 12px; // Adjust position of the price tag
+        right: 12px;
+        font-size: 12px; // Reduce font size of the price tag
+        padding: 3px 6px; // Reduce padding of the price tag
+      }
+
+      .card-title {
+        font-size: 14px; // Reduce font size of the title
+        padding-right: 60px; // Adjust padding for the title
+      }
+
+      .card-description {
+        font-size: 12px; // Reduce font size of the description
+      }
+    }
+  }
+
+  .section-heading {
+    margin-bottom: 30px; // Reduce margin below the section heading
+
+    .top-seller {
+      font-size: 12px; // Reduce font size of the top seller text
+      margin-bottom: 8px; // Reduce margin below the top seller text
+    }
+
+    h2 {
+      font-size: 24px; // Reduce font size of the heading
+    }
+  }
+}
+
+// iPad Mini (768px to 1024px, with smaller height)
+@media (min-width: 768px) and (max-width: 1024px) and (max-height: 1024px) {
+  .product-card {
+    margin-bottom: 20px; // Reduce margin between cards
+
+    .card-image-container {
+      margin-bottom: 10px; // Reduce margin below the image
+    }
+
+    .card-content {
+      padding: 12px; // Reduce padding inside the card
+
+      .price-tag {
+        top: 12px; // Adjust position of the price tag
+        right: 12px;
+        font-size: 12px; // Reduce font size of the price tag
+        padding: 3px 6px; // Reduce padding of the price tag
+      }
+
+      .card-title {
+        font-size: 14px; // Reduce font size of the title
+        padding-right: 60px; // Adjust padding for the title
+      }
+
+      .card-description {
+        font-size: 12px; // Reduce font size of the description
+      }
+    }
+  }
+
+  .section-heading {
+    margin-bottom: 30px; // Reduce margin below the section heading
+
+    .top-seller {
+      font-size: 12px; // Reduce font size of the top seller text
+      margin-bottom: 8px; // Reduce margin below the top seller text
+    }
+
+    h2 {
+      font-size: 24px; // Reduce font size of the heading
+    }
+  }
+}
+
+// General iPad and Tablet Styles (768px to 1024px)
+@media (min-width: 768px) and (max-width: 1024px) {
+  .product-card {
+    margin-bottom: 20px; // Reduce margin between cards
+
+    .card-image-container {
+      margin-bottom: 10px; // Reduce margin below the image
+    }
+
+    .card-content {
+      padding: 12px; // Reduce padding inside the card
+
+      .price-tag {
+        top: 12px; // Adjust position of the price tag
+        right: 12px;
+        font-size: 12px; // Reduce font size of the price tag
+        padding: 3px 6px; // Reduce padding of the price tag
+      }
+
+      .card-title {
+        font-size: 14px; // Reduce font size of the title
+        padding-right: 60px; // Adjust padding for the title
+      }
+
+      .card-description {
+        font-size: 12px; // Reduce font size of the description
+      }
+    }
+  }
+
+  .section-heading {
+    margin-bottom: 30px; // Reduce margin below the section heading
+
+    .top-seller {
+      font-size: 12px; // Reduce font size of the top seller text
+      margin-bottom: 8px; // Reduce margin below the top seller text
+    }
+
+    h2 {
+      font-size: 24px; // Reduce font size of the heading
+    }
+  }
+}

@@ -10,6 +10,7 @@ const DiscoverHaircareSection = () => {
   const productRefs = useRef([]); // Ref to hold product card references
   const observerRef = useRef(null); // Ref to hold the observer
   const [hasAnimated, setHasAnimated] = useState(false); // State to track if animation has occurred
+  const sectionRef = useRef(null); // Ref to hold the section
 
   useEffect(() => {
     const handleResize = () => {
@@ -78,7 +79,7 @@ const DiscoverHaircareSection = () => {
   const renderProductCard = (product, index) => (
     <div 
       key={index} 
-      className={`product-card ${product.smallImage ? 'small-image' : ''}`}
+      className={`product-cards ${product.smallImage ? 'small-image' : ''}`}
       ref={el => productRefs.current[index] = el} // Assign ref to each product card
       onMouseEnter={() => !isMobile && setActiveIndex(index)}
       onMouseLeave={() => !isMobile && setActiveIndex(null)}
@@ -109,11 +110,21 @@ const DiscoverHaircareSection = () => {
   );
 
   return (
-    <section className="discover-haircare-section">
+    <section className="discover-haircare-section" ref={sectionRef}>
       <div className="heading-container">
-        <img src={require('../../Assets/Image/bloomLeft.png')} alt="Flower Icon" className="decor-icon" />
-        <h2 className="section-heading">DISCOVER HAIRCARE FOR ALL</h2>
-        <img src={require('../../Assets/Image/bloomRight.png')} alt="Flower Icon" className="decor-icon"/>
+        <img
+          src={require('../../Assets/Image/bloomLeft.png')}
+          alt="Flower Icon"
+          className="decor-icon left-icon"
+        />
+        <h2 className="section-heading">
+          <span className="decor-line">DISCOVER HAIRCARE FOR ALL</span>
+        </h2>
+        <img
+          src={require('../../Assets/Image/bloomRight.png')}
+          alt="Flower Icon"
+          className="decor-icon right-icon"
+        />
       </div>
 
       <div className={`products-container ${isMobile ? 'mobile-slider' : ''}`}>

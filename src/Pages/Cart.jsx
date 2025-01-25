@@ -269,89 +269,117 @@ const Cart = () => {
   const isCartEmpty = cartProducts.length === 0;
 
   return (
-    <div className="cart-page fade-in">
-      {/* Desktop Header */}
-      <div className="desktop-header">
+    <div className="cart-page">
+      {/* Desktop Cart */}
+      <div className="d-none d-md-block">
         <Header />
-      </div>
-
-      <div className="cart-container">
-        <div className="container-fluid">
-          {isCartEmpty ? (
-            <div className="empty-cart-message">
-              <div className="empty-cart-icon">
-                <FontAwesomeIcon icon={faShoppingCart} />
+        <div className="cart-container">
+          <div className="container-fluid">
+            {isCartEmpty ? (
+              <div className="empty-cart-message">
+                <div className="empty-cart-icon">
+                  <FontAwesomeIcon icon={faShoppingCart} />
+                </div>
+                <h2>Your Shopping Cart is Empty</h2>
+                <p>
+                  Looks like you haven't added anything to your cart yet. 
+                  Explore our collection and find something you'll love!
+                </p>
+                <Link to="/product" className="btn btn-primary font-color-$header-bg">
+                  Start Shopping
+                </Link>
               </div>
-              <h2>Your Shopping Cart is Empty</h2>
-              <p>
-                Looks like you haven't added anything to your cart yet. 
-                Explore our collection and find something you'll love!
-              </p>
-              <Link to="/product" className="btn btn-primary font-color-$header-bg">
-                Start Shopping
-              </Link>
-            </div>
-          ) : (
-            <div className="cart-page-layout">
-              {/* Left Side - Cart Products */}
-              <div className="cart-products-container">
-                <div className="cart-products-list">
-                  <div className="cart-header">
-                    <h1>Cart</h1>
-                    <Link to="/" className="continue-shopping">
-                      <FontAwesomeIcon icon={faArrowLeft} />
-                      Continue Shopping
-                    </Link>
+            ) : (
+              <div className="cart-page-layout">
+                {/* Left Side - Cart Products */}
+                <div className="cart-products-container">
+                  <div className="cart-products-list">
+                    <div className="cart-header">
+                      <h1>Cart</h1>
+                      <Link to="/" className="continue-shopping">
+                        <FontAwesomeIcon icon={faArrowLeft} />
+                        Continue Shopping
+                      </Link>
+                    </div>
+                    {cartProducts.map((product, index) => (
+                      <CartProduct 
+                        key={`${product.product_id}-${product.variant_name}`}
+                        product={{...product, isFirstProduct: index === 0}}
+                        onQuantityChange={handleQuantityChange}
+                        onDelete={() => handleDelete(product.product_id, product.variant_name)}
+                      />
+                    ))}
+                    <div className="cart-products-subtotal">
+                      <span>Subtotal ({itemCount} items):</span>
+                      <span className="subtotal-amount">₹{subtotal.toFixed(2)}</span>
+                    </div>
                   </div>
-                  {cartProducts.map((product, index) => (
-                    <CartProduct 
-                      key={`${product.product_id}-${product.variant_name}`}
-                      product={{...product, isFirstProduct: index === 0}}
-                      onQuantityChange={handleQuantityChange}
-                      onDelete={() => handleDelete(product.product_id, product.variant_name)}
+                </div>
+
+                {/* Right Side - Order Summary and Recommendations */}
+                <div className="cart-sidebar">
+                  <div className="cart-sidebar-content">
+                    <OrderSummary 
+                      subtotal={subtotal} 
+                      itemCount={itemCount} 
+                      onProceedToBuy={handleProceedToBuy}
                     />
-                  ))}
-                  <div className="cart-products-subtotal">
-                    <span>Subtotal ({itemCount} items):</span>
-                    <span className="subtotal-amount">₹{subtotal.toFixed(2)}</span>
+                    {recommendedProducts.length > 0 && (
+                      <div className="recommended-products">
+                        <h5 className="recommended-title  fw-bold mb-3">Recommended Products</h5>
+                        <div className="recommended-products-grid">
+                          {recommendedProducts.map((product) => (
+                            <RecommendedProduct 
+                              key={product._id} 
+                              product={product}
+                              onCartUpdate={fetchCartData}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
-
-              {/* Right Side - Order Summary and Recommendations */}
-              <div className="cart-sidebar">
-                <div className="cart-sidebar-content">
-                  <OrderSummary 
-                    subtotal={subtotal} 
-                    itemCount={itemCount} 
-                    onProceedToBuy={handleProceedToBuy}
-                  />
-                  {recommendedProducts.length > 0 && (
-                    <div className="recommended-products">
-                      <h5 className="recommended-title  fw-bold mb-3">Recommended Products</h5>
-                      <div className="recommended-products-grid">
-                        {recommendedProducts.map((product) => (
-                          <RecommendedProduct 
-                            key={product._id} 
-                            product={product}
-                            onCartUpdate={fetchCartData}
-                          />
-                        ))}
+            )}
+          </div>
+        </div>
+        {!isCartEmpty && (
+          <div className="best-sellers-section">
+            <div className="container">
+              <div className="section-header">
+                <div className="header-content">
+                  <h2 className="section-title mb-0">Explore Our Best Collections</h2>
+                </div>
+                <Link to="/product" className="view-all-btn">View All</Link>
+              </div>
+              <div className="products-grid">
+                {bestSellers.slice(0, 4).map(product => (
+                  <div key={product._id} className="product-card-wrapper">
+                    <div className="product-card">
+                      <div className="card-image-container">
+                        <img src={product.image_urls[0]} alt={product.name} />
+                      </div>
+                      <div className="card-content">
+                        <h3 className="card-title">{product.name}</h3>
+                        <p className="card-description">{product.description}</p>
+                        <div className="price-tag">${product.variants[0]?.price || 0}</div>
                       </div>
                     </div>
-                  )}
-                </div>
+                  </div>
+                ))}
               </div>
             </div>
-          )}
-        </div>
+          </div>
+        )}
+        <Touch/>
+        <Footer />
       </div>
 
       {/* Mobile Cart */}
       <div className="d-block d-md-none">
         <MobileCart
           cartProducts={cartProducts}
-          recommendedProducts={recommendedProducts}
           handleQuantityChange={handleQuantityChange}
           handleDelete={handleDelete}
           subtotal={subtotal}
@@ -359,37 +387,6 @@ const Cart = () => {
           onProceedToBuy={handleProceedToBuy}
         />
       </div>
-
-      {!isCartEmpty && (
-        <div className="best-sellers-section">
-          <div className="container">
-            <div className="section-header">
-              <div className="header-content">
-                <h2 className="section-title mb-0">Explore Our Best Collections</h2>
-              </div>
-              <Link to="/product" className="view-all-btn">View All</Link>
-            </div>
-            <div className="products-grid">
-              {bestSellers.slice(0, 4).map(product => (
-                <div key={product._id} className="product-card-wrapper">
-                  <div className="product-card">
-                    <div className="card-image-container">
-                      <img src={product.image_urls[0]} alt={product.name} />
-                    </div>
-                    <div className="card-content">
-                      <h3 className="card-title">{product.name}</h3>
-                      <p className="card-description">{product.description}</p>
-                      <div className="price-tag">${product.variants[0]?.price || 0}</div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
-      <Touch/>
-      <Footer />
     </div>
   );
 };

@@ -4,7 +4,7 @@ import '../Components/FeaturedSection'
 
 const Banner = () => {
     return (
-        <div className="hero-banner mt-3">
+        <div className="hero-banner">
             <div className="banner-content">
                 <p className="date-range">March 4th - 8th</p>
                 <h1 className="main-heading">Women's Day Exclusive Beauty Deals!</h1>

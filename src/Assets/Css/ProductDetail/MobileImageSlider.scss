@@ -1,37 +1,182 @@
+@keyframes swipeAnimation {
+  0% {
+    transform: translateX(-20px);
+    opacity: 0;
+  }
+  20% {
+    transform: translateX(-20px);
+    opacity: 1;
+  }
+  80% {
+    transform: translateX(20px);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(20px);
+    opacity: 0;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 .mobile-image-slider {
-  display: none;
+  width: 100%;
+  height: 500px;
+  background: #f8f8f8;
+  position: relative;
+  overflow: hidden;
 
   @media (max-width: 767px) {
     display: block;
-    width: 100%;
     margin-bottom: 20px;
+  }
 
-    .product-swiper {
-      width: 100%;
-      height: 350px;
+  .product-swiper {
+    width: 100%;
+    height: 100%;
 
-      .swiper-slide {
+    .swiper-slide {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+
+      &.swiper-slide-active {
+        opacity: 1;
+      }
+
+      .swiper-slide-content {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+
         img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
+          max-width: 100%;
+          max-height: 100%;
+          object-fit: contain;
+          transition: transform 0.3s ease;
         }
       }
+    }
 
-      .swiper-pagination {
-        bottom: 10px;
+    .swiper-button-next,
+    .swiper-button-prev {
+      width: 40px;
+      height: 40px;
+      background: rgba(255, 255, 255, 0.9);
+      border-radius: 50%;
+      color: #000;
+      
+      &::after {
+        font-size: 18px;
+        font-weight: bold;
+      }
 
-        .swiper-pagination-bullet {
-          width: 8px;
-          height: 8px;
-          background: #fff;
-          opacity: 0.5;
+      &:hover {
+        background: #fff;
+      }
+    }
 
-          &-active {
-            opacity: 1;
-          }
+    .swiper-pagination {
+      bottom: 20px !important;
+
+      .swiper-pagination-bullet {
+        width: 8px;
+        height: 8px;
+        background: #000;
+        opacity: 0.2;
+        margin: 0 4px;
+        transition: all 0.3s ease;
+
+        &.swiper-pagination-bullet-active {
+          opacity: 1;
+          transform: scale(1.2);
         }
       }
+    }
+  }
+
+  .swipe-hint {
+    position: absolute;
+    bottom: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 10;
+    animation: fadeIn 0.5s ease;
+
+    .swipe-icon {
+      width: 40px;
+      height: 40px;
+      background: rgba(0, 0, 0, 0.6);
+      border-radius: 50%;
+      position: relative;
+      margin-bottom: 8px;
+
+      &:before {
+        content: '';
+        position: absolute;
+        width: 16px;
+        height: 16px;
+        border: 2px solid #fff;
+        border-left: 0;
+        border-bottom: 0;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) rotate(45deg);
+        animation: swipeAnimation 2s infinite;
+      }
+    }
+
+    span {
+      color: rgba(0, 0, 0, 0.6);
+      font-size: 14px;
+      font-weight: 500;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 4px 12px;
+      border-radius: 16px;
+      white-space: nowrap;
+    }
+  }
+}
+
+// iPad Air and Mini specific styles
+@media (min-width: 768px) and (max-width: 991.98px) {
+  .mobile-image-slider {
+    max-width: 100%;
+    margin: 0 auto;
+    
+    .product-swiper {
+      .swiper-slide {
+        .swiper-slide-content {
+          padding: 30px;
+        }
+      }
+      
+      .swiper-button-next {
+        right: 20px;
+      }
+      
+      .swiper-button-prev {
+        left: 20px;
+      }
+    }
+
+    .swipe-hint {
+      bottom: 80px;
     }
   }
 }

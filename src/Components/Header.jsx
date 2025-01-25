@@ -253,15 +253,13 @@ const Header = () => {
 
   useEffect(() => {
     const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      setIsHeaderScrolled(currentScrollY > scrollThreshold);
+      if (window.innerWidth <= 767) {  // Only apply on mobile
+        setIsHeaderScrolled(window.scrollY > 10);
+      }
     };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-      document.body.classList.remove('header-scrolled');
-    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   useEffect(() => {

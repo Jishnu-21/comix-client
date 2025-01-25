@@ -10,7 +10,7 @@ const FeaturedSection = () => {
         <img
           src={require('../Assets/Image/bloomLeft.png')}
           alt="Flower Icon"
-          className="decor-icon left-icon"
+          className="decor-icon"
         />
         <h2 className="section-heading">
           <span className="decor-line">WHAT WE'RE LOVING RIGHT NOW</span>
@@ -18,7 +18,7 @@ const FeaturedSection = () => {
         <img
           src={require('../Assets/Image/bloomRight.png')}
           alt="Flower Icon"
-          className="decor-icon right-icon"
+          className="decor-icon"
         />
       </div>
 
@@ -26,7 +26,7 @@ const FeaturedSection = () => {
         {['left', 'right'].map((side, index) => (
           <div 
             key={index}
-            className="product-card"
+            className="product-cards"
             onMouseEnter={() => setHoveredCard(index)}
             onMouseLeave={() => setHoveredCard(null)}
           >
@@ -51,11 +51,9 @@ const FeaturedSection = () => {
               )}
             </div>
             <div className="product-text">
-              <h3>SUBSCRIBE & <br/>SAVE 15%</h3>
-              <p>Rinse And Repeat with Comix</p>
-              <button className="shop-now-btn">
-                {index === 0 ? 'SHOP THE SET $44 - $59' : 'SUBSCRIBE NOW'}
-              </button>
+              <h3>PRODUCT TITLE</h3>
+              <p>Product description goes here. This is a brief overview of the product features.</p>
+              <button className="shop-now-btn">SHOP NOW</button>
             </div>
           </div>
         ))}
