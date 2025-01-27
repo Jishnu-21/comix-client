@@ -132,7 +132,6 @@ const ProductGridLayout = ({ searchTerm, sortOption, setSortOption }) => {
         <div className="col-sm-12 col-md-12 col-lg-4 col-xl-3 col-12">
           <ProductFilters />
         </div>
-        <MobileFilter sortOption={sortOption} setSortOption={setSortOption} />
         {/* Right Section */}
         <div className="col-sm-12 col-md-12 col-lg-8 col-xl-9 col-12">
           <div className="result-header mb-4 d-flex justify-content-between align-items-center">

@@ -50,6 +50,8 @@ const Header = () => {
   const [currentMarqueeIndex, setCurrentMarqueeIndex] = useState(0);
   const [isChatbotOpen, setIsChatbotOpen] = useState(false);
   const [isFooterVisible, setIsFooterVisible] = useState(false);
+  const [categories, setCategories] = useState([]);
+  const [categoryProducts, setCategoryProducts] = useState({});
   const marqueeItems = [
     "🎉 Welcome to Comix - Your Beauty Destination!",
     "✨ Free Shipping on Orders Over ₹499",
@@ -277,47 +279,40 @@ const Header = () => {
     return () => clearInterval(interval);
   }, []);
 
-  const navLinks = [
-    { 
-      name: 'SKINCARE', 
-      link: '/skincare',
-      dropdown: [
-        {
-          title: 'LIPSTICKS',
-          items: [
-            'TRANSFER PROOF LIPSTICKS',
-            'MATTE LIPSTICKS',
-            'LIQUID LIPSTICKS',
-            'CRAYON LIPSTICKS',
-            'POWDER LIPSTICKS',
-            'SATIN LIPSTICKS',
-            'BULLET LIPSTICKS',
-            'LIP GLOSS & LINERS'
-          ]
-        },
-        {
-          title: 'LIP CARE',
-          items: [
-            'LIPSTICK FIXERS & REMOVERS',
-            'LIP PRIMERS & SCRUBS',
-            'LIP BALMS'
-          ]
-        },
-        {
-          title: 'LIPSTICK SETS & COMBOS',
-          items: [
-            'LIPSTICK SETS',
-            'LIPSTICK COMBOS'
-          ]
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/categories`);
+        setCategories(response.data.categories || []);
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+      }
+    };
+    fetchCategories();
+  }, []);
+
+  useEffect(() => {
+    const fetchProductsForSubcategories = async () => {
+      try {
+        const productsData = {};
+        for (const category of categories) {
+          for (const subcategory of category.subcategories) {
+            const response = await axios.get(`${API_URL}/products/subcategory/${subcategory._id}`);
+            if (response.data.success) {
+              productsData[subcategory._id] = response.data.products;
+            }
+          }
         }
-      ]
-    },
-    { name: 'HAIRCARE', link: '/haircare' },
-    { name: 'BODYCARE', link: '/bodycare' },
-    { name: 'ORALCARE', link: '/oralcare' },  
-    { name: 'OFFERS', link: '/offers' },
-    { name: 'BLOG', link: '/blog' }
-  ];
+        setCategoryProducts(productsData);
+      } catch (error) {
+        console.error('Error fetching subcategory products:', error);
+      }
+    };
+
+    if (categories.length > 0) {
+      fetchProductsForSubcategories();
+    }
+  }, [categories]);
 
   const getUserName = () => {
     if (!isAuthenticated) {
@@ -439,7 +434,7 @@ const Header = () => {
   }, []);
 
   return (
-    <header className={`header ${isHeaderScrolled ? 'header-scrolled' : ''}`}>
+    <header className={`header ${!isHeaderVisible ? 'hidden' : ''} ${isHeaderScrolled ? 'scrolled' : ''}`}>
       <div className="header-top">
         <div className="marquee-container">
           <div className="marquee-item">
@@ -552,29 +547,30 @@ const Header = () => {
 
       <div className={`sidebar ${isSidebarOpen ? 'open' : ''}`}>
         <div className="sidebar-header">
-          <img src={HeaderLogo} alt="COMIX LOGO" className="sidebar-logo" />
-          <div className="sidebar-user-info">
-            {isAuthenticated ? (
-              <div className="user-info">
-                {profilePicture ? (
-                  <img src={profilePicture} alt="Profile" className="profile-icon" />
-                ) : (
-                  <SocialIcon icon={faUserCircle} />
-                )}
-                <span className="sidebar-username">&{getUserName()}</span>
-              </div>
-            ) : null}
-          </div>
-          <button className="close-sidebar" onClick={toggleSidebar}>
+          <button className="close-button" onClick={toggleSidebar}>
             <SocialIcon icon={faTimes} />
           </button>
         </div>
         <nav className="nav">
-          {navLinks.map((navItem, index) => (
-            <Link key={index} to='/product' className="nav-link" onClick={toggleSidebar}>
-            {navItem.name}
+          <Link to="/" className="nav-link" onClick={toggleSidebar}>
+            HOME
+          </Link>
+          {categories.map((category) => (
+            <Link 
+              key={category._id} 
+              to={`/category/${category._id}`} 
+              className="nav-link" 
+              onClick={toggleSidebar}
+            >
+              {category.name.toUpperCase()}
             </Link>
           ))}
+          <Link to="/offers" className="nav-link" onClick={toggleSidebar}>
+            OFFERS
+          </Link>
+          <Link to="/blogs" className="nav-link" onClick={toggleSidebar}>
+            BLOGS
+          </Link>
           {isAuthenticated ? (
             <button className="nav-link" onClick={handleLogout}>
               Logout
@@ -589,26 +585,34 @@ const Header = () => {
 
       {isSidebarOpen && <div className="overlay" onClick={toggleSidebar}></div>}
 
+      {/* Desktop Navigation */}
       <nav className="nav desktop-nav">
-        {navLinks.map((navItem, index) => (
+        {categories.map((category, index) => (
           <div 
-            key={index} 
+            key={category._id} 
             className="nav-item"
             onMouseEnter={() => handleMouseEnter(index)}
             onMouseLeave={handleMouseLeaveLips}
           >
-            <Link to="/product" className="nav-link">
-              {navItem.name}
+            <Link to={`/category/${category._id}`} className="nav-link">
+              {category.name.toUpperCase()}
             </Link>
-            {navItem.dropdown && activeDropdown === index && (
+            {category.subcategories && category.subcategories.length > 0 && activeDropdown === index && (
               <div className="dropdown" onMouseLeave={handleMouseLeaveDropdown}>
-                {navItem.dropdown.map((category, catIndex) => (
-                  <div key={catIndex} className="dropdown-category">
-                    <h3>{category.title}</h3>
+                {category.subcategories.map((subcategory) => (
+                  <div key={subcategory._id} className="dropdown-category">
+                    <h3>{subcategory.name.toUpperCase()}</h3>
                     <ul>
-                      {category.items.map((item, itemIndex) => (
-                        <li key={itemIndex}>{item}</li>
+                      {categoryProducts[subcategory._id]?.map((product) => (
+                        <li key={product._id}>
+                          <Link to={`/product/${product.slug}`}>
+                            {product.name}
+                          </Link>
+                        </li>
                       ))}
+                      {(!categoryProducts[subcategory._id] || categoryProducts[subcategory._id].length === 0) && (
+                        <li>No products available</li>
+                      )}
                     </ul>
                   </div>
                 ))}
@@ -616,6 +620,16 @@ const Header = () => {
             )}
           </div>
         ))}
+        <div className="nav-item">
+          <Link to="/offers" className="nav-link">
+            OFFERS
+          </Link>
+        </div>
+        <div className="nav-item">
+          <Link to="/blogs" className="nav-link">
+            BLOGS
+          </Link>
+        </div>
       </nav>
 
       {/* Mobile Footer Navigation */}

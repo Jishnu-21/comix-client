@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { 
   BarChart, Users, Package, Grid, Image, Tag, LogOut, 
-  ShoppingCart, Menu, X, ChevronRight 
+  ShoppingCart, Menu, X, ChevronRight, Droplet 
 } from "lucide-react";
 import "../Assets/Css/Admin/AdminPanel.scss";
 import DashboardContent from '../Components/Admin/DashboardContent';
@@ -13,6 +13,7 @@ import ProductsContent from '../Components/Admin/ProductsContent';
 import CategoriesContent from '../Components/Admin/CategoriesContent';
 import BannerContent from '../Components/Admin/BannerContent';
 import OffersContent from "../Components/Admin/OffersContent";
+import HeroIngredientsList from "../Components/Admin/HeroIngredients/HeroIngredientsList";
 import EditProductForm from "../Components/Admin/EditProductForm";
 import { useDispatch } from 'react-redux';
 import { logout } from '../features/auth/authActions';
@@ -22,9 +23,8 @@ import { toast } from 'sonner';
 export default function AdminPanel() {
   const [currentSection, setCurrentSection] = useState("dashboard");
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const [isEditProductModalOpen, setIsEditProductModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
-  const [refreshProducts, setRefreshProducts] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -36,18 +36,27 @@ export default function AdminPanel() {
     { id: "banner", name: "Banner", icon: Image },
     { id: "orders", name: "Orders", icon: ShoppingCart },
     { id: "offers", name: "Offers", icon: Tag },
+    { id: "hero-ingredients", name: "Hero Ingredients", icon: Droplet },
   ];
 
   const handleEditProduct = (product) => {
     setSelectedProduct(product);
-    setIsEditProductModalOpen(true);
+    setIsModalOpen(true);
   };
 
-  const handleUpdateProduct = (updatedProduct) => {
-    console.log("Product updated:", updatedProduct);
-    setIsEditProductModalOpen(false);
-    setRefreshProducts(prev => !prev);
-    toast.success('Product updated successfully');
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedProduct(null);
+  };
+
+  const handleUpdateProduct = async (updatedProduct) => {
+    try {
+      // Your update logic here
+      handleCloseModal();
+      toast.success('Product updated successfully');
+    } catch (error) {
+      toast.error('Failed to update product');
+    }
   };
 
   const handleLogout = async () => {
@@ -68,7 +77,7 @@ export default function AdminPanel() {
       case "users":
         return <UsersContent />;
       case "products":
-        return <ProductsContent onEdit={handleEditProduct} refresh={refreshProducts} />;
+        return <ProductsContent onEditProduct={handleEditProduct} />;
       case "categories":
         return <CategoriesContent />;
       case "banner":
@@ -77,6 +86,8 @@ export default function AdminPanel() {
         return <OrderContent />;
       case "offers":
         return <OffersContent />;
+      case "hero-ingredients":
+        return <HeroIngredientsList />;
       default:
         return <DashboardContent />;
     }
@@ -138,14 +149,17 @@ export default function AdminPanel() {
         </div>
       </main>
 
-      {/* Edit Product Modal */}
-      {isEditProductModalOpen && (
+      {/* Modal */}
+      {isModalOpen && (
         <div className="modal-overlay">
           <div className="modal-content">
+            <button className="modal-close" onClick={handleCloseModal}>
+              <X size={24} />
+            </button>
             <EditProductForm
               product={selectedProduct}
               onUpdate={handleUpdateProduct}
-              onClose={() => setIsEditProductModalOpen(false)}
+              onClose={handleCloseModal}
             />
           </div>
         </div>

@@ -2,7 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { API_URL } from '../../config/api';
-import { X } from 'lucide-react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTimes, faTrash, faPlus } from '@fortawesome/free-solid-svg-icons';
 import '../../Assets/Css/Admin/EditProductForm.scss';
 
 const VARIANT_SIZES = ['50ml', '150ml', '250ml'];
@@ -11,40 +12,58 @@ const EditProductForm = ({ product, onClose, onUpdate }) => {
   const [formData, setFormData] = useState({
     name: product?.name || '',
     description: product?.description || '',
-    category_id: product?.category?._id || product?.category_id?._id || '',
-    subcategory_id: product?.subcategory?._id || product?.subcategory_id?._id || '',
-    ingredients: Array.isArray(product?.ingredients) 
-      ? product.ingredients.join(', ') 
-      : product?.ingredients || '',
-    hero_ingredients: Array.isArray(product?.hero_ingredients) 
-      ? product.hero_ingredients.join(', ') 
-      : product?.hero_ingredients || '',
-    functions: Array.isArray(product?.functions) 
-      ? product.functions.join(', ') 
-      : product?.functions || '',
-    taglines: Array.isArray(product?.taglines) 
-      ? product.taglines.join(', ') 
-      : product?.taglines || '',
+    category_id: product?.category?._id || product?.category_id || '',
+    subcategory_id: product?.subcategory?._id || product?.subcategory_id || '',
+    ingredients: product?.ingredients || '',
+    how_to_use: product?.how_to_use || '',
+    functions: product?.functions || '',
+    taglines: product?.taglines || '',
+    additional_info: product?.additional_info || '',
     variants: product?.variants?.map(variant => ({
       name: variant.name || '',
       price: variant.price || '',
       stock_quantity: variant.stock_quantity || ''
-    })) || []
+    })) || [{ name: '50ml', price: '', stock_quantity: '' }],
+    faqs: product?.faqs || [{ question: '', answer: '' }]
   });
+
+  const [heroIngredients, setHeroIngredients] = useState([]);
+  const [selectedHeroIngredients, setSelectedHeroIngredients] = useState(
+    product?.hero_ingredients?.map(hi => ({
+      ingredient: hi.ingredient._id || hi.ingredient,
+      description: hi.description
+    })) || []
+  );
+  
   const [existingImages, setExistingImages] = useState(product?.image_urls || []);
-  const [images, setImages] = useState([]);
+  const [newImages, setNewImages] = useState([]);
+  const [imagePreview, setImagePreview] = useState([]);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [categories, setCategories] = useState([]);
   const [subcategories, setSubcategories] = useState([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     fetchCategories();
+    fetchHeroIngredients();
+  }, []);
+
+  useEffect(() => {
     if (formData.category_id) {
       const selectedCategory = categories.find(cat => cat._id === formData.category_id);
       setSubcategories(selectedCategory ? selectedCategory.subcategories : []);
     }
   }, [formData.category_id, categories]);
+
+  const fetchHeroIngredients = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/hero-ingredients`);
+      setHeroIngredients(response.data.heroIngredients || []);
+    } catch (error) {
+      console.error('Error fetching hero ingredients:', error);
+    }
+  };
 
   const fetchCategories = async () => {
     try {
@@ -55,25 +74,63 @@ const EditProductForm = ({ product, onClose, onUpdate }) => {
     }
   };
 
-  const handleChange = (e) => {
+  const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData(prevState => ({
       ...prevState,
       [name]: value
     }));
+  };
 
-    if (name === 'category_id') {
-      const selectedCategory = categories.find(cat => cat._id === value);
-      setSubcategories(selectedCategory ? selectedCategory.subcategories : []);
-      setFormData(prevState => ({ ...prevState, subcategory_id: '' }));
+  const handleHeroIngredientSelect = (heroIngredient) => {
+    const isAlreadySelected = selectedHeroIngredients.some(
+      item => item.ingredient === heroIngredient._id
+    );
+
+    if (!isAlreadySelected) {
+      setSelectedHeroIngredients([
+        ...selectedHeroIngredients,
+        {
+          ingredient: heroIngredient._id,
+          description: ''
+        }
+      ]);
     }
+  };
+
+  const handleHeroIngredientDescription = (id, description) => {
+    setSelectedHeroIngredients(prevState =>
+      prevState.map(item =>
+        item.ingredient === id
+          ? { ...item, description }
+          : item
+      )
+    );
+  };
+
+  const removeHeroIngredient = (id) => {
+    setSelectedHeroIngredients(prevState =>
+      prevState.filter(item => item.ingredient !== id)
+    );
+  };
+
+  const handleCategoryChange = (e) => {
+    const categoryId = e.target.value;
+    setFormData(prevState => ({
+      ...prevState,
+      category_id: categoryId,
+      subcategory_id: ''
+    }));
+
+    const selectedCategory = categories.find(cat => cat._id === categoryId);
+    setSubcategories(selectedCategory ? selectedCategory.subcategories : []);
   };
 
   const handleVariantChange = (index, field, value) => {
     const updatedVariants = [...formData.variants];
     updatedVariants[index] = {
       ...updatedVariants[index],
-      [field]: value
+      [field]: field === 'price' || field === 'stock_quantity' ? Number(value) : value
     };
     setFormData(prevState => ({
       ...prevState,
@@ -97,290 +154,385 @@ const EditProductForm = ({ product, onClose, onUpdate }) => {
     }));
   };
 
-  const handleImageChange = (e) => {
+  const handleFaqChange = (index, field, value) => {
+    const updatedFaqs = [...formData.faqs];
+    updatedFaqs[index] = {
+      ...updatedFaqs[index],
+      [field]: value
+    };
+    setFormData(prevState => ({
+      ...prevState,
+      faqs: updatedFaqs
+    }));
+  };
+
+  const addFaq = () => {
+    setFormData(prevState => ({
+      ...prevState,
+      faqs: [...prevState.faqs, { question: '', answer: '' }]
+    }));
+  };
+
+  const removeFaq = (index) => {
+    setFormData(prevState => ({
+      ...prevState,
+      faqs: prevState.faqs.filter((_, i) => i !== index)
+    }));
+  };
+
+  const handleNewImageChange = (e) => {
     const files = Array.from(e.target.files);
-    if (files.length > 7) {
-      setError('You can only upload a maximum of 7 images.');
-      return;
-    }
-    setImages(files);
-    setError('');
+    setNewImages(prevImages => [...prevImages, ...files]);
+
+    // Create preview URLs for new images
+    const newPreviews = files.map(file => URL.createObjectURL(file));
+    setImagePreview(prevPreviews => [...prevPreviews, ...newPreviews]);
+  };
+
+  const removeExistingImage = (index) => {
+    setExistingImages(prevImages => prevImages.filter((_, i) => i !== index));
+  };
+
+  const removeNewImage = (index) => {
+    setNewImages(prevImages => prevImages.filter((_, i) => i !== index));
+    setImagePreview(prevPreviews => prevPreviews.filter((_, i) => i !== index));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
     setError('');
     setSuccess('');
 
-    // Validate variants
-    if (!formData.variants || formData.variants.length === 0) {
-      setError('At least one variant is required');
-      return;
-    }
-
-    // Validate that each variant has required fields
-    const invalidVariants = formData.variants.some(
-      variant => !variant.name || !variant.price || !variant.stock_quantity
-    );
-    if (invalidVariants) {
-      setError('All variant fields (name, price, and stock) are required');
-      return;
-    }
-
     try {
-      const productData = new FormData();
-      
-      // Convert variants to proper format
-      const validVariants = formData.variants.map(variant => ({
-        name: variant.name,
-        price: Number(variant.price),
-        stock_quantity: Number(variant.stock_quantity)
-      }));
+      const formDataToSend = new FormData();
+      formDataToSend.append('name', formData.name);
+      formDataToSend.append('description', formData.description);
+      formDataToSend.append('category_id', formData.category_id);
+      formDataToSend.append('subcategory_id', formData.subcategory_id);
+      formDataToSend.append('ingredients', formData.ingredients);
+      formDataToSend.append('how_to_use', formData.how_to_use);
+      formDataToSend.append('functions', formData.functions);
+      formDataToSend.append('taglines', formData.taglines);
+      formDataToSend.append('additional_info', formData.additional_info);
+      formDataToSend.append('hero_ingredients', JSON.stringify(selectedHeroIngredients));
+      formDataToSend.append('variants', JSON.stringify(formData.variants));
+      formDataToSend.append('faqs', JSON.stringify(formData.faqs));
+      formDataToSend.append('existing_images', JSON.stringify(existingImages));
 
-      // Append form data
-      Object.keys(formData).forEach(key => {
-        if (key === 'variants') {
-          productData.append(key, JSON.stringify(validVariants));
-        } else if (['ingredients', 'hero_ingredients', 'functions', 'taglines'].includes(key)) {
-          const arrayData = formData[key].split(',').map(item => item.trim()).filter(Boolean);
-          productData.append(key, JSON.stringify(arrayData));
-        } else {
-          productData.append(key, formData[key]);
+      newImages.forEach(image => {
+        formDataToSend.append('files', image);
+      });
+
+      const response = await axios.put(
+        `${API_URL}/products/edit/${product._id}`,
+        formDataToSend,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
         }
-      });
+      );
 
-      if (images.length > 0) {
-        images.forEach((image, index) => {
-          productData.append(`files`, image);
-        });
-      } else {
-        productData.append('noNewImages', 'true');
-      }
-
-      console.log('Product data being sent:', Object.fromEntries(productData));
-
-      const response = await axios.put(`${API_URL}/products/edit/${product._id}`, productData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
-      });
-
-      console.log('Server response:', response.data);
-
-      setSuccess('Product updated successfully');
-      setTimeout(() => {
+      setSuccess('Product updated successfully!');
+      if (onUpdate) {
         onUpdate(response.data.product);
+      }
+      setTimeout(() => {
         onClose();
       }, 2000);
     } catch (error) {
-      console.error('Error updating product:', error.response?.data || error.message);
-      setError(error.response?.data?.message || 'Failed to update product');
+      setError(error.response?.data?.message || 'Error updating product');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
-  const renderImagePreviews = () => (
-    <div className="image-previews">
-      <h4>Current Images:</h4>
-      <div className="existing-images-grid">
-        {existingImages.map((url, index) => (
-          <div key={index} className="image-preview-container">
-            <img src={url} alt={`Product ${index + 1}`} className="image-preview" />
-          </div>
-        ))}
+  return (
+    <div className="form-container">
+      <div className="form-header">
+        <h2>Edit Product</h2>
+        <button onClick={onClose} className="close-button">
+          <FontAwesomeIcon icon={faTimes} />
+        </button>
       </div>
-      {images.length > 0 && (
-        <>
-          <h4>New Images to Upload:</h4>
-          <div className="new-images-grid">
-            {Array.from(images).map((file, index) => (
-              <div key={index} className="image-preview-container">
-                <img 
-                  src={URL.createObjectURL(file)} 
-                  alt={`New upload ${index + 1}`} 
-                  className="image-preview" 
+
+      <form onSubmit={handleSubmit} className="admin-form">
+        {/* Basic Information */}
+        <div className="form-section">
+          <h3>Basic Information</h3>
+          <input
+            type="text"
+            name="name"
+            value={formData.name}
+            onChange={handleInputChange}
+            placeholder="Product Name"
+            required
+          />
+          <textarea
+            name="description"
+            value={formData.description}
+            onChange={handleInputChange}
+            placeholder="Product Description"
+            required
+          />
+          <select
+            name="category_id"
+            value={formData.category_id}
+            onChange={handleCategoryChange}
+            required
+          >
+            <option value="">Select Category</option>
+            {categories.map(category => (
+              <option key={category._id} value={category._id}>
+                {category.name}
+              </option>
+            ))}
+          </select>
+
+          <select
+            name="subcategory_id"
+            value={formData.subcategory_id}
+            onChange={handleInputChange}
+            required
+            disabled={!formData.category_id}
+          >
+            <option value="">Select Subcategory</option>
+            {subcategories.map(subcategory => (
+              <option key={subcategory._id} value={subcategory._id}>
+                {subcategory.name}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Product Details */}
+        <div className="form-section">
+          <h3>Product Details</h3>
+          <textarea
+            name="ingredients"
+            value={formData.ingredients}
+            onChange={handleInputChange}
+            placeholder="Ingredients"
+            required
+          />
+          <textarea
+            name="how_to_use"
+            value={formData.how_to_use}
+            onChange={handleInputChange}
+            placeholder="How to Use"
+            required
+          />
+          <textarea
+            name="functions"
+            value={formData.functions}
+            onChange={handleInputChange}
+            placeholder="Functions"
+          />
+          <textarea
+            name="taglines"
+            value={formData.taglines}
+            onChange={handleInputChange}
+            placeholder="Taglines"
+          />
+          <textarea
+            name="additional_info"
+            value={formData.additional_info}
+            onChange={handleInputChange}
+            placeholder="Additional Information"
+          />
+        </div>
+
+        {/* Hero Ingredients */}
+        <div className="form-section">
+          <h3>Hero Ingredients</h3>
+          <select
+            onChange={(e) => {
+              const heroIngredient = heroIngredients.find(h => h._id === e.target.value);
+              if (heroIngredient) {
+                handleHeroIngredientSelect(heroIngredient);
+              }
+            }}
+            value=""
+          >
+            <option value="">Select Hero Ingredient</option>
+            {heroIngredients.map(hero => (
+              <option key={hero._id} value={hero._id}>
+                {hero.name}
+              </option>
+            ))}
+          </select>
+
+          {selectedHeroIngredients.map((item, index) => {
+            const heroIngredient = heroIngredients.find(h => h._id === item.ingredient);
+            return (
+              <div key={index} className="hero-ingredient-item">
+                <div className="hero-ingredient-header">
+                  <span>{heroIngredient?.name}</span>
+                  <button
+                    type="button"
+                    onClick={() => removeHeroIngredient(item.ingredient)}
+                    className="remove-button"
+                  >
+                    <FontAwesomeIcon icon={faTrash} />
+                  </button>
+                </div>
+                <textarea
+                  value={item.description}
+                  onChange={(e) => handleHeroIngredientDescription(item.ingredient, e.target.value)}
+                  placeholder="Description for this hero ingredient"
+                  required
                 />
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Variants */}
+        <div className="form-section">
+          <h3>Variants</h3>
+          {formData.variants.map((variant, index) => (
+            <div key={index} className="variant-item">
+              <select
+                value={variant.name}
+                onChange={(e) => handleVariantChange(index, 'name', e.target.value)}
+                required
+              >
+                <option value="">Select Size</option>
+                {VARIANT_SIZES.map(size => (
+                  <option key={size} value={size}>
+                    {size}
+                  </option>
+                ))}
+              </select>
+              <input
+                type="number"
+                value={variant.price}
+                onChange={(e) => handleVariantChange(index, 'price', e.target.value)}
+                placeholder="Price"
+                required
+                min="0"
+              />
+              <input
+                type="number"
+                value={variant.stock_quantity}
+                onChange={(e) => handleVariantChange(index, 'stock_quantity', e.target.value)}
+                placeholder="Stock Quantity"
+                required
+                min="0"
+              />
+              {index > 0 && (
+                <button
+                  type="button"
+                  onClick={() => removeVariant(index)}
+                  className="remove-button"
+                >
+                  <FontAwesomeIcon icon={faTrash} />
+                </button>
+              )}
+            </div>
+          ))}
+          {formData.variants.length < VARIANT_SIZES.length && (
+            <button
+              type="button"
+              onClick={addVariant}
+              className="add-button"
+            >
+              <FontAwesomeIcon icon={faPlus} /> Add Variant
+            </button>
+          )}
+        </div>
+
+        {/* FAQs */}
+        <div className="form-section">
+          <h3>FAQs</h3>
+          {formData.faqs.map((faq, index) => (
+            <div key={index} className="faq-item">
+              <input
+                type="text"
+                value={faq.question}
+                onChange={(e) => handleFaqChange(index, 'question', e.target.value)}
+                placeholder="Question"
+                required
+              />
+              <textarea
+                value={faq.answer}
+                onChange={(e) => handleFaqChange(index, 'answer', e.target.value)}
+                placeholder="Answer"
+                required
+              />
+              <button
+                type="button"
+                onClick={() => removeFaq(index)}
+                className="remove-button"
+              >
+                <FontAwesomeIcon icon={faTrash} />
+              </button>
+            </div>
+          ))}
+          <button
+            type="button"
+            onClick={addFaq}
+            className="add-button"
+          >
+            <FontAwesomeIcon icon={faPlus} /> Add FAQ
+          </button>
+        </div>
+
+        {/* Images */}
+        <div className="form-section">
+          <h3>Product Images</h3>
+          {/* Existing Images */}
+          <div className="image-preview-container">
+            {existingImages.map((url, index) => (
+              <div key={index} className="image-preview">
+                <img src={url} alt={`Existing ${index + 1}`} />
+                <button
+                  type="button"
+                  onClick={() => removeExistingImage(index)}
+                  className="remove-button"
+                >
+                  <FontAwesomeIcon icon={faTrash} />
+                </button>
               </div>
             ))}
           </div>
-        </>
-      )}
-    </div>
-  );
 
-  const renderVariants = () => (
-    <div className="variants-section">
-      <label>Variants</label>
-      {formData.variants.map((variant, index) => (
-        <div key={index} className="variant-row">
-          <select
-            value={variant.name}
-            onChange={(e) => handleVariantChange(index, 'name', e.target.value)}
-            required
-          >
-            <option value="">Select size</option>
-            {VARIANT_SIZES.map(size => (
-              <option key={size} value={size}>{size}</option>
+          {/* New Images */}
+          <input
+            type="file"
+            onChange={handleNewImageChange}
+            multiple
+            accept="image/*"
+          />
+          <div className="image-preview-container">
+            {imagePreview.map((preview, index) => (
+              <div key={index} className="image-preview">
+                <img src={preview} alt={`New ${index + 1}`} />
+                <button
+                  type="button"
+                  onClick={() => removeNewImage(index)}
+                  className="remove-button"
+                >
+                  <FontAwesomeIcon icon={faTrash} />
+                </button>
+              </div>
             ))}
-          </select>
-          <input
-            type="number"
-            value={variant.price}
-            onChange={(e) => handleVariantChange(index, 'price', e.target.value)}
-            placeholder="Price"
-            required
-            min="0"
-          />
-          <input
-            type="number"
-            value={variant.stock_quantity}
-            onChange={(e) => handleVariantChange(index, 'stock_quantity', e.target.value)}
-            placeholder="Stock"
-            required
-            min="0"
-          />
-          <button 
-            type="button" 
-            onClick={() => removeVariant(index)}
-            disabled={formData.variants.length === 1}
-          >Remove</button>
+          </div>
         </div>
-      ))}
-      {formData.variants.length < VARIANT_SIZES.length && (
-        <button type="button" onClick={addVariant}>Add Variant</button>
-      )}
-    </div>
-  );
 
-  return (
-    <div className="edit-product-modal-overlay">
-      <div className="edit-product-modal-content">
-        <button onClick={onClose} className="close-button" aria-label="Close">
-          <X size={24} />
-        </button>
-        <h3 className="modal-title">Edit Product</h3>
-        <form onSubmit={handleSubmit} className="edit-product-form">
-          <div>
-            <label htmlFor="name">Product Name</label>
-            <input
-              id="name"
-              name="name"
-              type="text"
-              value={formData.name}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div>
-            <label htmlFor="description">Description</label>
-            <textarea
-              id="description"
-              name="description"
-              value={formData.description}
-              onChange={handleChange}
-              rows="3"
-            ></textarea>
-          </div>
-          <div>
-            <label htmlFor="category_id">Category</label>
-            <select
-              id="category_id"
-              name="category_id"
-              value={formData.category_id}
-              onChange={handleChange}
-              required
-            >
-              <option value="">Select a category</option>
-              {categories.map(category => (
-                <option key={category._id} value={category._id}>{category.name}</option>
-              ))}
-            </select>
-          </div>
-          <div>
-            <label htmlFor="subcategory_id">Subcategory</label>
-            <select
-              id="subcategory_id"
-              name="subcategory_id"
-              value={formData.subcategory_id}
-              onChange={handleChange}
-              required
-            >
-              <option value="">Select a subcategory</option>
-              {subcategories.map(subcategory => (
-                <option key={subcategory._id} value={subcategory._id}>{subcategory.name}</option>
-              ))}
-            </select>
-          </div>
-          <div>
-            <label htmlFor="ingredients">Ingredients (comma-separated)</label>
-            <textarea
-              id="ingredients"
-              name="ingredients"
-              value={formData.ingredients}
-              onChange={handleChange}
-              rows="3"
-            ></textarea>
-          </div>
-          <div>
-            <label htmlFor="hero_ingredients">Hero Ingredients (comma-separated)</label>
-            <textarea
-              id="hero_ingredients"
-              name="hero_ingredients"
-              value={formData.hero_ingredients}
-              onChange={handleChange}
-              rows="3"
-              placeholder="Must be included in the main ingredients list"
-            ></textarea>
-          </div>
-          <div>
-            <label htmlFor="functions">Functions (comma-separated)</label>
-            <textarea
-              id="functions"
-              name="functions"
-              value={formData.functions}
-              onChange={handleChange}
-              rows="3"
-              placeholder="e.g., Moisturizing, Anti-aging"
-            ></textarea>
-          </div>
-          <div>
-            <label htmlFor="taglines">Taglines (comma-separated)</label>
-            <textarea
-              id="taglines"
-              name="taglines"
-              value={formData.taglines}
-              onChange={handleChange}
-              rows="3"
-              placeholder="Enter product taglines"
-            ></textarea>
-          </div>
-          {renderVariants()}
-          {renderImagePreviews()}
-          <div>
-            <label htmlFor="images">Add New Images (Max 7 total)</label>
-            <input
-              id="images"
-              name="files"
-              type="file"
-              onChange={handleImageChange}
-              multiple
-              accept="image/*"
-              className="file-input"
-            />
-            <small>Current images: {existingImages.length}, New images: {images.length}</small>
-          </div>
-          {error && (
-            <div className="error-message">
-              <span>{error}</span>
-            </div>
-          )}
-          {success && (
-            <div className="success-message">
-              <span>{success}</span>
-            </div>
-          )}
-          <div>
-            <button type="submit">Update Product</button>
-          </div>
-        </form>
-      </div>
+        {error && <div className="error-message">{error}</div>}
+        {success && <div className="success-message">{success}</div>}
+
+        <div className="form-actions">
+          <button type="submit" className="submit-button" disabled={isSubmitting}>
+            {isSubmitting ? 'Updating Product...' : 'Update Product'}
+          </button>
+          <button type="button" onClick={onClose} className="cancel-button">
+            Cancel
+          </button>
+        </div>
+      </form>
     </div>
   );
 };

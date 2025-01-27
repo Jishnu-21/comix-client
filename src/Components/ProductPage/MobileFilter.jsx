@@ -32,9 +32,10 @@ const MobileFilter = ({ sortOption, setSortOption }) => {
                         <option value="priceHighToLow">Price High to Low</option>
                     </select>
                 </div>
-                <div className="dropdown-item">Option 1</div>
-                <div className="dropdown-item">Option 2</div>
-                <div className="dropdown-item">Option 3</div>
+                <div className="dropdown-item">Hair Care</div>
+                <div className="dropdown-item">Skin Care</div>
+                <div className="dropdown-item">Oral Care</div>
+                <div className="dropdown-item">Body Care</div>
             </div>
         )}
     </div>

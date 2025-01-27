@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTimes, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faTimes, faTrash, faPlus } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
 import { API_URL } from '../../config/api';
 import '../../Assets/Css/Admin/SharedForm.scss';
@@ -14,24 +14,37 @@ const AddProductForm = ({ onClose }) => {
     category_id: '',
     subcategory_id: '',
     ingredients: '',
-    hero_ingredients: '',
+    how_to_use: '',
     functions: '',
     taglines: '',
+    additional_info: '',
     variants: [{ name: '50ml', price: '', stock_quantity: '' }],
+    faqs: [{ question: '', answer: '' }]
   });
+
+  const [heroIngredients, setHeroIngredients] = useState([]);
+  const [selectedHeroIngredients, setSelectedHeroIngredients] = useState([]);
   const [images, setImages] = useState([]);
   const [error, setError] = useState('');
-  const [success, setSuccess] = useState([]);
+  const [success, setSuccess] = useState('');
   const [categories, setCategories] = useState([]);
   const [subcategories, setSubcategories] = useState([]);
-  const [ingredientInput, setIngredientInput] = useState('');
-  const [heroIngredientInput, setHeroIngredientInput] = useState('');
   const [imagePreview, setImagePreview] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     fetchCategories();
+    fetchHeroIngredients();
   }, []);
+
+  const fetchHeroIngredients = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/hero-ingredients`);
+      setHeroIngredients(response.data.heroIngredients || []);
+    } catch (error) {
+      console.error('Error fetching hero ingredients:', error);
+    }
+  };
 
   const fetchCategories = async () => {
     try {
@@ -42,33 +55,67 @@ const AddProductForm = ({ onClose }) => {
     }
   };
 
-  const handleInputChange = async (e) => {
+  const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData(prevState => ({
       ...prevState,
       [name]: value
     }));
+  };
 
-    if (name === 'category_id') {
-      try {
-        const response = await axios.get(`${API_URL}/categories/${value}`);
-        setSubcategories(response.data.category.subcategories || []);
-      } catch (error) {
-        console.error('Error fetching subcategories:', error);
-        setSubcategories([]);
-      }
+  const handleHeroIngredientSelect = (heroIngredient) => {
+    const isAlreadySelected = selectedHeroIngredients.some(
+      item => item.ingredient === heroIngredient._id
+    );
+
+    if (!isAlreadySelected) {
+      setSelectedHeroIngredients([
+        ...selectedHeroIngredients,
+        {
+          ingredient: heroIngredient._id,
+          description: ''
+        }
+      ]);
     }
   };
 
-  const handleVariantChange = (index, field, value) => {
+  const handleHeroIngredientDescription = (id, description) => {
+    setSelectedHeroIngredients(prevState =>
+      prevState.map(item =>
+        item.ingredient === id
+          ? { ...item, description }
+          : item
+      )
+    );
+  };
+
+  const removeHeroIngredient = (id) => {
+    setSelectedHeroIngredients(prevState =>
+      prevState.filter(item => item.ingredient !== id)
+    );
+  };
+
+  const handleCategoryChange = async (e) => {
+    const categoryId = e.target.value;
     setFormData(prevState => ({
       ...prevState,
-      variants: prevState.variants.map((variant, i) => 
-        i === index ? { 
-          ...variant, 
-          [field]: field === 'price' ? parseFloat(value) || 0 : value 
-        } : variant
-      )
+      category_id: categoryId,
+      subcategory_id: ''
+    }));
+
+    const selectedCategory = categories.find(cat => cat._id === categoryId);
+    setSubcategories(selectedCategory ? selectedCategory.subcategories : []);
+  };
+
+  const handleVariantChange = (index, field, value) => {
+    const updatedVariants = [...formData.variants];
+    updatedVariants[index] = {
+      ...updatedVariants[index],
+      [field]: field === 'price' || field === 'stock_quantity' ? Number(value) : value
+    };
+    setFormData(prevState => ({
+      ...prevState,
+      variants: updatedVariants
     }));
   };
 
@@ -88,260 +135,201 @@ const AddProductForm = ({ onClose }) => {
     }));
   };
 
-  const handleImageChange = (e) => {
-    const files = Array.from(e.target.files);
-    if (files.length > 7) {
-      setError('You can only upload a maximum of 7 images.');
-      return;
-    }
-    setImages(files);
-    setImagePreview(files.map(file => URL.createObjectURL(file)));
-    setError('');
+  const handleFaqChange = (index, field, value) => {
+    const updatedFaqs = [...formData.faqs];
+    updatedFaqs[index] = {
+      ...updatedFaqs[index],
+      [field]: value
+    };
+    setFormData(prevState => ({
+      ...prevState,
+      faqs: updatedFaqs
+    }));
   };
 
-  const handleRemoveImage = (index) => {
-    setImages(images.filter((_, i) => i !== index));
-    setImagePreview(imagePreview.filter((_, i) => i !== index));
+  const addFaq = () => {
+    setFormData(prevState => ({
+      ...prevState,
+      faqs: [...prevState.faqs, { question: '', answer: '' }]
+    }));
+  };
+
+  const removeFaq = (index) => {
+    setFormData(prevState => ({
+      ...prevState,
+      faqs: prevState.faqs.filter((_, i) => i !== index)
+    }));
+  };
+
+  const handleImageChange = (e) => {
+    const files = Array.from(e.target.files);
+    setImages(prevImages => [...prevImages, ...files]);
+
+    // Create preview URLs
+    const newPreviews = files.map(file => URL.createObjectURL(file));
+    setImagePreview(prevPreviews => [...prevPreviews, ...newPreviews]);
+  };
+
+  const removeImage = (index) => {
+    setImages(prevImages => prevImages.filter((_, i) => i !== index));
+    setImagePreview(prevPreviews => prevPreviews.filter((_, i) => i !== index));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
     setError('');
     setSuccess('');
-    setIsSubmitting(true);
-
-    // Validate variants
-    const validVariants = formData.variants.filter(v => 
-      v.name && 
-      v.price && 
-      v.stock_quantity
-    ).map(v => ({
-      name: v.name,
-      price: Number(v.price),
-      stock_quantity: Number(v.stock_quantity)
-    }));
-
-    if (validVariants.length === 0) {
-      setError('At least one variant with name, price, and stock quantity is required');
-      setIsSubmitting(false);
-      return;
-    }
 
     try {
-      const productData = new FormData();
-      
-      // Append form data
-      Object.keys(formData).forEach(key => {
-        if (key === 'variants') {
-          // Ensure variants are properly stringified
-          productData.append('variants', JSON.stringify(validVariants));
-        } else if (['ingredients', 'hero_ingredients', 'functions', 'taglines'].includes(key)) {
-          const arrayData = formData[key].split(',').map(item => item.trim()).filter(Boolean);
-          productData.append(key, JSON.stringify(arrayData));
-        } else {
-          productData.append(key, formData[key]);
+      const formDataToSend = new FormData();
+      formDataToSend.append('name', formData.name);
+      formDataToSend.append('description', formData.description);
+      formDataToSend.append('category_id', formData.category_id);
+      formDataToSend.append('subcategory_id', formData.subcategory_id);
+      formDataToSend.append('ingredients', formData.ingredients);
+      formDataToSend.append('how_to_use', formData.how_to_use);
+      formDataToSend.append('functions', formData.functions);
+      formDataToSend.append('taglines', formData.taglines);
+      formDataToSend.append('additional_info', formData.additional_info);
+      formDataToSend.append('hero_ingredients', JSON.stringify(selectedHeroIngredients));
+      formDataToSend.append('variants', JSON.stringify(formData.variants));
+      formDataToSend.append('faqs', JSON.stringify(formData.faqs));
+
+      images.forEach(image => {
+        formDataToSend.append('files', image);
+      });
+
+      const response = await axios.post(`${API_URL}/products/add`, formDataToSend, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
         }
       });
-      
-      images.forEach((image, index) => {
-        productData.append(`files`, image);
-      });
-  
-      const response = await axios.post(`${API_URL}/products/add`, productData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
-      });
-  
-      setSuccess('Product added successfully');
+
+      setSuccess('Product added successfully!');
       setTimeout(() => {
         onClose();
-        setFormData({
-          name: '',
-          description: '',
-          category_id: '',
-          subcategory_id: '',
-          ingredients: '',
-          hero_ingredients: '',
-          functions: '',
-          taglines: '',
-          variants: [{ name: '50ml', price: '', stock_quantity: '' }],
-        });
-        setImages([]);
-        setImagePreview([]);
-        setSuccess('');
-        setIsSubmitting(false);
       }, 2000);
     } catch (error) {
-      console.error('Error adding product:', error.response?.data || error.message);
-      setError(error.response?.data?.message || 'Failed to add product. Please try again.');
+      setError(error.response?.data?.message || 'Error adding product');
+    } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
     <div className="modal-overlay">
-      <div className="modal-content">
-        <form className="admin-form" onSubmit={handleSubmit}>
-          <div className="form-header">
-            <h2>Add New Product</h2>
-            <button type="button" className="close-button" onClick={onClose}>
-              <FontAwesomeIcon icon={faTimes} />
-            </button>
-          </div>
+      <div className="admin-form">
+        <div className="form-header">
+          <h2>Add New Product</h2>
+          <button onClick={onClose} className="close-button">
+            <FontAwesomeIcon icon={faTimes} />
+          </button>
+        </div>
 
-          <div className="form-grid">
+        <form onSubmit={handleSubmit}>
+          {/* Basic Information */}
+          <div className="form-section">
+            <h3>Basic Information</h3>
             <div className="form-group">
-              <label htmlFor="name">Product Name</label>
+              <label>Product Name</label>
               <input
                 type="text"
-                id="name"
                 name="name"
                 value={formData.name}
                 onChange={handleInputChange}
+                placeholder="Enter product name"
                 required
               />
             </div>
-
+            
             <div className="form-group">
-              <label htmlFor="description">Description</label>
+              <label>Description</label>
               <textarea
-                id="description"
                 name="description"
                 value={formData.description}
                 onChange={handleInputChange}
+                placeholder="Enter product description"
+                required
+              />
+            </div>
+
+            <div className="form-grid">
+              <div className="form-group">
+                <label>Category</label>
+                <select
+                  name="category_id"
+                  value={formData.category_id}
+                  onChange={handleCategoryChange}
+                  required
+                >
+                  <option value="">Select Category</option>
+                  {categories.map(category => (
+                    <option key={category._id} value={category._id}>
+                      {category.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="form-group">
+                <label>Subcategory</label>
+                <select
+                  name="subcategory_id"
+                  value={formData.subcategory_id}
+                  onChange={handleInputChange}
+                  required
+                  disabled={!formData.category_id}
+                >
+                  <option value="">Select Subcategory</option>
+                  {subcategories.map(subcategory => (
+                    <option key={subcategory._id} value={subcategory._id}>
+                      {subcategory.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+          </div>
+
+          {/* Product Details */}
+          <div className="form-section">
+            <h3>Product Details</h3>
+            <div className="form-group">
+              <label>Ingredients</label>
+              <textarea
+                name="ingredients"
+                value={formData.ingredients}
+                onChange={handleInputChange}
+                placeholder="List all ingredients"
                 required
               />
             </div>
 
             <div className="form-group">
-              <label htmlFor="category_id">Category</label>
-              <select
-                id="category_id"
-                name="category_id"
-                value={formData.category_id}
+              <label>How to Use</label>
+              <textarea
+                name="how_to_use"
+                value={formData.how_to_use}
                 onChange={handleInputChange}
+                placeholder="Enter usage instructions"
                 required
-              >
-                <option value="">Select Category</option>
-                {categories.map(category => (
-                  <option key={category._id} value={category._id}>{category.name}</option>
-                ))}
-              </select>
+              />
             </div>
 
             <div className="form-group">
-              <label htmlFor="subcategory_id">Subcategory</label>
-              <select
-                id="subcategory_id"
-                name="subcategory_id"
-                value={formData.subcategory_id}
-                onChange={handleInputChange}
-                required
-                disabled={!formData.category_id}
-              >
-                <option value="">Select Subcategory</option>
-                {subcategories.map(subcategory => (
-                  <option key={subcategory._id} value={subcategory._id}>{subcategory.name}</option>
-                ))}
-              </select>
-            </div>
-
-            <div className="form-group">
-              <label>Ingredients</label>
-              <div className="input-group">
-                <input
-                  type="text"
-                  value={ingredientInput}
-                  onChange={(e) => setIngredientInput(e.target.value)}
-                  placeholder="Add ingredient"
-                />
-                <button type="button" onClick={() => {
-                  setFormData(prevState => ({
-                    ...prevState,
-                    ingredients: prevState.ingredients + (prevState.ingredients ? ',' : '') + ingredientInput
-                  }));
-                  setIngredientInput('');
-                }}>
-                  Add
-                </button>
-              </div>
-              <div className="variant-list">
-                {formData.ingredients.split(',').map((ingredient, index) => (
-                  <div key={index} className="variant-item">
-                    <span>{ingredient.trim()}</span>
-                    <button
-                      type="button"
-                      className="remove-button"
-                      onClick={() => {
-                        const ingredients = formData.ingredients.split(',').filter((_, i) => i !== index);
-                        setFormData(prevState => ({
-                          ...prevState,
-                          ingredients: ingredients.join(',')
-                        }));
-                      }}
-                    >
-                      <FontAwesomeIcon icon={faTrash} />
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="form-group">
-              <label>Hero Ingredients</label>
-              <div className="input-group">
-                <input
-                  type="text"
-                  value={heroIngredientInput}
-                  onChange={(e) => setHeroIngredientInput(e.target.value)}
-                  placeholder="Add hero ingredient"
-                />
-                <button type="button" onClick={() => {
-                  setFormData(prevState => ({
-                    ...prevState,
-                    hero_ingredients: prevState.hero_ingredients + (prevState.hero_ingredients ? ',' : '') + heroIngredientInput
-                  }));
-                  setHeroIngredientInput('');
-                }}>
-                  Add
-                </button>
-              </div>
-              <div className="variant-list">
-                {formData.hero_ingredients.split(',').map((ingredient, index) => (
-                  <div key={index} className="variant-item">
-                    <span>{ingredient.trim()}</span>
-                    <button
-                      type="button"
-                      className="remove-button"
-                      onClick={() => {
-                        const heroIngredients = formData.hero_ingredients.split(',').filter((_, i) => i !== index);
-                        setFormData(prevState => ({
-                          ...prevState,
-                          hero_ingredients: heroIngredients.join(',')
-                        }));
-                      }}
-                    >
-                      <FontAwesomeIcon icon={faTrash} />
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="form-group full-width">
               <label>Functions</label>
               <textarea
-                id="functions"
                 name="functions"
                 value={formData.functions}
                 onChange={handleInputChange}
-                placeholder="e.g., Moisturizing, Anti-aging, etc."
+                placeholder="Enter product functions"
               />
             </div>
 
-            <div className="form-group full-width">
+            <div className="form-group">
               <label>Taglines</label>
               <textarea
-                id="taglines"
                 name="taglines"
                 value={formData.taglines}
                 onChange={handleInputChange}
@@ -349,92 +337,231 @@ const AddProductForm = ({ onClose }) => {
               />
             </div>
 
-            <div className="form-group full-width">
-              <label>Product Images</label>
-              <input
-                type="file"
-                multiple
-                accept="image/*"
-                onChange={handleImageChange}
+            <div className="form-group">
+              <label>Additional Information</label>
+              <textarea
+                name="additional_info"
+                value={formData.additional_info}
+                onChange={handleInputChange}
+                placeholder="Enter any additional information"
               />
-              <div className="image-preview">
-                {imagePreview.map((image, index) => (
-                  <div key={index} className="image-item">
-                    <img src={image} alt={`Preview ${index + 1}`} />
+            </div>
+          </div>
+
+          {/* Hero Ingredients */}
+          <div className="form-section">
+            <h3>Hero Ingredients</h3>
+            <div className="form-group">
+              <label>Add Hero Ingredient</label>
+              <select
+                onChange={(e) => {
+                  const heroIngredient = heroIngredients.find(h => h._id === e.target.value);
+                  if (heroIngredient) {
+                    handleHeroIngredientSelect(heroIngredient);
+                  }
+                }}
+                value=""
+              >
+                <option value="">Select Hero Ingredient</option>
+                {heroIngredients.map(hero => (
+                  <option key={hero._id} value={hero._id}>
+                    {hero.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="hero-ingredients-list">
+              {selectedHeroIngredients.map((item, index) => {
+                const heroIngredient = heroIngredients.find(h => h._id === item.ingredient);
+                return (
+                  <div key={index} className="hero-ingredient-item">
+                    <div className="ingredient-header">
+                      <span>{heroIngredient?.name}</span>
+                      <button
+                        type="button"
+                        onClick={() => removeHeroIngredient(item.ingredient)}
+                        className="remove-button"
+                      >
+                        <FontAwesomeIcon icon={faTrash} />
+                      </button>
+                    </div>
+                    <textarea
+                      value={item.description}
+                      onChange={(e) => handleHeroIngredientDescription(item.ingredient, e.target.value)}
+                      placeholder="Description for this hero ingredient"
+                      required
+                    />
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Variants */}
+          <div className="form-section">
+            <h3>Variants</h3>
+            <div className="variant-list">
+              {formData.variants.map((variant, index) => (
+                <div key={index} className="variant-item">
+                  <div className="variant-info">
+                    <div className="form-group">
+                      <label>Size</label>
+                      <select
+                        value={variant.name}
+                        onChange={(e) => handleVariantChange(index, 'name', e.target.value)}
+                        required
+                      >
+                        <option value="">Select Size</option>
+                        {VARIANT_SIZES.map(size => (
+                          <option key={size} value={size}>
+                            {size}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="form-group">
+                      <label>Price</label>
+                      <input
+                        type="number"
+                        value={variant.price}
+                        onChange={(e) => handleVariantChange(index, 'price', e.target.value)}
+                        placeholder="Enter price"
+                        required
+                        min="0"
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label>Stock</label>
+                      <input
+                        type="number"
+                        value={variant.stock_quantity}
+                        onChange={(e) => handleVariantChange(index, 'stock_quantity', e.target.value)}
+                        placeholder="Enter stock quantity"
+                        required
+                        min="0"
+                      />
+                    </div>
+                  </div>
+                  {index > 0 && (
                     <button
                       type="button"
+                      onClick={() => removeVariant(index)}
+                      className="remove-button"
+                    >
+                      <FontAwesomeIcon icon={faTrash} />
+                    </button>
+                  )}
+                </div>
+              ))}
+            </div>
+            {formData.variants.length < VARIANT_SIZES.length && (
+              <button
+                type="button"
+                onClick={addVariant}
+                className="add-button"
+              >
+                <FontAwesomeIcon icon={faPlus} /> Add Variant
+              </button>
+            )}
+          </div>
+
+          {/* FAQs */}
+          <div className="form-section">
+            <h3>FAQs</h3>
+            <div className="faq-list">
+              {formData.faqs.map((faq, index) => (
+                <div key={index} className="faq-item">
+                  <div className="faq-inputs">
+                    <div className="form-group">
+                      <label>Question</label>
+                      <input
+                        type="text"
+                        value={faq.question}
+                        onChange={(e) => handleFaqChange(index, 'question', e.target.value)}
+                        placeholder="Enter question"
+                        required
+                      />
+                    </div>
+                    <div className="form-group">
+                      <label>Answer</label>
+                      <textarea
+                        value={faq.answer}
+                        onChange={(e) => handleFaqChange(index, 'answer', e.target.value)}
+                        placeholder="Enter answer"
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div className="faq-actions">
+                    <button
+                      type="button"
+                      onClick={() => removeFaq(index)}
+                      className="remove-button"
+                    >
+                      <FontAwesomeIcon icon={faTrash} />
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <button
+              type="button"
+              onClick={addFaq}
+              className="add-button"
+            >
+              <FontAwesomeIcon icon={faPlus} /> Add FAQ
+            </button>
+          </div>
+
+          {/* Images */}
+          <div className="form-section">
+            <h3>Product Images</h3>
+            <div className="form-group">
+              <label>Upload Images</label>
+              <input
+                type="file"
+                onChange={handleImageChange}
+                multiple
+                accept="image/*"
+              />
+            </div>
+            {imagePreview.length > 0 && (
+              <div className="image-preview">
+                {imagePreview.map((preview, index) => (
+                  <div key={index} className="image-item">
+                    <img src={preview} alt={`Preview ${index + 1}`} />
+                    <button
+                      type="button"
+                      onClick={() => removeImage(index)}
                       className="remove-image"
-                      onClick={() => handleRemoveImage(index)}
                     >
                       <FontAwesomeIcon icon={faTimes} />
                     </button>
                   </div>
                 ))}
               </div>
-            </div>
-
-            <div className="form-group full-width">
-              <label>Variants</label>
-              <div className="variant-list">
-                {formData.variants.map((variant, index) => (
-                  <div key={index} className="variant-item">
-                    <div className="variant-info">
-                      <select
-                        value={variant.name}
-                        onChange={(e) => handleVariantChange(index, 'name', e.target.value)}
-                        className="add-product-modal__select"
-                      >
-                        <option value="">Select size</option>
-                        {VARIANT_SIZES.map(size => (
-                          <option key={size} value={size}>{size}</option>
-                        ))}
-                      </select>
-                      <input
-                        type="number"
-                        placeholder="Price"
-                        value={variant.price}
-                        onChange={(e) => handleVariantChange(index, 'price', e.target.value)}
-                      />
-                      <input
-                        type="number"
-                        placeholder="Stock"
-                        value={variant.stock_quantity}
-                        onChange={(e) => handleVariantChange(index, 'stock_quantity', e.target.value)}
-                      />
-                    </div>
-                    <button
-                      type="button"
-                      className="remove-button"
-                      onClick={() => removeVariant(index)}
-                    >
-                      <FontAwesomeIcon icon={faTrash} />
-                    </button>
-                  </div>
-                ))}
-                <button type="button" onClick={addVariant}>
-                  Add Variant
-                </button>
-              </div>
-            </div>
+            )}
           </div>
 
-          {error && (
-            <div className="add-product-modal__error" role="alert">
-              <span>{error}</span>
-            </div>
-          )}
-          {success && (
-            <div className="add-product-modal__success" role="alert">
-              <span>{success}</span>
-            </div>
-          )}
+          {error && <div className="error-message">{error}</div>}
+          {success && <div className="success-message">{success}</div>}
 
           <div className="form-actions">
-            <button type="button" className="cancel-button" onClick={onClose}>
+            <button
+              type="button"
+              onClick={onClose}
+              className="secondary"
+              disabled={isSubmitting}
+            >
               Cancel
             </button>
-            <button type="submit" className="submit-button" disabled={isSubmitting}>
-              {isSubmitting ? 'Adding...' : 'Add Product'}
+            <button
+              type="submit"
+              className="primary"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? 'Adding Product...' : 'Add Product'}
             </button>
           </div>
         </form>

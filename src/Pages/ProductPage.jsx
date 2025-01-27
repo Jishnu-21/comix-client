@@ -5,6 +5,7 @@ import Header from '../Components/Header';
 import Footer from '../Components/Footer';
 import Banner from '../Components/ProductPage/Banner';
 import SearchBar from '../Components/ProductPage/SearchBar';
+import MobileFilter from '../Components/ProductPage/MobileFilter';
 import ProductGridLayout from '../Components/ProductPage/ProductGridLayout'; 
 import Touch from '../Components/Touch';
 import LoadingScreen from '../Components/LoadingScreen';
@@ -69,8 +70,15 @@ const ProductPage = () => {
       <Header />
       <div className="container">
         <Banner />
-        <SearchBar searchTerm={searchTerm} handleSearch={setSearchTerm} />
-        
+        <div className="search-filter-row">
+          <SearchBar searchTerm={searchTerm} handleSearch={setSearchTerm} />
+          <MobileFilter 
+            sortOption={sortOption}
+            setSortOption={setSortOption}
+            selectedFilters={selectedFilters}
+            setSelectedFilters={setSelectedFilters}
+          />
+        </div>
         {loading ? (
           <LoadingScreen />
         ) : error ? (

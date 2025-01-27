@@ -1,16 +1,16 @@
 import React from 'react';
-import '../../Assets/Css/ProductPage/SearchBar.scss'; // Import the SCSS file
+import '../../Assets/Css/ProductPage/SearchBar.scss';
 
-const SearchBar = ({searchTerm , handleSearch }) => {
+const SearchBar = ({searchTerm, handleSearch}) => {
     return (
-        <div className="search-bar-container mt-4 d-flex justify-content-center">
-            <form className=" form-container d-flex w-100">
+        <div className="search-bar-container-product">
+            <form className="form-container">
                 <input 
                     type="text" 
                     className="form-control" 
-                    placeholder="Find your favorite products" 
+                    placeholder="Search products..." 
                     aria-label="Search"
-                    value={searchTerm} 
+                    value={searchTerm}
                     onChange={(e) => handleSearch(e.target.value)}
                 />
                 <button type="submit" className="btn btn-light" onClick={(e) => e.preventDefault()}>

@@ -3,13 +3,14 @@ import axios from 'axios';
 import Slider from 'react-slick';
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { API_URL } from '../../config/api';
 import defaultImage from '../../Assets/Image/main-image.png'
 import '../../Assets/Css/MainSection.scss'
 
 const MainSlider = () => {
   const [banners, setBanners] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchBanners();
@@ -53,25 +54,22 @@ const MainSlider = () => {
   };
 
   const renderShopNowButton = (link) => {
-    if (link.startsWith('http://') || link.startsWith('https://')) {
-      return (
-        <a href={link} target="_blank" rel="noopener noreferrer" className="shop-now-btn no-underline">
-          <div className="btn-content">
-            SHOP NOW
-            <FontAwesomeIcon icon={faChevronRight} className="social-icon" />
-          </div>
-        </a>
-      );
-    } else {
-      return (
-        <Link to={link} className="shop-now-btn no-underline">
-          <div className="btn-content">
-            SHOP NOW
-            <FontAwesomeIcon icon={faChevronRight} className="social-icon" />
-          </div>
-        </Link>
-      );
-    }
+    const handleClick = () => {
+      if (link.startsWith('http://') || link.startsWith('https://')) {
+        window.location.href = link;
+      } else {
+        navigate(link);
+      }
+    };
+
+    return (
+      <button onClick={handleClick} className="shop-now-btn no-underline">
+        <div className="btn-content">
+          SHOP NOW
+          <FontAwesomeIcon icon={faChevronRight} className="social-icon" />
+        </div>
+      </button>
+    );
   };
 
   return (
@@ -90,7 +88,7 @@ const MainSlider = () => {
                     rgba(255, 255, 255, 0) 45%
                   ), url(${banner.image_url})`,
                   backgroundPosition: 'center right',
-                  backgroundSize: 'cover'
+                  backgroundSize: 'fill'
                 }} />
                 <div className="content-wrapper">
                   <h1>{banner.title}</h1>

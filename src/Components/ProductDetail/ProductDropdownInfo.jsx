@@ -27,7 +27,6 @@ const DropdownSection = ({ title, content, isOpen, toggleOpen, rating, reviewCou
   <div className={`dropdown-section ${isOpen ? 'open' : ''}`}>
     <div className="dropdown-header" onClick={toggleOpen}>
       <h3 className="dropdown-title">
-        <FontAwesomeIcon icon={faCircle} className="bullet-icon" />
         {title}
         {rating && reviewCount && (
           <span className="rating-info">
@@ -41,7 +40,7 @@ const DropdownSection = ({ title, content, isOpen, toggleOpen, rating, reviewCou
         className={`dropdown-icon ${isOpen ? 'open' : ''}`} 
       />
     </div>
-    {isOpen && <div className="dropdown-content">{content}</div>}
+    <div className={`dropdown-content ${isOpen ? 'open' : ''}`}>{content}</div>
   </div>
 );
 
@@ -102,7 +101,7 @@ const ReviewSection = ({ reviews, currentPage, totalPages, onPageChange }) => {
   );
 };
 
-const ProductDropdownInfo = ({ description, ingredients, faqs, additionalDetails, productId }) => {
+const ProductDropdownInfo = ({ description, ingredients, faqs, additionalDetails, productId, product }) => {
   const [openSection, setOpenSection] = useState('');
   const [reviews, setReviews] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -204,7 +203,46 @@ const ProductDropdownInfo = ({ description, ingredients, faqs, additionalDetails
       />
       <DropdownSection
         title="INGREDIENTS"
-        content={<p>{formatArrayField(ingredients)}</p>}
+        content={
+          <div className="ingredients-section">
+            <p className="ingredients-list">{formatArrayField(ingredients)}</p>
+            
+            {product?.hero_ingredients?.length > 0 && (
+              <div className="hero-ingredients">
+                <h4 className="hero-title">HERO INGREDIENTS</h4>
+                <div className="hero-ingredients-grid">
+                  {product.hero_ingredients.map((heroIng, index) => {
+                    // Log the hero ingredient data to debug
+                    console.log('Hero Ingredient:', heroIng);
+                    
+                    return (
+                      <div key={index} className="hero-ingredient-card">
+                        <div className="hero-ingredient-image">
+                          <img 
+                            src={heroIng.image_url || '/placeholder-image.jpg'} 
+                            alt={heroIng.name || 'Hero Ingredient'}
+                            onError={(e) => {
+                              console.log('Image failed to load:', e.target.src);
+                              e.target.src = '/placeholder-image.jpg';
+                            }}
+                          />
+                        </div>
+                        <div className="hero-ingredient-info">
+                          <h5 className="hero-ingredient-name">
+                            {heroIng.name || 'Unknown Ingredient'}
+                          </h5>
+                          <p className="hero-ingredient-desc">
+                            {heroIng.description || 'No description available'}
+                          </p>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+          </div>
+        }
         isOpen={openSection === 'ingredients'}
         toggleOpen={() => toggleSection('ingredients')}
       />

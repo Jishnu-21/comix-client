@@ -44,7 +44,9 @@ const ProductDetail = () => {
         console.log('Fetching product details...');
         const response = await axios.get(`${API_URL}/products/details/${slug}`);
         if (response.data.success) {
-          console.log('Product details fetched successfully:', response.data.product);
+          console.log('Product details:', response.data.product);
+          // Log hero ingredients specifically
+          console.log('Hero Ingredients:', response.data.product.hero_ingredients);
           setProduct(response.data.product);
           await trackProductVisit(response.data.product);
         } else {
@@ -158,9 +160,10 @@ const ProductDetail = () => {
               <ProductDropdownInfo
                 description={product.description}
                 ingredients={product.ingredients}
-                faqs={product.faqs || []}
-                additionalDetails={product.additionalDetails}
+                faqs={product.faqs}
+                additionalDetails={product.additional_info}
                 productId={product._id}
+                product={product}
               />
               <div className="mobile-before-after">
                 <h2>Before and After</h2>
@@ -220,9 +223,10 @@ const ProductDetail = () => {
                       <ProductDropdownInfo
                         description={product.description}
                         ingredients={product.ingredients}
-                        faqs={product.faqs || []}
-                        additionalDetails={product.additionalDetails}
+                        faqs={product.faqs}
+                        additionalDetails={product.additional_info}
                         productId={product._id}
+                        product={product}
                       />
                       <div className="image-comparison-container">
                         <h2 className='kavya'>Before and After</h2>
@@ -257,9 +261,10 @@ const ProductDetail = () => {
                   <ProductDropdownInfo
                     description={product.description}
                     ingredients={product.ingredients}
-                    faqs={product.faqs || []}
-                    additionalDetails={product.additionalDetails}
+                    faqs={product.faqs}
+                    additionalDetails={product.additional_info}
                     productId={product._id}
+                    product={product}
                   />
                 </div>
               </div>

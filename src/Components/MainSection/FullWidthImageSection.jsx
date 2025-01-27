@@ -54,8 +54,13 @@ const FullWidthImageSection = () => {
 
   const handlePlayVideo = () => {
     if (videoRef.current) {
-      videoRef.current.play();
-      setIsPlaying(true);
+      videoRef.current.play()
+        .then(() => {
+          setIsPlaying(true);
+        })
+        .catch((error) => {
+          console.error('Error playing video:', error);
+        });
     }
   };
 
@@ -80,6 +85,7 @@ const FullWidthImageSection = () => {
           scrollTriggerRef.current.kill();
         }
 
+        // Normalize scroll behavior for mobile devices
         ScrollTrigger.normalizeScroll(true);
 
         const endValue = video.duration * 150;
@@ -119,7 +125,7 @@ const FullWidthImageSection = () => {
         if (scrollTriggerRef.current) {
           scrollTriggerRef.current.kill();
         }
-        ScrollTrigger.normalizeScroll(false);
+        ScrollTrigger.normalizeScroll(false); // Cleanup
       };
     }
   }, []);

@@ -2,6 +2,8 @@ import React from 'react';
 import '../../Assets/Css/Cart/CartProduct.scss';
 
 const CartProduct = ({ product, onQuantityChange, onDelete }) => {
+  const isMobile = window.innerWidth <= 768;
+
   if (!product) {
     return null;
   }
@@ -20,6 +22,62 @@ const CartProduct = ({ product, onQuantityChange, onDelete }) => {
   // Log the product and display data
   console.log('Product data:', product);
   console.log('Display data:', displayData);
+
+  if (isMobile) {
+    return (
+      <div className="cart-product-mobile">
+        <div className="product-image">
+          <img src={displayData.image_urls?.[0] || '/placeholder-image.jpg'} alt={displayData.name} />
+        </div>
+        <div className="product-details">
+          <h3 className="product-name">{displayData.name}</h3>
+          <div className="product-price">₹{product.price}</div>
+          <div className="quantity-controls">
+            <button
+              onClick={() => onQuantityChange({
+                product_id: productId,
+                variant_name: product.variant_name,
+                product_name: displayData.name,
+                quantity: product.quantity - 1,
+                price: product.price,
+                image_urls: displayData.image_urls,
+                description: displayData.description,
+                variants: displayData.variants,
+                total_price: (product.quantity - 1) * product.price
+              })}
+              disabled={product.quantity <= 1}
+              className="quantity-btn"
+            >
+              -
+            </button>
+            <span className="quantity">{product.quantity}</span>
+            <button
+              onClick={() => onQuantityChange({
+                product_id: productId,
+                variant_name: product.variant_name,
+                product_name: displayData.name,
+                quantity: product.quantity + 1,
+                price: product.price,
+                image_urls: displayData.image_urls,
+                description: displayData.description,
+                variants: displayData.variants,
+                total_price: (product.quantity + 1) * product.price
+              })}
+              className="quantity-btn"
+            >
+              +
+            </button>
+            <button
+              onClick={() => onDelete(productId, product.variant_name)}
+              className="remove-btn"
+            >
+              Remove
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   // Define maxQuantity and create quantity options array
   const maxQuantity = 9;

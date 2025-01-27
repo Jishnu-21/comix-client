@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import CartProduct from './CartProduct';
+import OrderSummary from './OrderSummary';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 import '../../Assets/Css/Cart/MobileCart.scss';
@@ -11,7 +12,13 @@ const MobileCart = ({
   handleDelete,
   subtotal,
   itemCount,
-  onProceedToBuy 
+  onProceedToBuy,
+  couponCode,
+  setCouponCode,
+  applyCoupon,
+  couponDiscount,
+  shippingCost,
+  finalAmount
 }) => {
   const formattedSubtotal = new Intl.NumberFormat('en-IN', {
     style: 'currency',
@@ -72,30 +79,24 @@ const MobileCart = ({
               <span className="shipping">Free</span>
             </div>
           </div>
-          <button 
-            className="checkout-button"
-            onClick={onProceedToBuy}
-          >
-            Proceed to Checkout
-          </button>
+          <div className="mobile-order-summary">
+            <OrderSummary
+              subtotal={subtotal}
+              itemCount={itemCount}
+              onProceedToBuy={onProceedToBuy}
+              couponCode={couponCode}
+              setCouponCode={setCouponCode}
+              applyCoupon={applyCoupon}
+              couponDiscount={couponDiscount}
+              shippingCost={shippingCost}
+              finalAmount={finalAmount}
+              isMobile={true}
+            />
+          </div>
         </div>
       )}
 
       {/* Recommended Products Section */}
-      <div className="recommended-section">
-        <h2>You May Also Like</h2>
-        <div className="recommended-products">
-          {cartProducts.slice(0, 4).map((product) => (
-            <CartProduct
-              key={`recommended-${product.product_id}-${product.variant_name}`}
-              product={product}
-              isRecommended={true} // Add this prop to handle recommended product styling
-              onQuantityChange={handleQuantityChange}
-              onDelete={handleDelete}
-            />
-          ))}
-        </div>
-      </div>
     </div>
   );
 };
