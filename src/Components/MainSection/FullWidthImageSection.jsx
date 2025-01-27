@@ -5,7 +5,7 @@ import '../../Assets/Css/FullWidthImageSection.scss';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const VIDEO_URL = 'https://scrollyvideo.js.org/goldengate.mp4';
+const VIDEO_URL = 'https://www.apple.com/media/us/mac-pro/2013/16C1b6b5-1d91-4fef-891e-ff2fc1c1bb58/videos/macpro_main_desktop.mp4';
 const CACHE_NAME = 'video-cache-v1';
 
 // Create a singleton for video blob
