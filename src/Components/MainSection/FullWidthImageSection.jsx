@@ -8,7 +8,6 @@ gsap.registerPlugin(ScrollTrigger);
 const VIDEO_URL = 'https://www.apple.com/media/us/mac-pro/2013/16C1b6b5-1d91-4fef-891e-ff2fc1c1bb58/videos/macpro_main_desktop.mp4';
 const CACHE_NAME = 'video-cache-v1';
 
-// Create a singleton for video blob
 let cachedVideoBlob = null;
 
 const FullWidthImageSection = () => {
@@ -17,9 +16,10 @@ const FullWidthImageSection = () => {
   const videoRef = useRef(null);
   const scrollTriggerRef = useRef(null);
 
-  useEffect(() => {
-    const loadVideo = async () => {
-      try {
+  const loadVideo = async () => {
+    try {
+      // Check if the code is running in the browser and if `caches` is supported
+      if (typeof window !== 'undefined' && 'caches' in window) {
         if (!cachedVideoBlob) {
           const cache = await caches.open(CACHE_NAME);
           let videoResponse = await cache.match(VIDEO_URL);
@@ -38,18 +38,32 @@ const FullWidthImageSection = () => {
         if (videoRef.current) {
           videoRef.current.src = cachedVideoBlob;
         }
-      } catch (error) {
-        console.error('Error loading video:', error);
+      } else {
+        // Fallback: Load the video directly if `caches` is not available
+        console.warn('Cache API not available. Falling back to direct video URL.');
+        if (videoRef.current) {
+          videoRef.current.src = VIDEO_URL;
+        }
       }
-    };
+    } catch (error) {
+      console.error('Error loading video:', error);
+      // Fallback: Load the video directly if an error occurs
+      if (videoRef.current) {
+        videoRef.current.src = VIDEO_URL;
+      }
+    }
+  };
 
-    loadVideo();
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      loadVideo();
+    }
   }, []);
 
   useEffect(() => {
     if (videoRef.current) {
       const video = videoRef.current;
-      
+
       const initVideo = () => {
         video.pause();
         video.currentTime = 0;
@@ -61,10 +75,12 @@ const FullWidthImageSection = () => {
           scrollTriggerRef.current.kill();
         }
 
+        const endValue = video.duration * 150;
+
         scrollTriggerRef.current = ScrollTrigger.create({
           trigger: containerRef.current,
           start: 'top top',
-          end: () => `+=${video.duration * 150}`,
+          end: `+=${endValue}`,
           scrub: 0.5,
           pin: true,
           anticipatePin: 1,
@@ -109,6 +125,7 @@ const FullWidthImageSection = () => {
           muted
           playsInline
           className="full-width-video"
+          onError={(e) => console.error('Video playback error:', e)}
         />
       </div>
     </section>
