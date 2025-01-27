@@ -83,10 +83,16 @@ const ChatbotModal = ({ isOpen, onClose, is404Page }) => {
   return (
     <div className={`chatbot-modal ${isOpen ? 'open' : ''}`}>
       <div className="chatbot-header">
-        <img src={botImage} alt="Ask Alia" className="bot-image" />
-        <h2>Alia</h2>
-        <button className="close-button" onClick={onClose}>
-          <X size={24} />
+        <div className="header-content">
+          <img src={botImage} alt="Bot Avatar" className="bot-avatar" />
+          <span className="header-text">Ask Alia</span>
+        </div>
+        <button 
+          className="modal-close-button" 
+          onClick={onClose}
+          aria-label="Close chat"
+        >
+          ×
         </button>
       </div>
       <div className="chatbot-content">
@@ -126,6 +132,11 @@ const ChatbotModal = ({ isOpen, onClose, is404Page }) => {
           />
           <Send className="send-icon" size={18} onClick={handleSendMessage} />
         </div>
+      </div>
+      <div className="chatbot-footer">
+        <button className="close-chat-button" onClick={onClose}>
+          Close Chat
+        </button>
       </div>
     </div>
   );

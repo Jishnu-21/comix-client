@@ -8,6 +8,11 @@ import '../../Assets/Css/ProductPage/ProductGridLayout.scss';
 import axios from 'axios'; // Import axios for API calls
 import { API_URL } from '../../config/api';
 import { Link } from 'react-router-dom'; // Import Link from react-router-dom
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation, Pagination } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
 const itemsPerPage = 9;
 
 const ProductGridLayout = ({ searchTerm, sortOption, setSortOption }) => {
@@ -114,10 +119,10 @@ const ProductGridLayout = ({ searchTerm, sortOption, setSortOption }) => {
   if (error) return <p>{error}</p>; // Error state
 
   // Check if the screen size is mobile
-  const isMobile = window.innerWidth <= 768; // Adjust the breakpoint as needed
+  const isMobile = window.innerWidth <= 767; // Adjust the breakpoint as needed
 
   // Check for iPad
-  const isIpad = window.innerWidth >= 768 && window.innerWidth <= 1024;
+  const isIpad = window.innerWidth >= 768 && window.innerWidth <= 991;
   const isPortrait = window.innerHeight > window.innerWidth;
 
   return (
@@ -202,19 +207,36 @@ const ProductGridLayout = ({ searchTerm, sortOption, setSortOption }) => {
 
       {isMobile ? (
         <MobileBestSellers bestSellers={bestSellers} />
+      ) : isIpad ? (
+        <div className="best-sellers-swiper">
+          <Swiper
+            modules={[Navigation, Pagination]}
+            spaceBetween={15}
+            slidesPerView="auto"
+            navigation
+            pagination={{ clickable: true }}
+            className="best-sellers-grid"
+          >
+            {bestSellers.map((product) => (
+              <SwiperSlide key={product._id}>
+                <CardComponent
+                  image={product.image_urls[0]}
+                  title={product.name}
+                  price={product.variants?.[0]?.price || 'N/A'}
+                  description={product.description}
+                  slug={product.slug}
+                />
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </div>
       ) : (
         <div className="best-sellers-grid">
           <div className="row">
-            {bestSellers.slice(0, isIpad && isPortrait ? 4 : 4).map((product) => (
+            {bestSellers.slice(0, 4).map((product) => (
               <div 
                 key={product._id} 
-                className={`${
-                  isIpad 
-                    ? isPortrait 
-                      ? 'col-md-6' 
-                      : 'col-lg-4'
-                    : 'col-xl-3 col-lg-4 col-md-6'
-                }`}
+                className="col-xl-3 col-lg-4 col-md-6"
               >
                 <CardComponent
                   image={product.image_urls[0]}

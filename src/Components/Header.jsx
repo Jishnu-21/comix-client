@@ -49,6 +49,7 @@ const Header = () => {
   const [recentSearchesLoading, setRecentSearchesLoading] = useState(true);
   const [currentMarqueeIndex, setCurrentMarqueeIndex] = useState(0);
   const [isChatbotOpen, setIsChatbotOpen] = useState(false);
+  const [isFooterVisible, setIsFooterVisible] = useState(false);
   const marqueeItems = [
     "🎉 Welcome to Comix - Your Beauty Destination!",
     "✨ Free Shipping on Orders Over ₹499",
@@ -199,12 +200,16 @@ const Header = () => {
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
-    document.body.classList.toggle('sidebar-open');
+    // Toggle body scroll
+    if (!isSidebarOpen) {
+      document.body.classList.add('sidebar-open');
+    } else {
+      document.body.classList.remove('sidebar-open');
+    }
   };
 
   useEffect(() => {
     return () => {
-      // Cleanup: remove sidebar-open class when component unmounts
       document.body.classList.remove('sidebar-open');
     };
   }, []);
@@ -416,6 +421,23 @@ const Header = () => {
     setIsChatbotOpen(!isChatbotOpen);
   };
 
+  useEffect(() => {
+    const checkFooterVisibility = () => {
+      const footer = document.querySelector('footer');
+      if (footer) {
+        const footerRect = footer.getBoundingClientRect();
+        const isVisible = footerRect.top <= window.innerHeight;
+        setIsFooterVisible(isVisible);
+      }
+    };
+
+    window.addEventListener('scroll', checkFooterVisibility);
+    // Initial check
+    checkFooterVisibility();
+
+    return () => window.removeEventListener('scroll', checkFooterVisibility);
+  }, []);
+
   return (
     <header className={`header ${isHeaderScrolled ? 'header-scrolled' : ''}`}>
       <div className="header-top">
@@ -549,8 +571,8 @@ const Header = () => {
         </div>
         <nav className="nav">
           {navLinks.map((navItem, index) => (
-            <Link key={index} to={navItem.link} className="nav-link" onClick={toggleSidebar}>
-              {navItem.name}
+            <Link key={index} to='/product' className="nav-link" onClick={toggleSidebar}>
+            {navItem.name}
             </Link>
           ))}
           {isAuthenticated ? (
@@ -575,7 +597,7 @@ const Header = () => {
             onMouseEnter={() => handleMouseEnter(index)}
             onMouseLeave={handleMouseLeaveLips}
           >
-            <Link to={navItem.link} className="nav-link">
+            <Link to="/product" className="nav-link">
               {navItem.name}
             </Link>
             {navItem.dropdown && activeDropdown === index && (
@@ -597,7 +619,7 @@ const Header = () => {
       </nav>
 
       {/* Mobile Footer Navigation */}
-      <div className="mobile-footer">
+      <div className={`mobile-footer ${isFooterVisible ? 'hidden' : ''}`}>
         <Link to="/" className={`footer-item ${window.location.pathname === '/' ? 'active' : ''}`}>
           <SocialIcon icon={faHome} />
           <span>Home</span>

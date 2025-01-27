@@ -7,7 +7,6 @@ import axios from 'axios'; // Import axios for API calls
 import { API_URL } from '../../config/api';
 import MobileFilter from './MobileFilter';
 
-
 const itemsPerPage = 9;
 const ProductGridLayout = ({ searchTerm, sortOption, setSortOption }) => {
   const [products, setProducts] = useState([]); // State to hold products
@@ -15,6 +14,37 @@ const ProductGridLayout = ({ searchTerm, sortOption, setSortOption }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true); // Loading state
   const [error, setError] = useState(null); // Error state
+  const [filters, setFilters] = useState({
+    category: null,
+    priceRange: { min: 0, max: 1000 }
+  });
+
+  const handleFilterChange = (newFilters) => {
+    setFilters(newFilters);
+  };
+
+  // Get filtered products
+  const getFilteredProducts = () => {
+    return products.filter(product => {
+      // Filter by category
+      if (filters.category && product.category !== filters.category) {
+        return false;
+      }
+
+      // Filter by price
+      const price = parseFloat(product.variants[0].price);
+      if (price < filters.priceRange.min || price > filters.priceRange.max) {
+        return false;
+      }
+
+      // Filter by search term
+      if (searchTerm && !product.name.toLowerCase().includes(searchTerm.toLowerCase())) {
+        return false;
+      }
+
+      return true;
+    });
+  };
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -53,7 +83,33 @@ const ProductGridLayout = ({ searchTerm, sortOption, setSortOption }) => {
     fetchBestSellers();
   }, []);
 
-  const totalPages = Math.ceil(products.length / itemsPerPage);
+  // Apply sorting to filtered products
+  const getSortedProducts = (filteredProducts) => {
+    if (!sortOption) return filteredProducts;
+
+    return [...filteredProducts].sort((a, b) => {
+      switch (sortOption) {
+        case 'AtoZ':
+          return a.name.localeCompare(b.name);
+        case 'ZtoA':
+          return b.name.localeCompare(a.name);
+        case 'priceLowToHigh':
+          return parseFloat(a.variants[0].price) - parseFloat(b.variants[0].price);
+        case 'priceHighToLow':
+          return parseFloat(b.variants[0].price) - parseFloat(a.variants[0].price);
+        default:
+          return 0;
+      }
+    });
+  };
+
+  const filteredProducts = getFilteredProducts();
+  const sortedProducts = getSortedProducts(filteredProducts);
+  const totalPages = Math.ceil(sortedProducts.length / itemsPerPage);
+  const displayedProducts = sortedProducts.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
 
   const handleNextPage = () => {
     if (currentPage < totalPages) setCurrentPage(currentPage + 1);
@@ -63,109 +119,69 @@ const ProductGridLayout = ({ searchTerm, sortOption, setSortOption }) => {
     if (currentPage > 1) setCurrentPage(currentPage - 1);
   };
 
-  const filteredProducts = searchTerm.trim() === ''
-    ? products
-    : products.filter((product) =>
-        product.name.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-
-  const displayedProducts = filteredProducts.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
-
-  // Function to sort products based on the selected option
-  const sortProducts = (products) => {
-    switch (sortOption) {
-      case 'AtoZ':
-        return products.sort((a, b) => a.name.localeCompare(b.name));
-      case 'ZtoA':
-        return products.sort((a, b) => b.name.localeCompare(a.name));
-      case 'priceLowToHigh':
-        return products.sort((a, b) => a.variants[0].price - b.variants[0].price);
-      case 'priceHighToLow':
-        return products.sort((a, b) => b.variants[0].price - a.variants[0].price);
-      default:
-        return products;
-    }
-  };
-
-  const sortedProducts = sortProducts(filteredProducts);
-
   if (loading) return <p>Loading products...</p>; // Loading state
   if (error) return <p>{error}</p>; // Error state
 
   return (
-    <div className="product-grid-layout container mt-5">
+    <div className="product-grid-container">
       <div className="row">
         {/* Left Section */}
         <div className="col-sm-12 col-md-12 col-lg-4 col-xl-3 col-12">
-          <ProductFilters />
+          <ProductFilters onFilterChange={handleFilterChange} />
         </div>
         <MobileFilter sortOption={sortOption} setSortOption={setSortOption} />
         {/* Right Section */}
         <div className="col-sm-12 col-md-12 col-lg-8 col-xl-9 col-12">
-          <div className="result-header mb-4">
-            <div className="d-flex justify-content-between align-items-center">
-              <div className="result-count">
-                <p>Showing all {filteredProducts.length} results</p>
-              </div>
-              <div className="sort-by dropdown">
-                <select 
-                  id="sortOptions" 
-                  value={sortOption} 
-                  onChange={(e) => setSortOption(e.target.value)} // Use setSortOption here
-                  className="btn btn-dark dropdown-toggle"
-                >
-                  <option value="" disabled>Sort By</option> {/* "Sort By" will be shown initially but disabled */}
-                  <option value="AtoZ">A to Z</option>
-                  <option value="ZtoA">Z to A</option>
-                  <option value="priceLowToHigh">Price Low to High</option>
-                  <option value="priceHighToLow">Price High to Low</option>
-                </select>
-              </div>
-            </div>
-          </div>
-
-          <div className="row">
-            {displayedProducts.length > 0 ? (
-              displayedProducts.map((product) => (
-                <div className="col-6 col-md-4 col-lg-4" key={product._id}> {/* Ensure proper column classes */}
-                  <ProductCard product={product} />
-                </div>
-              ))
+          <div className="product-grid">
+            {loading ? (
+              <div>Loading...</div>
+            ) : error ? (
+              <div>{error}</div>
+            ) : displayedProducts.length === 0 ? (
+              <div>No products found matching your criteria</div>
             ) : (
-              <p>No products found</p>
+              <>
+                <div className="row">
+                  {displayedProducts.map((product) => (
+                    <div key={product._id} className="col-sm-6 col-md-6 col-lg-4 mb-4">
+                      <ProductCard product={product} />
+                    </div>
+                  ))}
+                </div>
+                {totalPages > 1 && (
+                  <div className="pagination justify-content-center mt-4">
+                    <button
+                      className="btn btn-outline-primary me-2"
+                      onClick={handlePreviousPage}
+                      disabled={currentPage === 1}
+                    >
+                      Previous
+                    </button>
+                    {[...Array(totalPages).keys()].map((num) => (
+                      <button
+                        key={num + 1}
+                        onClick={() => setCurrentPage(num + 1)}
+                        className={`btn ${
+                          currentPage === num + 1 ? 'btn-primary' : 'btn-outline-primary'
+                        } me-2`}
+                      >
+                        {num + 1}
+                      </button>
+                    ))}
+                    <button
+                      className="btn btn-outline-primary"
+                      onClick={handleNextPage}
+                      disabled={currentPage === totalPages}
+                    >
+                      Next
+                    </button>
+                  </div>
+                )}
+              </>
             )}
           </div>
-
-          <nav>
-            <ul className="pagination justify-content-center ">
-              <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
-                <button className="page-link" onClick={handlePreviousPage}>
-                  &laquo;
-                </button>
-              </li>
-              {[...Array(totalPages).keys()].map((num) => (
-                <li
-                  key={num + 1}
-                  className={`page-item ${currentPage === num + 1 ? 'active' : ''}`}
-                >
-                  <button className="page-link" onClick={() => setCurrentPage(num + 1)}>
-                    {num + 1}
-                  </button>
-                </li>
-              ))}
-              <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
-                <button className="page-link" onClick={handleNextPage}>
-                   &raquo;
-                </button>
-              </li>
-            </ul>
-          </nav>
         </div>
       </div>
-
       <div className="row mt-5">
         <div className="col-lg-10 col-md-9 col-sm-12">
           <p className="section-subtitle">

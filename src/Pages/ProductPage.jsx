@@ -17,16 +17,36 @@ const ProductPage = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [selectedFilters, setSelectedFilters] = useState({
+    category: null,
+    skinType: null,
+    priceRange: {
+      min: 0,
+      max: 1000
+    }
+  });
 
   useEffect(() => {
     fetchProducts();
-  }, []);
+  }, [selectedFilters]); // Re-fetch when filters change
 
   const fetchProducts = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`${API_URL}/products`);
-      console.log('Fetched products:', response.data.products); // Add this line
+      // Build query parameters based on filters
+      const queryParams = new URLSearchParams();
+      
+      if (selectedFilters.category) {
+        queryParams.append('category', selectedFilters.category);
+      }
+      if (selectedFilters.skinType) {
+        queryParams.append('skinType', selectedFilters.skinType);
+      }
+      queryParams.append('minPrice', selectedFilters.priceRange.min);
+      queryParams.append('maxPrice', selectedFilters.priceRange.max);
+
+      const response = await axios.get(`${API_URL}/products?${queryParams.toString()}`);
+      console.log('Fetched products:', response.data.products);
       setProducts(response.data.products);
       setLoading(false);
     } catch (error) {
@@ -36,7 +56,14 @@ const ProductPage = () => {
     }
   };
 
-  
+  const handleFilterChange = (newFilters) => {
+    console.log('New filters:', newFilters);
+    setSelectedFilters(prevFilters => ({
+      ...prevFilters,
+      ...newFilters
+    }));
+  };
+
   return (
     <div className="product-page fade-in">
       <Header />
@@ -54,6 +81,8 @@ const ProductPage = () => {
             searchTerm={searchTerm} 
             sortOption={sortOption} 
             setSortOption={setSortOption}
+            selectedFilters={selectedFilters}
+            onFilterChange={handleFilterChange}
           />
         )}
       </div>

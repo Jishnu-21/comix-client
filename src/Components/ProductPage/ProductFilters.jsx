@@ -1,21 +1,57 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from "react-router-dom";
 import "../../Assets/Css/ProductPage/ProductFilters.scss"; // Import the SCSS file for this component
+import axios from 'axios';
+import { API_URL } from '../../config/api';
 
 const ProductFilters = () => {
   const [openSection, setOpenSection] = useState(null);
-  const [minPrice, setMinPrice] = useState('');
-  const [maxPrice, setMaxPrice] = useState('');
+  const [minPrice, setMinPrice] = useState(0);
+  const [maxPrice, setMaxPrice] = useState(1000);
+  const [categories, setCategories] = useState([]);  // Initialize as empty array
+  const [popularSubcategories, setPopularSubcategories] = useState([]);
+
+  useEffect(() => {
+    getCategories();
+  }, []);
 
   const toggleSection = (section) => {
     setOpenSection(openSection === section ? null : section);
   };
 
-  const handlePriceChange = (e, type) => {
-    const value = e.target.value.replace(/[^0-9]/g, '');
-    if (type === 'min') setMinPrice(value);
-    else setMaxPrice(value);
+  const handleMinPriceChange = (e) => {
+    const value = Number(e.target.value);
+    setMinPrice(Math.min(value, maxPrice));
   };
+
+  const handleMaxPriceChange = (e) => {
+    const value = Number(e.target.value);
+    setMaxPrice(Math.max(value, minPrice));
+  };
+
+  const getCategories = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/categories/`);
+      console.log('Categories response:', response.data);
+      // Ensure we're setting an array
+      const categoriesData = Array.isArray(response.data) ? response.data : response.data.categories || [];
+      setCategories(categoriesData);
+      
+      // Get all subcategories from all categories
+      const allSubcategories = categoriesData.reduce((acc, category) => {
+        return [...acc, ...(category.subcategories || [])];
+      }, []);
+      
+      // Randomly select 6 subcategories
+      const shuffled = allSubcategories.sort(() => 0.5 - Math.random());
+      setPopularSubcategories(shuffled.slice(0, 6));
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+      setCategories([]); // Set empty array on error
+    }
+  }
+
+  const formatPrice = (value) => `$${value}`;
 
   // Desktop version remains the same
   const DesktopFilter = () => (
@@ -44,10 +80,11 @@ const ProductFilters = () => {
           >
             <div className="accordion-body">
               <ul className="list-group">
-                <li className="list-group-item">Skincare</li>
-                <li className="list-group-item">Makeup</li>
-                <li className="list-group-item">Haircare</li>
-                <li className="list-group-item">Bodycare</li>
+                {categories.map((category) => (
+                  <li key={category._id} className="list-group-item">
+                    {category.name}
+                  </li>
+                ))}
               </ul>
             </div>
           </div>
@@ -108,19 +145,29 @@ const ProductFilters = () => {
           >
             <div className="accordion-body">
               <div className="price-range">
-                <div className="price-inputs">
-                  <input
-                    type="text"
-                    placeholder="Min"
-                    value={minPrice}
-                    onChange={(e) => handlePriceChange(e, 'min')}
-                  />
-                  <input
-                    type="text"
-                    placeholder="Max"
-                    value={maxPrice}
-                    onChange={(e) => handlePriceChange(e, 'max')}
-                  />
+                <div className="price-slider">
+                  <div className="slider-container text-white">
+                    <label>Min Price: {formatPrice(minPrice)}</label>
+                    <input
+                      type="range"
+                      min="0"
+                      max="1000"
+                      value={minPrice}
+                      onChange={handleMinPriceChange}
+                      className="price-range-input"
+                    />
+                  </div>
+                  <div className="slider-container text-white">
+                    <label>Max Price: {formatPrice(maxPrice)}</label>
+                    <input
+                      type="range"
+                      min="0"
+                      max="1000"
+                      value={maxPrice}
+                      onChange={handleMaxPriceChange}
+                      className="price-range-input"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
@@ -130,13 +177,14 @@ const ProductFilters = () => {
       <div className="browse-category">
         <h3>Browse by Popular Category</h3>
         <div className="category-tags">
-          <Link to="/cleansers">Cleansers</Link>
-          <Link to="/face-mask">Face Mask</Link>
-          <Link to="/lipstick">Lipstick</Link>
-          <Link to="/sunscreens">Sunscreens</Link>
-          <Link to="/face-moisturizers">Face Moisturizers</Link>
-          <Link to="/mascara">Mascara</Link>
-          <Link to="/foundations">Foundations</Link>
+          {popularSubcategories.map((subcategory) => (
+            <Link 
+              key={subcategory._id} 
+              to={`/category/${subcategory.name.toLowerCase().replace(/\s+/g, '-')}`}
+            >
+              {subcategory.name}
+            </Link>
+          ))}
         </div>
       </div>
     </div>
@@ -203,11 +251,32 @@ const ProductFilters = () => {
           <div className="collapse" id="priceCollapse">
             <div className="filter-card">
               <h3>Price Range</h3>
-              <ul className="filter-list">
-                <li>Under $50</li>
-                <li>$50 - $100</li>
-                <li>Over $100</li>
-              </ul>
+              <div className="price-range">
+                <div className="price-slider">
+                  <div className="slider-container">
+                    <label>Min Price: {formatPrice(minPrice)}</label>
+                    <input
+                      type="range"
+                      min="0"
+                      max="1000"
+                      value={minPrice}
+                      onChange={handleMinPriceChange}
+                      className="price-range-input"
+                    />
+                  </div>
+                  <div className="slider-container">
+                    <label>Max Price: {formatPrice(maxPrice)}</label>
+                    <input
+                      type="range"
+                      min="0"
+                      max="1000"
+                      value={maxPrice}
+                      onChange={handleMaxPriceChange}
+                      className="price-range-input"
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -216,13 +285,14 @@ const ProductFilters = () => {
       <div className="browse-category mt-4">
         <h3>Browse by Popular Category</h3>
         <div className="category-tags">
-          <Link to="/cleansers">Cleansers</Link>
-          <Link to="/face-mask">Face Mask</Link>
-          <Link to="/lipstick">Lipstick</Link>
-          <Link to="/sunscreens">Sunscreens</Link>
-          <Link to="/face-moisturizers">Face Moisturizers</Link>
-          <Link to="/mascara">Mascara</Link>
-          <Link to="/foundations">Foundations</Link>
+          {popularSubcategories.map((subcategory) => (
+            <Link 
+              key={subcategory._id} 
+              to={`/category/${subcategory.name.toLowerCase().replace(/\s+/g, '-')}`}
+            >
+              {subcategory.name}
+            </Link>
+          ))}
         </div>
       </div>
     </div>

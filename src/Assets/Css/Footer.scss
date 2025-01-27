@@ -344,7 +344,7 @@
 
   main, .main-content {
     flex: 1 0 auto;
-    padding-bottom: 60px !important;
+    padding-bottom: 0 !important;
   }
 
   footer {
@@ -359,13 +359,6 @@
   }
 
   .mobile-footer-content {
-    margin-bottom: 60px;
+    margin-bottom: 0;
   }
-}
-
-// Remove any extra spacing
-html, body {
-  margin: 0;
-  padding: 0;
-  overflow-x: hidden;
 }

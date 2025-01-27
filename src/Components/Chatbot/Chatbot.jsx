@@ -5,11 +5,16 @@ import image from '../../Assets/Image/ask alia-01.png';
 import ChatbotModal from './ChatbotModal';
 import '../../Assets/Css/Chatbot/Chatbot.scss';
 
-const Chatbot = ({ isOpen, onClose }) => {
+const Chatbot = ({ isOpen: propIsOpen, onClose: propOnClose }) => {
   const [isVisible, setIsVisible] = useState(true);
+  const [isOpen, setIsOpen] = useState(propIsOpen);
   const location = useLocation();
 
   const is404Page = location.pathname === '/404' || location.pathname === '*';
+
+  useEffect(() => {
+    setIsOpen(propIsOpen);
+  }, [propIsOpen]);
 
   // Prevent body scroll when chatbot is open on mobile
   useEffect(() => {
@@ -29,19 +34,27 @@ const Chatbot = ({ isOpen, onClose }) => {
     setIsVisible(false);
   };
 
+  const handleChatbotClick = () => {
+    setIsOpen(true);
+  };
+
+  const handleClose = () => {
+    setIsOpen(false);
+    if (propOnClose) propOnClose();
+  };
+
   if (!isVisible) return null;
 
   return (
     <>
-      {/* Add overlay for mobile */}
       <div 
         className={`chatbot-overlay ${isOpen ? 'open' : ''}`} 
-        onClick={onClose}
+        onClick={handleClose}
       />
       
       <div className={`chatbot-container ${isOpen ? 'open' : ''}`}>
         {!isOpen && (
-          <div className="chatbot-image-container" onClick={onClose}>
+          <div className="chatbot-image-container" onClick={handleChatbotClick}>
             <img src={image} alt="Ask Alia" className="chatbot-image" />
             <button 
               className="chatbot-close-button" 
@@ -54,7 +67,7 @@ const Chatbot = ({ isOpen, onClose }) => {
         )}
         <ChatbotModal 
           isOpen={isOpen} 
-          onClose={onClose} 
+          onClose={handleClose} 
           is404Page={is404Page} 
         />
       </div>
