@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes, faTrash, faPlus } from '@fortawesome/free-solid-svg-icons';
 import '../../Assets/Css/Admin/EditProductForm.scss';
 
-const VARIANT_SIZES = ['50ml', '150ml', '250ml'];
+const VARIANT_SIZES = ['50ml', '150ml', '250ml','100ml','200ml','300ml','50mg','100mg','30ml'];
 
 const EditProductForm = ({ product, onClose, onUpdate }) => {
   const [formData, setFormData] = useState({
@@ -206,6 +206,8 @@ const EditProductForm = ({ product, onClose, onUpdate }) => {
 
     try {
       const formDataToSend = new FormData();
+      
+      // Append basic fields
       formDataToSend.append('name', formData.name);
       formDataToSend.append('description', formData.description);
       formDataToSend.append('category_id', formData.category_id);
@@ -215,13 +217,16 @@ const EditProductForm = ({ product, onClose, onUpdate }) => {
       formDataToSend.append('functions', formData.functions);
       formDataToSend.append('taglines', formData.taglines);
       formDataToSend.append('additional_info', formData.additional_info);
+      
+      // Append JSON fields
       formDataToSend.append('hero_ingredients', JSON.stringify(selectedHeroIngredients));
       formDataToSend.append('variants', JSON.stringify(formData.variants));
       formDataToSend.append('faqs', JSON.stringify(formData.faqs));
       formDataToSend.append('existing_images', JSON.stringify(existingImages));
 
+      // Append new images
       newImages.forEach(image => {
-        formDataToSend.append('files', image);
+        formDataToSend.append('images', image);
       });
 
       const response = await axios.put(
@@ -242,6 +247,7 @@ const EditProductForm = ({ product, onClose, onUpdate }) => {
         onClose();
       }, 2000);
     } catch (error) {
+      console.error('Error updating product:', error);
       setError(error.response?.data?.message || 'Error updating product');
     } finally {
       setIsSubmitting(false);

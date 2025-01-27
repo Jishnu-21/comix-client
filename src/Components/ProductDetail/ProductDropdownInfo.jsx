@@ -165,6 +165,42 @@ const ProductDropdownInfo = ({ description, ingredients, faqs, additionalDetails
 
   console.log('Current state:', { openSection, reviews, isLoading, error });
 
+  const formatHowToUse = (text) => {
+    if (!text) return null;
+    // Split by newlines and filter out empty strings
+    const steps = text.split('\n').filter(step => step.trim());
+    return (
+      <div className="steps-list">
+        {steps.map((step, index) => {
+          // Remove the number prefix if it exists (e.g., "1. ", "2. ")
+          const stepText = step.replace(/^\d+\.\s*/, '').trim();
+          return (
+            <div key={index} className="step-row">
+              <span className="step-number">{index + 1}.</span>
+              <span className="step-text">{stepText}</span>
+            </div>
+          );
+        })}
+      </div>
+    );
+  };
+
+  const formatFunctions = (text) => {
+    if (!text) return null;
+    // Split only on commas that are followed by a space
+    const functions = text.split(/, /).map(func => func.trim()).filter(Boolean);
+    return (
+      <div className="benefits-list">
+        {functions.map((func, index) => (
+          <div key={index} className="benefit-row">
+            <span className="benefit-bullet">•</span>
+            <span className="benefit-text">{func}</span>
+          </div>
+        ))}
+      </div>
+    );
+  };
+
   const ReviewsDropdownSection = () => (
     <DropdownSection
       title="REVIEWS"
@@ -197,7 +233,7 @@ const ProductDropdownInfo = ({ description, ingredients, faqs, additionalDetails
     <div className="product-dropdown-info">
       <DropdownSection
         title="DESCRIPTION"
-        content={<p>{description}</p>}
+        content={<div className="description-content" dangerouslySetInnerHTML={{ __html: description }} />}
         isOpen={openSection === 'description'}
         toggleOpen={() => toggleSection('description')}
       />
@@ -245,6 +281,18 @@ const ProductDropdownInfo = ({ description, ingredients, faqs, additionalDetails
         }
         isOpen={openSection === 'ingredients'}
         toggleOpen={() => toggleSection('ingredients')}
+      />
+      <DropdownSection
+        title="HOW TO USE"
+        content={<div className="how-to-use-section">{formatHowToUse(product?.how_to_use)}</div>}
+        isOpen={openSection === 'how_to_use'}
+        toggleOpen={() => toggleSection('how_to_use')}
+      />
+      <DropdownSection
+        title="FUNCTIONS & BENEFITS"
+        content={<div className="functions-section">{formatFunctions(product?.functions)}</div>}
+        isOpen={openSection === 'functions'}
+        toggleOpen={() => toggleSection('functions')}
       />
       <DropdownSection
         title="FREQUENTLY ASKED QUESTIONS"

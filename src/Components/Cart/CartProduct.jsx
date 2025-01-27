@@ -162,7 +162,7 @@ const CartProduct = ({ product, onQuantityChange, onDelete }) => {
           </div>
 
           <div className="cart-product-description mt-3">
-            {displayData.description}
+           <span className='fw-bold'>DESCRIPTION:</span>{displayData.description}
           </div>
         </div>
 

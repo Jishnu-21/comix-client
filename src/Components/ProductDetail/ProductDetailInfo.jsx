@@ -223,6 +223,19 @@ const ProductDetailInfo = forwardRef(({ product, isMobile }, ref) => {
   const memberPrice = Math.floor(regularPrice * 0.8);
   const displayedOffers = showAllOffers ? offers : offers.slice(0, 2);
 
+  // Default taglines
+  const defaultTaglines = [
+    'Dermatologically Tested',
+    '100% Authentic Products',
+    'Free Shipping Available',
+    'Premium Quality'
+  ];
+
+  // Convert comma-separated string to array or use defaults
+  const displayTaglines = product?.taglines 
+    ? product.taglines.split(',').map(tag => tag.trim())
+    : defaultTaglines;
+
   // Only expose these methods for mobile view
   React.useImperativeHandle(ref, () => ({
     handleToggleFavorite: deviceType === 'mobile' ? handleToggleFavorite : null,
@@ -236,6 +249,12 @@ const ProductDetailInfo = forwardRef(({ product, isMobile }, ref) => {
       <div className="product-header">
         <div className="title-section">
           <h1 className="product-name">{product.name}</h1>
+          {product.category_id?.name === 'Skin Care' && (
+            <div className="skin-type-badge">
+              <span className="badge-icon">✧</span>
+              <span className="badge-text">For ALL Skin Types</span>
+            </div>
+          )}
         </div>
         <button className="share-button" onClick={handleShare}>
           <FontAwesomeIcon icon={faShare} />
@@ -256,14 +275,16 @@ const ProductDetailInfo = forwardRef(({ product, isMobile }, ref) => {
       </div>
 
       <div className="price-section">
-        <div className="regular-price">${regularPrice}</div>
-        <div className="membership-offer">
-          <div className="price-info">
-            <span className="label">PRICE</span>
-            <span className="amount">${memberPrice}</span>
+        <div className="regular-price">Rs:{regularPrice}</div>
+        <div className="product-taglines">
+          <div className="tagline-grid">
+            {displayTaglines.map((tagline, index) => (
+              <div key={index} className="tagline-item">
+                <span className="tagline-icon">✦</span>
+                <span className="tagline-text">{tagline}</span>
+              </div>
+            ))}
           </div>
-          <div className="offer-text">(SAVE 20%) + FREE Shipping</div>
-          <button className="join-now-btn">JOIN NOW</button>
         </div>
       </div>
 
@@ -329,7 +350,7 @@ const ProductDetailInfo = forwardRef(({ product, isMobile }, ref) => {
               <div className="product-details">
                 <h4>{product.name}</h4>
                 <p className="variant">{selectedVariant?.name}</p>
-                <p className="price">${regularPrice}</p>
+                <p className="price">Rs:{regularPrice}</p>
               </div>
             </div>
             <div className="action-buttons">

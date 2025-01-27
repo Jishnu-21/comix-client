@@ -5,7 +5,7 @@ import axios from 'axios';
 import { API_URL } from '../../config/api';
 import '../../Assets/Css/Admin/SharedForm.scss';
 
-const VARIANT_SIZES = ['50ml', '150ml', '250ml'];
+const VARIANT_SIZES = ['50ml', '150ml', '250ml','100ml','200ml','300ml','50mg','100mg','30ml'];
 
 const AddProductForm = ({ onClose }) => {
   const [formData, setFormData] = useState({

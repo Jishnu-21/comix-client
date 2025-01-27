@@ -1064,9 +1064,9 @@ const CheckOut = () => {
                                item.product_id?.name || 
                                'Product Name';
                     
-                    const description = item._display?.description || 
-                                     item.product_id?.description || 
-                                     'No description available';
+                    const category = item._display?.category || 
+                                   item.product_id?.category || 
+                                   'Uncategorized';
                     
                     const price = parseFloat(item.price) || 0;
 
@@ -1075,7 +1075,7 @@ const CheckOut = () => {
                         key={`${item.product_id?._id || item.product_id}-${index}`}
                         image={image}
                         quantity={item.quantity}
-                        description={description}
+                        category={category}
                         name={name}
                         subDescription={item.product_id?.subDescription || ''}
                         price={price}
@@ -1163,6 +1163,7 @@ const CheckOut = () => {
                     </div>
                     <div className='payment-method d-flex align-items-center'>
                       <div className="payment-logo-container me-3">
+                      <i className="fas fa-money-bill-wave"></i>
                       </div>
                       <span className="payment-name me-3">Cash on Delivery</span>
                       <input 
@@ -1191,19 +1192,19 @@ const CheckOut = () => {
                                        item.product_id?.name || 
                                        'Product Name';
                           
-                          const description = item._display?.description || 
-                                             item.product_id?.description || 
-                                             'No description available';
+                          const category = item._display?.category || 
+                                         item.product_id?.category || 
+                                         'Uncategorized';
 
                           return (
                             <ProductItem
                               key={`${item.product_id?._id || item.product_id}-${index}`}
                               image={image}
                               quantity={item.quantity}
-                              description={description}
+                              category={category}
                               name={name}
                               subDescription={item.product_id?.subDescription || ''}
-                              price={item.price}
+                              price={parseFloat(item.price) || 0}
                             />
                           );
                         })}

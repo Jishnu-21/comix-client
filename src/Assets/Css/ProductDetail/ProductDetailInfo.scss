@@ -31,6 +31,29 @@
           color: #666;
         }
       }
+
+      .skin-type-badge {
+        display: inline-flex;
+        align-items: center;
+        background: #f7f1e9;
+        padding: 6px 12px;
+        border-radius: 20px;
+        margin-top: 8px;
+        border: 1px solid #e8d5c4;
+        
+        .badge-icon {
+          color: #b4846c;
+          margin-right: 6px;
+          font-size: 14px;
+        }
+
+        .badge-text {
+          color: #7d5a50;
+          font-size: 13px;
+          font-weight: 500;
+          letter-spacing: 0.3px;
+        }
+      }
     }
 
     .share-button {
@@ -93,46 +116,40 @@
       margin-bottom: 16px;
     }
 
-    .membership-offer {
-      background: #000;
-      color: #fff;
-      padding: 16px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
+    .product-taglines {
+      background: #f8f8f8;
+      padding: 20px;
+      border: 1px solid #eee;
 
-      .price-info {
-        display: flex;
-        flex-direction: column;
+      .tagline-grid {
+        display: grid;
+        gap: 12px;
 
-        .label {
-          font-size: 12px;
-          opacity: 0.8;
-        }
+        .tagline-item {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          
+          .tagline-icon {
+            color: #333;
+            font-size: 14px;
+          }
 
-        .amount {
-          font-size: 20px;
-          font-weight: 600;
-        }
-      }
+          .tagline-text {
+            font-size: 14px;
+            color: #333;
+            font-weight: 500;
+            letter-spacing: 0.2px;
+          }
 
-      .offer-text {
-        font-size: 14px;
-        opacity: 0.8;
-      }
-
-      .join-now-btn {
-        background: #fff;
-        color: #000;
-        border: none;
-        padding: 8px 16px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: opacity 0.2s;
-
-        &:hover {
-          opacity: 0.9;
+          &:hover {
+            .tagline-icon {
+              color: #000;
+            }
+            .tagline-text {
+              color: #000;
+            }
+          }
         }
       }
     }
@@ -471,6 +488,36 @@
       right: 10px;
       left: 10px;
       width: auto;
+    }
+  }
+}
+
+@media (max-width: 767px) {
+  .price-section {
+    .product-taglines {
+      padding: 15px;
+
+      .tagline-grid {
+        gap: 10px;
+
+        .tagline-item {
+          .tagline-text {
+            font-size: 13px;
+          }
+        }
+      }
+    }
+  }
+
+  .product-header {
+    .title-section {
+      .skin-type-badge {
+        padding: 4px 10px;
+        
+        .badge-text {
+          font-size: 12px;
+        }
+      }
     }
   }
 }

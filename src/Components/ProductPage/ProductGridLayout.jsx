@@ -222,7 +222,7 @@ const ProductGridLayout = ({ searchTerm, sortOption, setSortOption }) => {
                   image={product.image_urls[0]}
                   title={product.name}
                   price={product.variants?.[0]?.price || 'N/A'}
-                  description={product.description}
+                  description={product.category_id?.name || 'Uncategorized'}
                   slug={product.slug}
                 />
               </SwiperSlide>
@@ -241,7 +241,7 @@ const ProductGridLayout = ({ searchTerm, sortOption, setSortOption }) => {
                   image={product.image_urls[0]}
                   title={product.name}
                   price={product.variants?.[0]?.price || 'N/A'}
-                  description={product.description}
+                  description={product.category_id?.name || 'Uncategorized'}
                   slug={product.slug}
                 />
               </div>
