@@ -29,11 +29,9 @@ const Banner = () => {
     return (
         <div className="banner-section">
             <div 
-                className="hero-banner mt-3 row" 
+                className="hero-banner" 
                 style={{
                     backgroundImage: `url(${banner.image_url})`,
-                    backgroundPosition: 'center center',
-                    backgroundSize: 'cover'
                 }}
                 role="banner"
                 aria-label={banner.title}
@@ -41,7 +39,7 @@ const Banner = () => {
                 <div className="col-12">
                     <h1 className="main-heading">{banner.title}</h1>
                     {banner.description && (
-                        <p className="sub-heading mt-3">{banner.description}</p>
+                        <p className="sub-heading">{banner.description}</p>
                     )}
                 </div>
             </div>

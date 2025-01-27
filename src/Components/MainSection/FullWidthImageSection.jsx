@@ -12,13 +12,13 @@ let cachedVideoBlob = null;
 
 const FullWidthImageSection = () => {
   const [isLoaded, setIsLoaded] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
   const containerRef = useRef(null);
   const videoRef = useRef(null);
   const scrollTriggerRef = useRef(null);
 
   const loadVideo = async () => {
     try {
-      // Check if the code is running in the browser and if `caches` is supported
       if (typeof window !== 'undefined' && 'caches' in window) {
         if (!cachedVideoBlob) {
           const cache = await caches.open(CACHE_NAME);
@@ -39,7 +39,6 @@ const FullWidthImageSection = () => {
           videoRef.current.src = cachedVideoBlob;
         }
       } else {
-        // Fallback: Load the video directly if `caches` is not available
         console.warn('Cache API not available. Falling back to direct video URL.');
         if (videoRef.current) {
           videoRef.current.src = VIDEO_URL;
@@ -47,10 +46,16 @@ const FullWidthImageSection = () => {
       }
     } catch (error) {
       console.error('Error loading video:', error);
-      // Fallback: Load the video directly if an error occurs
       if (videoRef.current) {
         videoRef.current.src = VIDEO_URL;
       }
+    }
+  };
+
+  const handlePlayVideo = () => {
+    if (videoRef.current) {
+      videoRef.current.play();
+      setIsPlaying(true);
     }
   };
 
@@ -74,6 +79,8 @@ const FullWidthImageSection = () => {
         if (scrollTriggerRef.current) {
           scrollTriggerRef.current.kill();
         }
+
+        ScrollTrigger.normalizeScroll(true);
 
         const endValue = video.duration * 150;
 
@@ -112,6 +119,7 @@ const FullWidthImageSection = () => {
         if (scrollTriggerRef.current) {
           scrollTriggerRef.current.kill();
         }
+        ScrollTrigger.normalizeScroll(false);
       };
     }
   }, []);
@@ -126,7 +134,13 @@ const FullWidthImageSection = () => {
           playsInline
           className="full-width-video"
           onError={(e) => console.error('Video playback error:', e)}
+          preload="none"
         />
+        {!isPlaying && (
+          <button onClick={handlePlayVideo} className="play-button">
+            Play Video
+          </button>
+        )}
       </div>
     </section>
   );
