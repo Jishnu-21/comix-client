@@ -118,7 +118,7 @@ const DiscoverHaircareSection = () => {
           className="decor-icon left-icon"
         />
         <h2 className="section-heading">
-          <span className="decor-line">DISCOVER HAIRCARE FOR ALL</span>
+          <span className="decor-line">What Are You Shopping Today?</span>
         </h2>
         <img
           src={require('../../Assets/Image/bloomRight.png')}

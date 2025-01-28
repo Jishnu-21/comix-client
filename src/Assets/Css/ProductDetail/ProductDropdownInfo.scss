@@ -15,14 +15,14 @@
     border-bottom: 1px solid #e5e5e5;
     
     .dropdown-header {
-      padding: 20px 0;
+      padding: 25px 0;
       display: flex;
       justify-content: space-between;
       align-items: center;
       cursor: pointer;
 
       .dropdown-title {
-        font-size: 20px;
+        font-size: 22px;
         font-weight: 600;
         margin: 0;
         color: #333;
@@ -68,16 +68,16 @@
       opacity: 0;
       
       &.open {
-        max-height: 2000px;
+        max-height: 3000px;
         opacity: 1;
-        padding-bottom: 20px;
+        padding-bottom: 30px;
         transition: max-height 0.5s ease-in, opacity 0.3s ease-in;
       }
 
       p {
         margin: 0;
-        font-size: 16px;
-        line-height: 1.6;
+        font-size: 17px;
+        line-height: 1.7;
         color: #666;
       }
     }
@@ -91,12 +91,14 @@
   }
 
   li {
-    margin-bottom: 15px;
+    margin-bottom: 20px;
     text-align: left;
+    font-size: 17px;
 
     strong {
       display: block;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
+      font-size: 18px;
     }
 
     p {
@@ -106,8 +108,8 @@
 
   .description-content {
     color: #666;
-    font-size: 15px;
-    line-height: 1.6;
+    font-size: 17px;
+    line-height: 1.7;
 
     img {
       max-width: 100%;
@@ -134,9 +136,9 @@
 
 .reviews-section {
   .review-item {
-    margin-bottom: 20px;
+    margin-bottom: 25px;
     border-bottom: 1px solid #eee;
-    padding-bottom: 15px;
+    padding-bottom: 20px;
     text-align: left;
 
     .review-header {
@@ -152,6 +154,7 @@
         align-items: center;
         gap: 10px;
         text-align: left;
+        font-size: 17px;
 
         .user-icon {
           color: #666;
@@ -183,6 +186,8 @@
       margin: 0;
       text-align: left;
       word-break: break-word;
+      font-size: 16px;
+      line-height: 1.6;
     }
   }
 
@@ -231,8 +236,8 @@
 
 .ingredients-section {
   .ingredients-list {
-    font-size: 16px;
-    line-height: 1.5;
+    font-size: 17px;
+    line-height: 1.7;
     margin-bottom: 30px;
     color: #333;
   }
@@ -241,7 +246,7 @@
     margin-top: 40px;
     
     .hero-title {
-      font-size: 18px;
+      font-size: 20px;
       margin-bottom: 24px;
       font-weight: 600;
       color: #333;
@@ -255,7 +260,7 @@
       .hero-ingredient-card {
         display: flex;
         gap: 16px;
-        padding: 16px;
+        padding: 20px;
         background-color: #f9f9f9;
         
         .hero-ingredient-image {
@@ -274,15 +279,15 @@
           flex: 1;
           
           .hero-ingredient-name {
-            font-size: 16px;
+            font-size: 18px;
             font-weight: 600;
             margin-bottom: 8px;
             color: #333;
           }
 
           .hero-ingredient-desc {
-            font-size: 14px;
-            line-height: 1.6;
+            font-size: 16px;
+            line-height: 1.7;
             color: #666;
           }
         }
@@ -293,7 +298,7 @@
 
 .how-to-use-section,
 .functions-section {
-  padding: 15px 0;
+  padding: 20px 0;
 
   .steps-list,
   .benefits-list {
@@ -301,9 +306,9 @@
     .benefit-row {
       display: flex;
       align-items: flex-start;
-      margin-bottom: 12px;
-      font-size: 15px;
-      line-height: 1.6;
+      margin-bottom: 15px;
+      font-size: 17px;
+      line-height: 1.7;
       color: #666;
 
       &:last-child {
@@ -330,16 +335,32 @@
 }
 
 .functions-section {
+  padding: 20px 0;
+
   .benefits-list {
     .benefit-row {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 12px;
+      font-size: 15px;
+      line-height: 1.6;
+      color: #666;
+      padding-left: 0;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
       .benefit-bullet {
         min-width: 25px;
+        flex-shrink: 0;
         color: #333;
-        font-weight: 500;
+        padding-right: 5px;
       }
 
       .benefit-text {
         flex: 1;
+        margin-top: -2px;
       }
     }
   }
@@ -358,120 +379,135 @@
       &:first-child {
         border-top: none;
       }
-    }
 
-    .dropdown-header {
-      padding: 15px;
-      background: #fff;
-      position: relative;
-      
-      &:after {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: 15px;
-        right: 15px;
-        height: 1px;
-        background: #eee;
-      }
-    }
-
-    .dropdown-title {
-      font-size: 14px;
-      font-weight: 500;
-      color: #333;
-      
-      .bullet-icon {
-        font-size: 6px;
-        margin-right: 8px;
-      }
-    }
-
-    .dropdown-content {
-      padding: 15px;
-      font-size: 14px;
-      line-height: 1.6;
-      color: #666;
-      background: #fff;
-
-      ul {
-        margin: 0;
-        padding: 0;
+      .dropdown-header {
+        padding: 18px;
+        background: #fff;
+        position: relative;
         
-        li {
-          margin-bottom: 10px;
+        &:after {
+          content: '';
+          position: absolute;
+          bottom: 0;
+          left: 15px;
+          right: 15px;
+          height: 1px;
+          background: #eee;
+        }
+      }
+
+      .dropdown-title {
+        font-size: 16px;
+        font-weight: 500;
+        color: #333;
+        
+        .bullet-icon {
+          font-size: 6px;
+          margin-right: 8px;
+        }
+      }
+
+      .dropdown-content {
+        padding: 18px;
+        font-size: 15px;
+        line-height: 1.6;
+        color: #666;
+        background: #fff;
+
+        ul {
+          margin: 0;
+          padding: 0;
           
-          &:last-child {
-            margin-bottom: 0;
+          li {
+            margin-bottom: 10px;
+            
+            &:last-child {
+              margin-bottom: 0;
+            }
           }
+        }
+      }
+
+      .dropdown-icon {
+        color: #999;
+      }
+
+      .description-content {
+        font-size: 15px;
+        
+        img {
+          margin: 10px 0;
         }
       }
     }
 
-    .dropdown-icon {
-      color: #999;
-    }
-
-    .description-content {
-      font-size: 14px;
-      
-      img {
-        margin: 10px 0;
+    .reviews-section {
+      .review-header {
+        .reviewer-name {
+          font-size: 13px;
+        }
       }
-    }
-  }
 
-  .reviews-section {
-    .review-header {
-      .reviewer-name {
+      .review-text {
         font-size: 13px;
       }
-    }
 
-    .review-text {
-      font-size: 13px;
-    }
-
-    .pagination {
-      justify-content: center;
-      
-      .page-info {
-        width: 100%;
-        order: -1;
-        margin-bottom: 10px;
+      .pagination {
+        justify-content: center;
+        
+        .page-info {
+          width: 100%;
+          order: -1;
+          margin-bottom: 10px;
+        }
       }
     }
-  }
 
-  .ingredients-section {
-    .hero-ingredients {
-      .hero-ingredients-grid {
-        grid-template-columns: 1fr;
-        gap: 16px;
+    .ingredients-section {
+      .hero-ingredients {
+        .hero-ingredients-grid {
+          grid-template-columns: 1fr;
+          gap: 16px;
 
-        .hero-ingredient-card {
-          padding: 12px;
-          
-          .hero-ingredient-image {
-            width: 80px;
-            height: 80px;
+          .hero-ingredient-card {
+            padding: 12px;
+            
+            .hero-ingredient-image {
+              width: 80px;
+              height: 80px;
+            }
           }
+        }
+      }
+    }
+
+    .how-to-use-section,
+    .functions-section {
+      padding: 12px 0;
+
+      .steps-list,
+      .benefits-list {
+        .step-row,
+        .benefit-row {
+          font-size: 15px;
+          margin-bottom: 10px;
         }
       }
     }
   }
 
+  .reviews-section,
+  .ingredients-section,
   .how-to-use-section,
   .functions-section {
-    padding: 12px 0;
-
-    .steps-list,
-    .benefits-list {
-      .step-row,
-      .benefit-row {
-        font-size: 14px;
-        margin-bottom: 10px;
-      }
+    font-size: 15px;
+    
+    .step-row,
+    .benefit-row,
+    .review-text,
+    .ingredients-list {
+      font-size: 15px;
+      line-height: 1.6;
     }
   }
 }

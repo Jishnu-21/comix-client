@@ -19,7 +19,6 @@ const ProductDetailInfo = forwardRef(({ product, isMobile }, ref) => {
   const [offers, setOffers] = useState([]);
   const [showAllOffers, setShowAllOffers] = useState(false);
   const [selectedVariant, setSelectedVariant] = useState(null);
-  const [showCartNotification, setShowCartNotification] = useState(false);
   const [expandedOffers, setExpandedOffers] = useState({});
   const [deviceType, setDeviceType] = useState('desktop');
 
@@ -196,10 +195,50 @@ const ProductDetailInfo = forwardRef(({ product, isMobile }, ref) => {
   };
 
   const showCartSuccessNotification = () => {
-    setShowCartNotification(true);
-    setTimeout(() => {
-      setShowCartNotification(false);
-    }, 3000);
+    toast.custom((t) => (
+      <div className="custom-toast-content">
+        <div className="product-info">
+          <img 
+            src={product.image_urls[0]} 
+            alt={product.name} 
+            className="product-image" 
+          />
+          <div className="product-details">
+            <h4>{product.name}</h4>
+            <p className="variant">{selectedVariant?.name}</p>
+            <p className="price">₹{regularPrice}</p>
+          </div>
+        </div>
+        <div className="action-buttons">
+          <button 
+            className="view-cart-btn" 
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              toast.dismiss(t);
+              navigate('/cart');
+            }}
+          >
+            View Cart
+          </button>
+          <button 
+            className="buy-now-btn" 
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              toast.dismiss(t);
+              navigate('/checkout');
+            }}
+          >
+            Buy Now
+          </button>
+        </div>
+      </div>
+    ), {
+      duration: 2000,
+      position: 'top-right',
+      className: 'cart-notification-toast'
+    });
   };
 
   const handleViewCart = (e) => {
@@ -306,7 +345,6 @@ const ProductDetailInfo = forwardRef(({ product, isMobile }, ref) => {
                 <div className={`offer-details ${expandedOffers[offer.id || index] ? 'expanded' : ''}`}>
                   <div className="details-content">
                     <p className="discount">Discount: {offer.discount_percentage}% off</p>
-                    <p className="terms">Terms: {offer.terms}</p>
                     <p className="note">* This offer can be applied at checkout</p>
                   </div>
                 </div>
@@ -339,29 +377,6 @@ const ProductDetailInfo = forwardRef(({ product, isMobile }, ref) => {
           >
             {isAddingToCart ? 'Adding...' : 'Add to Bag'}
           </button>
-        </div>
-      )}
-
-      {showCartNotification && (
-        <div className="cart-notification">
-          <div className="notification-content">
-            <div className="product-info">
-              <img src={product.image_urls[0]} alt={product.name} className="product-image" />
-              <div className="product-details">
-                <h4>{product.name}</h4>
-                <p className="variant">{selectedVariant?.name}</p>
-                <p className="price">Rs:{regularPrice}</p>
-              </div>
-            </div>
-            <div className="action-buttons">
-              <button className="view-cart-btn" onClick={handleViewCart}>
-                View Cart
-              </button>
-              <button className="buy-now-btn" onClick={handleBuyNow}>
-                Buy Now
-              </button>
-            </div>
-          </div>
         </div>
       )}
     </div>

@@ -11,7 +11,7 @@ const ExclusiveCombosSection = () => {
           className="decor-icon"
         />
         <h2 className="section-heading">
-          <span className="decor-line">EXCLUSIVE FESTIVE COMBOS</span>
+          <span className="decor-line">The Timeless Combos</span>
         </h2>
         <img
           src={require('../../Assets/Image/bloomRight.png')}

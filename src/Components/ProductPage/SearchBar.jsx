@@ -4,7 +4,7 @@ import '../../Assets/Css/ProductPage/SearchBar.scss';
 const SearchBar = ({searchTerm, handleSearch}) => {
     return (
         <div className="search-bar-container-product">
-            <form className="form-container">
+            <form className="form-container2">
                 <input 
                     type="text" 
                     className="form-control" 

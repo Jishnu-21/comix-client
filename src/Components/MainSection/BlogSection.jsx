@@ -31,7 +31,7 @@ const BlogSection = () => {
     <section className="blog-section">
       <SectionHeader title="BLOGS" />
       <p className="section-description">
-        Lorem Ipsum is simply dummy text of the printing and <br className="desktop-break"/>typesetting industry.
+      Glow Talk - Tips, Trends, and Everything Your Skin’s Been DMing You About!<br className="desktop-break"/>Been DMing You About!.
       </p>
 
       {isMobile ? (

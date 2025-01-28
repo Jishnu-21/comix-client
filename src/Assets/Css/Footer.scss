@@ -2,7 +2,7 @@
 
 .footer {
   position: relative;
-  background-color: #2C2E3A;
+  background-color: #2c2c38;
   color: white;
   padding: 0;
   display: flex;
@@ -31,7 +31,7 @@
     height: 70px; // Reduced from 80px
 
     .rounded-logo {
-      background-color: #2C2E3A; 
+      background-color:#2c2c38; 
       height: 160px;
       width: 160px; 
       border-radius: 50%; 
@@ -109,7 +109,7 @@
 
   .footer-header {
     text-align: left; // Align text to the left
-    padding-left: 135px; // Original padding for larger screens
+    padding-left: 90px; // Original padding for larger screens
     margin-bottom: 20px;
     margin-top: 20px;
     width: 100%;
@@ -123,11 +123,11 @@
 
   .footer-content {
     display: flex;
-    flex-wrap: wrap; // Allows wrapping to next line on small screens
+    flex-wrap: wrap;
     justify-content: space-between;
     width: 100%;
-    max-width: 1200px;
-    padding: 20px 0;
+    max-width: 1400px;
+    padding: 20px 80px;
 
     .footer-column {
       flex: 1;
@@ -362,3 +362,5 @@
     margin-bottom: 0;
   }
 }
+
+

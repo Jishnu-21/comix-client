@@ -4,7 +4,7 @@ import '../Assets/Css/SearchBar.scss'; // Import the SCSS file
 const SearchBar = () => {
     return (
         <div className="search-bar-container mt-4 d-flex justify-content-center">
-            <form className=" form-container d-flex w-100">
+            <form className=" form-container2 d-flex w-100">
                 <input 
                     type="text" 
                     className="form-control" 

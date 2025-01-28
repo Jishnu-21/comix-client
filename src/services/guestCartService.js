@@ -15,7 +15,7 @@ export const addToGuestCart = (productData, variant, quantity, isUpdate = false)
     const cart = getGuestCart();
     
     // Validate variant name
-    if (!['50ml', '150ml', '250ml'].includes(variant.name)) {
+    if (!['50ml', '150ml', '250ml','100ml','200ml','300ml','50mg','100mg','30ml'].includes(variant.name)) {
       throw new Error('Invalid variant name. Must be 50ml, 150ml, or 250ml');
     }
 
@@ -102,7 +102,7 @@ export const clearGuestCart = () => {
 
 export const validateCartItem = (item) => {
   if (!item.product_id) throw new Error('Product ID is required');
-  if (!['50ml', '150ml', '250ml'].includes(item.variant_name)) {
+  if (!['50ml', '150ml', '250ml','100ml','200ml','300ml','50mg','100mg','30ml'].includes(item.variant_name)) {
     throw new Error('Invalid variant name');
   }
   if (item.quantity < 1) throw new Error('Quantity must be at least 1');

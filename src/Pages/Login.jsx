@@ -168,7 +168,11 @@ const Login = () => {
 
   return (
     <div className="login-page">
-      <img src="Mask group.png" alt="Brand Logo" className="brand-logo" />
+ <Link to="/"> 
+
+<img src='Mask group.png' alt="COMIX" className="brand-logo" />
+
+</Link>
       <div className="login-container">
         <div className="login-form-container">
           {showResetForm ? (

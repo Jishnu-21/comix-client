@@ -41,7 +41,7 @@ const CommixIconicsSection = () => {
       <div className="heading-container">
         <img src={require('../../Assets/Image/bloomLeft.png')} alt="Flower Icon" className="decor-icon left-icon" />
         <h2 className="section-heading">
-          <span className="decor-line">COMIX ICONICS PRODUCTS</span>
+          <span className="decor-line">Best Picks for You</span>
         </h2>
         <img src={require('../../Assets/Image/bloomRight.png')} alt="Flower Icon" className="decor-icon right-icon"/>
       </div>

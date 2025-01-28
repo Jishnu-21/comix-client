@@ -278,9 +278,9 @@ const CheckOut = () => {
         const vat = originalSubtotal * 0.05;
         setOrderSummary({
           subtotal: originalSubtotal,
-          shipping: 103.50,
+          shipping: 0,
           vat: vat,
-          total: originalSubtotal + 103.50 + vat,
+          total: originalSubtotal + 0 + vat,
           discount: 0
         });
         
@@ -820,7 +820,7 @@ const CheckOut = () => {
       return total + (price * quantity);
     }, 0);
 
-    const shipping = 103.50;
+    const shipping = 1;
     const vat = subtotal * 0.18; // 18% VAT
     let discount = 0;
 

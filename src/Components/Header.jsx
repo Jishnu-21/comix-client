@@ -453,7 +453,7 @@ const Header = () => {
             <input 
               type="text" 
               className="search-bar" 
-              placeholder="Try Liquid Lipstick"
+              placeholder="Search...."
               value={headerSearchTerm}
               onChange={handleSearchChange}
               onFocus={handleSearchFocus}
@@ -547,7 +547,7 @@ const Header = () => {
 
       <div className={`sidebar ${isSidebarOpen ? 'open' : ''}`}>
         <div className="sidebar-header">
-          <button className="close-button" onClick={toggleSidebar}>
+          <button className="sidebar-close-button" onClick={toggleSidebar}>
             <SocialIcon icon={faTimes} />
           </button>
         </div>
@@ -558,7 +558,7 @@ const Header = () => {
           {categories.map((category) => (
             <Link 
               key={category._id} 
-              to={`/category/${category._id}`} 
+              to={`/product`} 
               className="nav-link" 
               onClick={toggleSidebar}
             >
@@ -606,12 +606,14 @@ const Header = () => {
                       {categoryProducts[subcategory._id]?.map((product) => (
                         <li key={product._id}>
                           <Link to={`/product/${product.slug}`}>
-                            {product.name}
+                           <h5>{product.name}</h5>
                           </Link>
                         </li>
                       ))}
                       {(!categoryProducts[subcategory._id] || categoryProducts[subcategory._id].length === 0) && (
-                        <li>No products available</li>
+                        <li>
+                          <h5>No products available</h5>
+                        </li>
                       )}
                     </ul>
                   </div>

@@ -13,7 +13,7 @@ const FeaturedSection = () => {
           className="decor-icon"
         />
         <h2 className="section-heading">
-          <span className="decor-line">WHAT WE'RE LOVING RIGHT NOW</span>
+          <span className="decor-line">Skincare That Loves You Back</span>
         </h2>
         <img
           src={require('../Assets/Image/bloomRight.png')}
