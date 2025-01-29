@@ -5,6 +5,7 @@ import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { useMediaQuery } from 'react-responsive';
+import SectionTitle from '../SectionTitle';
 
 const BlogSection = () => {
   const isMobile = useMediaQuery({ maxWidth: 768 });
@@ -29,7 +30,7 @@ const BlogSection = () => {
 
   return (
     <section className="blog-section">
-      <SectionHeader title="BLOGS" />
+      <SectionTitle title="BLOGS" />
       <p className="section-description">
       Glow Talk - Tips, Trends, and Everything Your Skin’s Been DMing You About!<br className="desktop-break"/>Been DMing You About!.
       </p>

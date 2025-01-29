@@ -4,6 +4,8 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import gsap from 'gsap';
 
+import SectionTitle from '../SectionTitle';
+
 const DiscoverHaircareSection = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [activeIndex, setActiveIndex] = useState(null);
@@ -111,21 +113,7 @@ const DiscoverHaircareSection = () => {
 
   return (
     <section className="discover-haircare-section" ref={sectionRef}>
-      <div className="heading-container">
-        <img
-          src={require('../../Assets/Image/bloomLeft.png')}
-          alt="Flower Icon"
-          className="decor-icon left-icon"
-        />
-        <h2 className="section-heading">
-          <span className="decor-line">What Are You Shopping Today?</span>
-        </h2>
-        <img
-          src={require('../../Assets/Image/bloomRight.png')}
-          alt="Flower Icon"
-          className="decor-icon right-icon"
-        />
-      </div>
+      <SectionTitle title="What Are You Shopping Today?" />
 
       <div className={`products-container ${isMobile ? 'mobile-slider' : ''}`}>
         {isMobile ? (

@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import Slider from 'react-slick';
 import { gsap } from 'gsap';
+import SectionTitle from '../SectionTitle';
 
 const CommixIconicsSection = () => {
   const sliderRef = useRef(null);
@@ -64,13 +65,7 @@ const CommixIconicsSection = () => {
 
   return (
     <section className="commix-iconics-section" ref={sliderRef} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-      <div className="heading-container">
-        <img src={require('../../Assets/Image/bloomLeft.png')} alt="Flower Icon" className="decor-icon left-icon" />
-        <h2 className="section-heading">
-          <span className="decor-line">Best Picks for You</span>
-        </h2>
-        <img src={require('../../Assets/Image/bloomRight.png')} alt="Flower Icon" className="decor-icon right-icon"/>
-      </div>
+     <SectionTitle title="Best Picks for You" />
 
       <div className="slider-container">
         <Slider {...productSliderSettings}>

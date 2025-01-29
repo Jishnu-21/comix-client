@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
+import SectionTitle from '../SectionTitle';
 
 const NewLaunchedSection = () => {
   const sectionRef = useRef(null); // Ref to hold the section reference
@@ -40,22 +41,7 @@ const NewLaunchedSection = () => {
 
   return (
     <section className="new-launched-section" ref={sectionRef}>
-      <div className="heading-container">
-        <img
-          src={require('../../Assets/Image/bloomLeft.png')}
-          alt="Flower Icon"
-          className="decor-icon left-icon"
-        />
-        <h2 className="section-heading">
-          <span className="decor-line">NEW LAUNCHED</span>
-        </h2>
-        <img
-          src={require('../../Assets/Image/bloomRight.png')}
-          alt="Flower Icon"
-          className="decor-icon right-icon"
-        />
-      </div>
-
+    <SectionTitle title="NEW LAUNCHED" />
       <div className="image-container">
         <img
           src={require('../../Assets/Image/add-image.png')} // Desktop image

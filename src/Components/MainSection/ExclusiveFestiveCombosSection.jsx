@@ -1,24 +1,11 @@
 // ExclusiveFestiveCombosSection.jsx
 import React from 'react';
+import SectionTitle from '../SectionTitle';
 
 const ExclusiveFestiveCombosSection = () => {
   return (
     <section className="exclusive-festive-combos-section">
-      <div className="heading-container">
-        <img
-          src={require('../../Assets/Image/bloomLeft.png')}
-          alt="Flower Icon"
-          className="decor-icon left-icon"
-        />
-        <h2 className="section-heading">
-          <span className="decor-line">The Timeless Combos</span>
-        </h2>
-        <img
-          src={require('../../Assets/Image/bloomRight.png')}
-          alt="Flower Icon"
-          className="decor-icon right-icon"
-        />
-      </div>
+      <SectionTitle title="The Timeless Combos" />
 
       <div className="combo-image-container">
         <img

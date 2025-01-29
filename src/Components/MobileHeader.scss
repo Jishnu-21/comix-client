@@ -46,11 +46,15 @@
         color: white;
         font-size: 24px;
         cursor: pointer;
-        margin: 0 10px;
+        margin: 0 5px;
 
         &:hover {
           color: #f39c12; // Change color on hover
         }
+      }
+
+      .search-button {
+        margin-right: -40px;
       }
 
       .logo {
@@ -62,14 +66,16 @@
       }
 
       .cart-item-count {
-        position: absolute;
-        top: -5px;
-        right: -10px;
+        position: relative;
+        top: -17px;
+        right: 10px;
         background-color: red;
         color: white;
         border-radius: 50%;
         padding: 2px 6px;
         font-size: 12px;
+        text-decoration: none;
+        display: inline-block;
       }
     }
 
@@ -347,53 +353,62 @@
       &.open {
         transform: translateX(0);
       }
+    }
 
-      .close-button {
-        background: none;
-        border: none;
+    .content {
+      transition: filter 0.3s ease;
+    }
+
+    .mobile-header.sidebar-open ~ .content {
+      filter: blur(5px);
+      pointer-events: none;
+    }
+
+    .close-button {
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 24px;
+      cursor: pointer;
+      align-self: flex-end;
+      margin-bottom: 20px;
+
+      &:hover {
+        color: #f39c12;
+      }
+    }
+
+    .sidebar-nav {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      margin-top: 20px;
+
+      .sidebar-item {
         color: #fff;
-        font-size: 24px;
-        cursor: pointer;
-        align-self: flex-end;
-        margin-bottom: 20px;
+        text-decoration: none;
+        font-size: 18px;
+        padding: 15px 0;
+        display: flex;
+        align-items: center;
+        border-bottom: 1px solid rgba(#fff, 0.1);
 
         &:hover {
           color: #f39c12;
         }
+
+        svg {
+          margin-right: 15px;
+          width: 20px;
+        }
       }
 
-      .sidebar-nav {
-        display: flex;
-        flex-direction: column;
+      button.sidebar-item {
+        background: none;
+        border: none;
+        text-align: left;
         width: 100%;
-        margin-top: 20px;
-
-        .sidebar-item {
-          color: #fff;
-          text-decoration: none;
-          font-size: 18px;
-          padding: 15px 0;
-          display: flex;
-          align-items: center;
-          border-bottom: 1px solid rgba(#fff, 0.1);
-
-          &:hover {
-            color: #f39c12;
-          }
-
-          svg {
-            margin-right: 15px;
-            width: 20px;
-          }
-        }
-
-        button.sidebar-item {
-          background: none;
-          border: none;
-          text-align: left;
-          width: 100%;
-          cursor: pointer;
-        }
+        cursor: pointer;
       }
     }
 

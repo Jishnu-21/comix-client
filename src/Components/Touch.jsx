@@ -3,7 +3,7 @@ import { toast } from 'sonner';
 import axios from 'axios';
 import '../Assets/Css/Touch.scss'
 import { API_URL } from '../config/api';
-
+import SectionTitle from '../Components/SectionTitle';
 const Touch = () => {
   const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -52,21 +52,7 @@ const Touch = () => {
   return (
     <section className='touch-subscribe-section' style={backgroundStyle}>
       <div className='touch-content'>
-        <div className='touch-heading-container'>
-          <img 
-            src={`${process.env.PUBLIC_URL}/images/bloomLeft.png`} 
-            alt="Flower Icon" 
-            className='touch-decor-icon touch-left-icon'
-          />
-          <h2 className='touch-section-heading'>
-            <span className='touch-decor-line'>LET'S STAY IN TOUCH</span>
-          </h2>
-          <img 
-            src={`${process.env.PUBLIC_URL}/images/bloomRight.png`} 
-            alt="Flower Icon" 
-            className='touch-decor-icon touch-right-icon'
-          />
-        </div>
+      <SectionTitle title="LET'S STAY IN TOUCH" />
 
         <p className='touch-section-description'>
           Get The Latest Beauty Tips Straight To Your Inbox. Can't Wait To Connect

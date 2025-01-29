@@ -1,26 +1,13 @@
 // FeaturedSection.jsx
 import React, { useState } from 'react';
-
+import SectionTitle from '../Components/SectionTitle';
 const FeaturedSection = () => {
   const [hoveredCard, setHoveredCard] = useState(null);
 
+
   return (
     <section className="featured-section">
-      <div className="heading-container">
-        <img
-          src={require('../Assets/Image/bloomLeft.png')}
-          alt="Flower Icon"
-          className="decor-icon"
-        />
-        <h2 className="section-heading">
-          <span className="decor-line">Skincare That Loves You Back</span>
-        </h2>
-        <img
-          src={require('../Assets/Image/bloomRight.png')}
-          alt="Flower Icon"
-          className="decor-icon"
-        />
-      </div>
+    <SectionTitle title="Skincare That Loves You Back" />
 
       <div className="image-grid">
         {['left', 'right'].map((side, index) => (

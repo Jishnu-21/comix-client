@@ -38,6 +38,14 @@ const MobileHeader = ({ cartItemCount, onMenuClick, marqueeText, onLogout, categ
     fetchBestSellers();
   }, []);
 
+  useEffect(() => {
+    if (isSidebarOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+  }, [isSidebarOpen]);
+
   const handleSearchToggle = () => {
     setIsSearchVisible(!isSearchVisible);
   };
