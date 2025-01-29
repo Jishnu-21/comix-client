@@ -18,35 +18,38 @@ const FullWidthImageSection = () => {
 
   const loadVideo = async () => {
     try {
-      if (typeof window !== 'undefined' && 'caches' in window) {
-        if (!cachedVideoBlob) {
-          const cache = await caches.open(CACHE_NAME);
-          let videoResponse = await cache.match(VIDEO_URL);
+      // Check for Cache API availability
+      const isCacheSupported = typeof window !== 'undefined' && 'caches' in window;
+      if (!isCacheSupported) {
+        throw new Error('Cache API not supported');
+      }
 
-          if (!videoResponse) {
-            const response = await fetch(VIDEO_URL);
-            const blob = await response.blob();
-            await cache.put(VIDEO_URL, new Response(blob.slice()));
-            videoResponse = await cache.match(VIDEO_URL);
+      if (!cachedVideoBlob) {
+        const cache = await caches.open(CACHE_NAME);
+        let videoResponse = await cache.match(VIDEO_URL);
+
+        if (!videoResponse) {
+          const response = await fetch(VIDEO_URL);
+          if (!response.ok) {
+            throw new Error(`Network response not OK: ${response.status}`);
           }
-
-          const blob = await videoResponse.blob();
-          cachedVideoBlob = URL.createObjectURL(blob);
+          
+          // Clone response for cache storage
+          await cache.put(VIDEO_URL, response.clone());
+          videoResponse = response;
         }
 
-        if (videoRef.current) {
-          videoRef.current.src = cachedVideoBlob;
-        }
-      } else {
-        console.warn('Cache API not available. Falling back to direct video URL.');
-        if (videoRef.current) {
-          videoRef.current.src = VIDEO_URL; // Direct URL fallback
-        }
+        const blob = await videoResponse.blob();
+        cachedVideoBlob = URL.createObjectURL(blob);
+      }
+
+      if (videoRef.current) {
+        videoRef.current.src = cachedVideoBlob;
       }
     } catch (error) {
-      console.error('Error loading video:', error);
+      console.warn(`Video caching failed: ${error.message}. Using direct URL.`);
       if (videoRef.current) {
-        videoRef.current.src = VIDEO_URL; // Direct URL fallback
+        videoRef.current.src = VIDEO_URL;
       }
     }
   };
@@ -126,7 +129,7 @@ const FullWidthImageSection = () => {
           playsInline
           className="full-width-video"
           onError={(e) => console.error('Video playback error:', e)}
-          preload="none"
+          preload="metadata"
         />
       </div>
     </section>
