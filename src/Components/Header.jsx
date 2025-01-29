@@ -443,6 +443,20 @@ const Header = () => {
     // Implement search functionality
   };
 
+  const handleLongPress = (e, dropdownId) => {
+    e.preventDefault();
+    setActiveDropdown(dropdownId);
+    setIsDropdownOpen(true);
+  };
+
+  const handleTouchStart = (e, dropdownId) => {
+    dropdownTimeout.current = setTimeout(() => handleLongPress(e, dropdownId), 500);
+  };
+
+  const handleTouchEnd = () => {
+    clearTimeout(dropdownTimeout.current);
+  };
+
   return (
     <>
       <MobileHeader 
@@ -456,11 +470,17 @@ const Header = () => {
       <header className={`header ${!isHeaderVisible ? 'hidden' : ''} ${isHeaderScrolled ? 'scrolled' : ''}`}>
         <div className="desktop-header">
           <div className="header-top">
-          <div className="marquee-container">
-          <div className="marquee-item">
-            {marqueeItems[currentMarqueeIndex]}
-          </div>
-        </div>
+            <div className="marquee-container">
+              <div className="marquee-item">
+                🎉 Welcome to Comix - Your Beauty Destination!
+              </div>
+              <div className="marquee-item">
+               🎉 Free Shipping on Orders Over ₹499 🎁 Get 10% Off on Your First Order
+              </div>
+              <div className="marquee-item">
+               🎁 Get 10% Off on Your First Order
+              </div>
+            </div>
           </div>
         </div>
         <div className="header-middle">
@@ -581,6 +601,8 @@ const Header = () => {
                 to={`/product`} 
                 className="nav-link" 
                 onClick={toggleSidebar}
+                onTouchStart={(e) => handleTouchStart(e, category._id)}
+                onTouchEnd={handleTouchEnd}
               >
                 {category.name.toUpperCase()}
               </Link>
@@ -613,6 +635,8 @@ const Header = () => {
               className="nav-item"
               onMouseEnter={() => handleMouseEnter(index)}
               onMouseLeave={handleMouseLeaveLips}
+              onTouchStart={(e) => handleTouchStart(e, category._id)}
+              onTouchEnd={handleTouchEnd}
             >
               <Link to={`/product`} className="nav-link">
                 {category.name.toUpperCase()}

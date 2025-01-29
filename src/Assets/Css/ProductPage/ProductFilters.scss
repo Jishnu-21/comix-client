@@ -10,6 +10,10 @@
     display: none;
   }
 
+  @media (min-width: 769px) and (max-width: 1024px) {
+    display: block;
+  }
+
   .accordion {
     .accordion-item {
       border: none;
@@ -463,4 +467,12 @@
 
 .price-button.selected {
   color: black;
+}
+
+
+
+@media (min-width: 1024px) and (max-width: 1366px) {
+  .product-filters {
+    display: block;
+  }
 }

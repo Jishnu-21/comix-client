@@ -12,7 +12,6 @@ let cachedVideoBlob = null;
 
 const FullWidthImageSection = () => {
   const [isLoaded, setIsLoaded] = useState(false);
-  const [isPlaying, setIsPlaying] = useState(false);
   const containerRef = useRef(null);
   const videoRef = useRef(null);
   const scrollTriggerRef = useRef(null);
@@ -41,26 +40,14 @@ const FullWidthImageSection = () => {
       } else {
         console.warn('Cache API not available. Falling back to direct video URL.');
         if (videoRef.current) {
-          videoRef.current.src = VIDEO_URL;
+          videoRef.current.src = VIDEO_URL; // Direct URL fallback
         }
       }
     } catch (error) {
       console.error('Error loading video:', error);
       if (videoRef.current) {
-        videoRef.current.src = VIDEO_URL;
+        videoRef.current.src = VIDEO_URL; // Direct URL fallback
       }
-    }
-  };
-
-  const handlePlayVideo = () => {
-    if (videoRef.current) {
-      videoRef.current.play()
-        .then(() => {
-          setIsPlaying(true);
-        })
-        .catch((error) => {
-          console.error('Error playing video:', error);
-        });
     }
   };
 
@@ -85,7 +72,6 @@ const FullWidthImageSection = () => {
           scrollTriggerRef.current.kill();
         }
 
-        // Normalize scroll behavior for mobile devices
         ScrollTrigger.normalizeScroll(true);
 
         const endValue = video.duration * 150;
@@ -94,7 +80,7 @@ const FullWidthImageSection = () => {
           trigger: containerRef.current,
           start: 'top top',
           end: `+=${endValue}`,
-          scrub: 0.5,
+          scrub: 1,
           pin: true,
           anticipatePin: 1,
           pinSpacing: true,
@@ -125,7 +111,7 @@ const FullWidthImageSection = () => {
         if (scrollTriggerRef.current) {
           scrollTriggerRef.current.kill();
         }
-        ScrollTrigger.normalizeScroll(false); // Cleanup
+        ScrollTrigger.normalizeScroll(false);
       };
     }
   }, []);
