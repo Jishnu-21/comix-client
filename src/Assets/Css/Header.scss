@@ -1212,3 +1212,18 @@ footer {
     transform: translateY(0);
   }
 }
+
+@media (max-width: 767px) {
+  .header {
+    display: none; // Hide the main header on mobile
+  }
+}
+
+
+.mobile-footer {
+  display: none;
+}
+
+.mobile-header {
+  display: none;
+}

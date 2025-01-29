@@ -7,7 +7,7 @@ import MobileBestSellers from './MobileBestSellers';
 import '../../Assets/Css/ProductPage/ProductGridLayout.scss';
 import axios from 'axios'; // Import axios for API calls
 import { API_URL } from '../../config/api';
-import { Link } from 'react-router-dom'; // Import Link from react-router-dom
+import { Link, useLocation } from 'react-router-dom'; // Import Link and useLocation from react-router-dom
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination } from 'swiper/modules';
 import 'swiper/css';
@@ -21,11 +21,23 @@ const ProductGridLayout = ({ searchTerm, sortOption, setSortOption }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true); // Loading state
   const [error, setError] = useState(null); // Error state
-
+  const [selectedCategories, setSelectedCategories] = useState([]); // State for selected categories
+  const [minPrice, setMinPrice] = useState(0); // Initialize minPrice
+  const [maxPrice, setMaxPrice] = useState(1000); // Initialize maxPrice
+  const [selectedSubcategories, setSelectedSubcategories] = useState([]); // State for selected subcategories
+  const [selectedPriceRange, setSelectedPriceRange] = useState(null); // State for selected price range
+  console.log(products);
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get(`${API_URL}/products`); // Adjust the endpoint as necessary
+        const params = {
+          category_id: selectedCategories.length > 0 ? selectedCategories[0] : undefined, // Example: using the first selected category
+          minPrice: minPrice,
+          maxPrice: maxPrice,
+          searchTerm: searchTerm,
+        };
+
+        const response = await axios.get(`${API_URL}/products`, { params }); // Pass params as query parameters
         if (response.data.success) {
           setProducts(Array.isArray(response.data.products) ? response.data.products : []);
         } else {
@@ -69,18 +81,51 @@ const ProductGridLayout = ({ searchTerm, sortOption, setSortOption }) => {
     if (currentPage > 1) setCurrentPage(currentPage - 1);
   };
 
-  const filteredProducts = searchTerm.trim() === ''
-    ? products
-    : products.filter((product) =>
-        product.name.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-
   // Function to get product price safely
   const getProductPrice = (product) => {
     if (!product || !product.variants || !product.variants.length) return 0;
     const price = parseFloat(product.variants[0].price);
     return isNaN(price) ? 0 : price;
   };
+
+  // Function to handle category selection
+  const handleCategorySelect = (categoryId) => {
+    setSelectedCategories((prev) => {
+      if (prev.includes(categoryId)) {
+        return prev.filter((id) => id !== categoryId); // Remove category if already selected
+      }
+      return [...prev, categoryId]; // Add category if not selected
+    });
+  };
+
+  const handleSubcategorySelect = (subcategoryId) => {
+    setSelectedSubcategories((prev) => {
+      if (prev.includes(subcategoryId)) {
+        return prev.filter((id) => id !== subcategoryId); // Remove subcategory if already selected
+      }
+      return [...prev, subcategoryId]; // Add subcategory if not selected
+    });
+  };
+
+  const handleFilterChange = (newFilters) => {
+    setSelectedCategories(newFilters.category || selectedCategories);
+    setSelectedSubcategories(newFilters.subcategories || selectedSubcategories);
+    
+    // Update minPrice and maxPrice based on the selected price range
+    if (newFilters.priceRange) {
+        setMinPrice(newFilters.priceRange.min);
+        setMaxPrice(newFilters.priceRange.max);
+    }
+  };
+
+  // Apply filtering based on search term, price range, and selected categories
+  const filteredProducts = products.filter((product) => {
+    const matchesSearchTerm = searchTerm.trim() === '' || product.name.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesPriceRange = getProductPrice(product) >= minPrice && getProductPrice(product) <= maxPrice;
+    const matchesCategory = selectedCategories.length === 0 || selectedCategories.includes(product.category_id._id.toString());
+    const matchesSubcategory = selectedSubcategories.length === 0 || selectedSubcategories.includes(product.subcategory._id.toString());
+    return matchesSearchTerm && matchesPriceRange && matchesCategory && matchesSubcategory;
+  });
 
   // Function to sort products based on the selected option
   const sortProducts = (products) => {
@@ -118,7 +163,7 @@ const ProductGridLayout = ({ searchTerm, sortOption, setSortOption }) => {
   if (loading) return <p>Loading products...</p>; // Loading state
   if (error) return <p>{error}</p>; // Error state
 
-  // Check if the screen size is mobile
+  //  if the screen size is mobile
   const isMobile = window.innerWidth <= 767; // Adjust the breakpoint as needed
 
   // Check for iPad
@@ -130,7 +175,11 @@ const ProductGridLayout = ({ searchTerm, sortOption, setSortOption }) => {
       <div className="row">
         {/* Left Section */}
         <div className="col-sm-12 col-md-12 col-lg-4 col-xl-3 col-12">
-          <ProductFilters />
+          <ProductFilters 
+            selectedCategories={selectedCategories} 
+            onCategorySelect={setSelectedCategories} 
+            onFilterChange={handleFilterChange} 
+          />
         </div>
         {/* Right Section */}
         <div className="col-sm-12 col-md-12 col-lg-8 col-xl-9 col-12">

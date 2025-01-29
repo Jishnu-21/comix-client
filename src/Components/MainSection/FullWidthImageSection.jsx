@@ -142,11 +142,6 @@ const FullWidthImageSection = () => {
           onError={(e) => console.error('Video playback error:', e)}
           preload="none"
         />
-        {!isPlaying && (
-          <button onClick={handlePlayVideo} className="play-button">
-            Play Video
-          </button>
-        )}
       </div>
     </section>
   );

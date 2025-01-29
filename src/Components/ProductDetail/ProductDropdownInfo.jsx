@@ -295,7 +295,7 @@ const ProductDropdownInfo = ({ description, ingredients, faqs, additionalDetails
         toggleOpen={() => toggleSection('functions')}
       />
       <DropdownSection
-        title="FREQUENTLY ASKED QUESTIONS"
+        title="FAQs"
         content={
           <ul>
             {faqs.map((faq, index) => (

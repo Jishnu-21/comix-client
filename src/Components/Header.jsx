@@ -22,8 +22,10 @@ import {
   faGift,
   faComments
 } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import styled from 'styled-components';
 import Chatbot from '../Components/Chatbot/Chatbot.jsx';
+import MobileHeader from './MobileHeader'; // Import the new MobileHeader
 
 const Header = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -362,7 +364,7 @@ const Header = () => {
             {profilePicture ? (
               <img src={profilePicture} alt="Profile" className="profile-icon" />
             ) : (
-              <SocialIcon icon={faUserCircle} />
+              <FontAwesomeIcon icon={faUserCircle} />
             )}
             <span className="user-name">&nbsp;{userName}</span>
           </div>
@@ -380,7 +382,7 @@ const Header = () => {
       return (
         <span className="login-register">
           <Link to="/login" style={{ textDecoration: 'none', color: 'inherit' }}>
-            <SocialIcon icon={faUserCircle} link="#"/> Login/Register
+            <FontAwesomeIcon icon={faUserCircle} /> Login/Register
           </Link>
         </span>
       );
@@ -433,244 +435,263 @@ const Header = () => {
     return () => window.removeEventListener('scroll', checkFooterVisibility);
   }, []);
 
+  const handleMenuClick = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+
+  const handleSearchClick = () => {
+    // Implement search functionality
+  };
+
   return (
-    <header className={`header ${!isHeaderVisible ? 'hidden' : ''} ${isHeaderScrolled ? 'scrolled' : ''}`}>
-      <div className="header-top">
-        <div className="marquee-container">
+    <>
+      <MobileHeader 
+        cartItemCount={cartItemCount} 
+        onMenuClick={handleMenuClick} 
+        onSearchClick={handleSearchClick} 
+        marqueeText={marqueeItems[currentMarqueeIndex]}
+        onLogout={handleLogout}
+        categories={categories}
+      />
+      <header className={`header ${!isHeaderVisible ? 'hidden' : ''} ${isHeaderScrolled ? 'scrolled' : ''}`}>
+        <div className="desktop-header">
+          <div className="header-top">
+          <div className="marquee-container">
           <div className="marquee-item">
             {marqueeItems[currentMarqueeIndex]}
           </div>
         </div>
-      </div>
-
-      <div className="header-middle">
-        <div className="logo" onClick={handleLogoClick} style={{ cursor: 'pointer' }}>
-          <img src={HeaderLogo} alt="COMIX LOGO" className="comix-logo"/>
+          </div>
         </div>
+        <div className="header-middle">
+          <div className="logo" onClick={handleLogoClick} style={{ cursor: 'pointer' }}>
+            <img src={HeaderLogo} alt="COMIX LOGO" className="comix-logo"/>
+          </div>
 
-        <div className="search-bar-container" ref={searchRef}>
-          <form onSubmit={handleHeaderSearch} className="search-form">
-            <input 
-              type="text" 
-              className="search-bar" 
-              placeholder="Search...."
-              value={headerSearchTerm}
-              onChange={handleSearchChange}
-              onFocus={handleSearchFocus}
-              onBlur={handleSearchBlur}
-            />
-            <button type="submit" className="search-button">
-              <i className="fas fa-search"></i>
-              <span className="search-text">Search</span>
-            </button>
-          </form>
+          <div className="search-bar-container" ref={searchRef}>
+            <form onSubmit={handleHeaderSearch} className="search-form">
+              <input 
+                type="text" 
+                className="search-bar" 
+                placeholder="Search...."
+                value={headerSearchTerm}
+                onChange={handleSearchChange}
+                onFocus={handleSearchFocus}
+                onBlur={handleSearchBlur}
+              />
+              <button type="submit" className="search-button">
+                <i className="fas fa-search"></i>
+                <span className="search-text">Search</span>
+              </button>
+            </form>
 
-          {showSearchDropdown && (
-            <div className={`search-dropdown ${showSearchDropdown ? 'show' : ''}`}>
-              {recentSearchesLoading ? (
-                <div>Loading...</div>
-              ) : (
-                recentSearches.length > 0 && (
-                  <div className={`search-section ${showSearchDropdown ? 'show' : ''}`}>
-                    <div className="section-header">
-                      <h3>Recent Searches</h3>
-                      <button onClick={clearRecentSearches} className="clear-searches">
-                        Clear all
-                      </button>
-                    </div>
-                    <div className="frequently-searched">
-                      {recentSearches.map((term, index) => (
-                        <span key={index} className="search-term" onClick={() => handleSearchTermClick(term)}>
-                          {term}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                )
-              )}
-
-              <div className={`search-section ${showSearchDropdown ? 'show' : ''}`}>
-                <div className="section-header">
-                  <i className="fas fa-fire social-icon"></i>
-                  <h3>Hot Picks</h3>
-                </div>
-                <div className="hot-picks">
-                  {hotPicks.map((item, index) => (
-                    <div key={index} className="hot-pick-item">
-                      <img src={item.image} alt={item.title} />
-                      <span>{item.title}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div className={`search-section ${showSearchDropdown ? 'show' : ''}`}>
-                <div className="section-header">
-                  <i className="fas fa-medal social-icon"></i>
-                  <h3>Best Sellers</h3>
-                </div>
-                <div className="best-sellers">
-                  {bestSellers.map((item, index) => (
-                    <div key={index} className="best-seller-item">
-                      <img src={item.image} alt={item.title} />
-                      <div className="item-details">
-                        <span className="title">{item.title}</span>
-                        <span className="price">{item.price}</span>
+            {showSearchDropdown && (
+              <div className={`search-dropdown ${showSearchDropdown ? 'show' : ''}`}>
+                {recentSearchesLoading ? (
+                  <div>Loading...</div>
+                ) : (
+                  recentSearches.length > 0 && (
+                    <div className={`search-section ${showSearchDropdown ? 'show' : ''}`}>
+                      <div className="section-header">
+                        <h3>Recent Searches</h3>
+                        <button onClick={clearRecentSearches} className="clear-searches">
+                          Clear all
+                        </button>
+                      </div>
+                      <div className="frequently-searched">
+                        {recentSearches.map((term, index) => (
+                          <span key={index} className="search-term" onClick={() => handleSearchTermClick(term)}>
+                            {term}
+                          </span>
+                        ))}
                       </div>
                     </div>
-                  ))}
+                  )
+                )}
+
+                <div className={`search-section ${showSearchDropdown ? 'show' : ''}`}>
+                  <div className="section-header">
+                    <i className="fas fa-fire social-icon"></i>
+                    <h3>Hot Picks</h3>
+                  </div>
+                  <div className="hot-picks">
+                    {hotPicks.map((item, index) => (
+                      <div key={index} className="hot-pick-item">
+                        <img src={item.image} alt={item.title} />
+                        <span>{item.title}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <div className={`search-section ${showSearchDropdown ? 'show' : ''}`}>
+                  <div className="section-header">
+                    <i className="fas fa-medal social-icon"></i>
+                    <h3>Best Sellers</h3>
+                  </div>
+                  <div className="best-sellers">
+                    {bestSellers.map((item, index) => (
+                      <div key={index} className="best-seller-item">
+                        <img src={item.image} alt={item.title} />
+                        <div className="item-details">
+                          <span className="title">{item.title}</span>
+                          <span className="price">{item.price}</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
-        </div>
-
-        <button className="nav-toggle" onClick={toggleSidebar}>
-          <SocialIcon icon={faBars} />
-        </button>
-
-        <div className="header-icons">
-          {renderUserInfo()}
-          <span className="icon" onClick={handleFavoritesClick} style={{ cursor: 'pointer' }}>
-            <SocialIcon icon={faHeart} />
-          </span>
-          <span className="icon" onClick={handleCartClick} style={{ cursor: 'pointer', position: 'relative' }}>
-            <SocialIcon icon={faShoppingCart} />
-            {cartItemCount > 0 && (
-              <span className="cart-item-count">
-                {cartItemCount}
-              </span>
             )}
-          </span>
-        </div>
-      </div>
+          </div>
 
-      <div className={`sidebar ${isSidebarOpen ? 'open' : ''}`}>
-        <div className="sidebar-header">
-          <button className="sidebar-close-button" onClick={toggleSidebar}>
-            <SocialIcon icon={faTimes} />
+          <button className="nav-toggle" onClick={toggleSidebar}>
+            <FontAwesomeIcon icon={faBars} />
           </button>
+
+          <div className="header-icons">
+            {renderUserInfo()}
+            <span className="icon" onClick={handleFavoritesClick} style={{ cursor: 'pointer' }}>
+              <FontAwesomeIcon icon={faHeart} />
+            </span>
+            <span className="icon" onClick={handleCartClick} style={{ cursor: 'pointer', position: 'relative' }}>
+              <FontAwesomeIcon icon={faShoppingCart} />
+              {cartItemCount > 0 && (
+                <span className="cart-item-count">
+                  {cartItemCount}
+                </span>
+              )}
+            </span>
+          </div>
         </div>
-        <nav className="nav">
-          <Link to="/" className="nav-link" onClick={toggleSidebar}>
-            HOME
-          </Link>
-          {categories.map((category) => (
-            <Link 
-              key={category._id} 
-              to={`/product`} 
-              className="nav-link" 
-              onClick={toggleSidebar}
-            >
-              {category.name.toUpperCase()}
-            </Link>
-          ))}
-          <Link to="/offers" className="nav-link" onClick={toggleSidebar}>
-            OFFERS
-          </Link>
-          <Link to="/blogs" className="nav-link" onClick={toggleSidebar}>
-            BLOGS
-          </Link>
-          {isAuthenticated ? (
-            <button className="nav-link" onClick={handleLogout}>
-              Logout
+
+        <div className={`sidebar ${isSidebarOpen ? 'open' : ''}`}>
+          <div className="sidebar-header">
+            <button className="sidebar-close-button" onClick={toggleSidebar}>
+              <FontAwesomeIcon icon={faTimes} />
             </button>
-          ) : (
-            <Link to="/login" className="nav-link" onClick={toggleSidebar}>
-              <SocialIcon icon={faUserCircle} /> Login/Register
+          </div>
+          <nav className="nav">
+            <Link to="/" className="nav-link" onClick={toggleSidebar}>
+              HOME
             </Link>
-          )}
+            {categories.map((category) => (
+              <Link 
+                key={category._id} 
+                to={`/product`} 
+                className="nav-link" 
+                onClick={toggleSidebar}
+              >
+                {category.name.toUpperCase()}
+              </Link>
+            ))}
+            <Link to="/offers" className="nav-link" onClick={toggleSidebar}>
+              OFFERS
+            </Link>
+            <Link to="/blog" className="nav-link" onClick={toggleSidebar}>
+              BLOGS
+            </Link>
+            {isAuthenticated ? (
+              <button className="nav-link" onClick={handleLogout}>
+                Logout
+              </button>
+            ) : (
+              <Link to="/login" className="nav-link" onClick={toggleSidebar}>
+                <FontAwesomeIcon icon={faUserCircle} /> Login/Register
+              </Link>
+            )}
+          </nav>
+        </div>
+
+        {isSidebarOpen && <div className="overlay" onClick={toggleSidebar}></div>}
+
+        {/* Desktop Navigation */}
+        <nav className="nav desktop-nav">
+          {categories.map((category, index) => (
+            <div 
+              key={category._id} 
+              className="nav-item"
+              onMouseEnter={() => handleMouseEnter(index)}
+              onMouseLeave={handleMouseLeaveLips}
+            >
+              <Link to={`/product`} className="nav-link">
+                {category.name.toUpperCase()}
+              </Link>
+              {category.subcategories && category.subcategories.length > 0 && activeDropdown === index && (
+                <div className="dropdown" onMouseLeave={handleMouseLeaveDropdown}>
+                  {category.subcategories.map((subcategory) => (
+                    <div key={subcategory._id} className="dropdown-category">
+                      <h3>{subcategory.name.toUpperCase()}</h3>
+                      <ul>
+                        {categoryProducts[subcategory._id]?.map((product) => (
+                          <li key={product._id}>
+                            <Link to={`/product/${product.slug}`}>
+                             <h5>{product.name}</h5>
+                            </Link>
+                          </li>
+                        ))}
+                        {(!categoryProducts[subcategory._id] || categoryProducts[subcategory._id].length === 0) && (
+                          <li>
+                            <h5>No products available</h5>
+                          </li>
+                        )}
+                      </ul>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          ))}
+          <div className="nav-item">
+            <Link to="/offers" className="nav-link">
+              OFFERS
+            </Link>
+          </div>
+          <div className="nav-item">
+            <Link to="/blog" className="nav-link">
+              BLOGS
+            </Link>
+          </div>
         </nav>
-      </div>
 
-      {isSidebarOpen && <div className="overlay" onClick={toggleSidebar}></div>}
-
-      {/* Desktop Navigation */}
-      <nav className="nav desktop-nav">
-        {categories.map((category, index) => (
-          <div 
-            key={category._id} 
-            className="nav-item"
-            onMouseEnter={() => handleMouseEnter(index)}
-            onMouseLeave={handleMouseLeaveLips}
+        {/* Mobile Footer Navigation */}
+        <div className={`mobile-footer ${isFooterVisible ? 'hidden' : ''}`}>
+          <Link to="/" className={`footer-item ${window.location.pathname === '/' ? 'active' : ''}`}>
+            <FontAwesomeIcon icon={faHome} />
+            <span>Home</span>
+          </Link>
+          <Link to="/cart" className={`footer-item ${window.location.pathname === '/cart' ? 'active' : ''}`}>
+            <div className="cart-icon-container">
+              <FontAwesomeIcon icon={faShoppingCart} />
+              {cartItemCount > 0 && (
+                <span className="cart-badge">{cartItemCount}</span>
+              )}
+            </div>
+            <span>Cart</span>
+          </Link>
+          <button 
+            className="footer-item" 
+            onClick={toggleChatbot} 
+            style={{ cursor: 'pointer' }}
           >
-            <Link to={`/category/${category._id}`} className="nav-link">
-              {category.name.toUpperCase()}
-            </Link>
-            {category.subcategories && category.subcategories.length > 0 && activeDropdown === index && (
-              <div className="dropdown" onMouseLeave={handleMouseLeaveDropdown}>
-                {category.subcategories.map((subcategory) => (
-                  <div key={subcategory._id} className="dropdown-category">
-                    <h3>{subcategory.name.toUpperCase()}</h3>
-                    <ul>
-                      {categoryProducts[subcategory._id]?.map((product) => (
-                        <li key={product._id}>
-                          <Link to={`/product/${product.slug}`}>
-                           <h5>{product.name}</h5>
-                          </Link>
-                        </li>
-                      ))}
-                      {(!categoryProducts[subcategory._id] || categoryProducts[subcategory._id].length === 0) && (
-                        <li>
-                          <h5>No products available</h5>
-                        </li>
-                      )}
-                    </ul>
-                  </div>
-                ))}
-              </div>
+            <FontAwesomeIcon icon={faComments} />
+            <span>Chat</span>
+          </button>
+          <Link 
+            to={isAuthenticated ? "/profile" : "/login"} 
+            className={`footer-item ${window.location.pathname === '/profile' || window.location.pathname === '/login' ? 'active' : ''}`}
+          >
+            {profilePicture ? (
+              <img src={profilePicture} alt="Profile" className="profile-pic" />
+            ) : (
+              <FontAwesomeIcon icon={faUserCircle} />
             )}
-          </div>
-        ))}
-        <div className="nav-item">
-          <Link to="/offers" className="nav-link">
-            OFFERS
+            <span>Profile</span>
           </Link>
         </div>
-        <div className="nav-item">
-          <Link to="/blogs" className="nav-link">
-            BLOGS
-          </Link>
-        </div>
-      </nav>
-
-      {/* Mobile Footer Navigation */}
-      <div className={`mobile-footer ${isFooterVisible ? 'hidden' : ''}`}>
-        <Link to="/" className={`footer-item ${window.location.pathname === '/' ? 'active' : ''}`}>
-          <SocialIcon icon={faHome} />
-          <span>Home</span>
-        </Link>
-        <Link to="/cart" className={`footer-item ${window.location.pathname === '/cart' ? 'active' : ''}`}>
-          <div className="cart-icon-container">
-            <SocialIcon icon={faShoppingCart} />
-            {cartItemCount > 0 && (
-              <span className="cart-badge">{cartItemCount}</span>
-            )}
-          </div>
-          <span>Cart</span>
-        </Link>
-        <button 
-          className="footer-item" 
-          onClick={toggleChatbot} 
-          style={{ cursor: 'pointer' }}
-        >
-          <SocialIcon icon={faComments} />
-          <span>Chat</span>
-        </button>
-        <Link 
-          to={isAuthenticated ? "/profile" : "/login"} 
-          className={`footer-item ${window.location.pathname === '/profile' || window.location.pathname === '/login' ? 'active' : ''}`}
-        >
-          {profilePicture ? (
-            <img src={profilePicture} alt="Profile" className="profile-pic" />
-          ) : (
-            <SocialIcon icon={faUserCircle} />
-          )}
-          <span>Profile</span>
-        </Link>
-      </div>
-      <Chatbot isOpen={isChatbotOpen} onClose={toggleChatbot} />
-    </header>
+        <Chatbot isOpen={isChatbotOpen} onClose={toggleChatbot} />
+      </header>
+    </>
   );
 };
 

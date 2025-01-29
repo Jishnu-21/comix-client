@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import '../Assets/Css/Footer.scss';
-import SocialIcon from './SocialIcon';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faInstagram, faFacebookF, faTwitter, faLinkedinIn, faYoutube } from '@fortawesome/free-brands-svg-icons';
 import { faEnvelope, faPhone } from '@fortawesome/free-solid-svg-icons';
 
@@ -34,22 +34,34 @@ const Footer = () => {
 
           <div className="footer-social-links row justify-content-center gap-3 mt-3 w-100">
             <div className="col-auto">
-              <SocialIcon icon={faInstagram} link="https://instagram.com" />
+              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="social-icon">
+                <FontAwesomeIcon icon={faInstagram} />
+              </a>
             </div>
             <div className="col-auto">
-              <SocialIcon icon={faFacebookF} link="https://facebook.com" />
+              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="social-icon">
+                <FontAwesomeIcon icon={faFacebookF} />
+              </a>
             </div>
             <div className="col-auto">
-              <SocialIcon icon={faTwitter} link="https://twitter.com" />
+              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="social-icon">
+                <FontAwesomeIcon icon={faTwitter} />
+              </a>
             </div>
             <div className="col-auto">
-              <SocialIcon icon={faLinkedinIn} link="https://linkedin.com" />
+              <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="social-icon">
+                <FontAwesomeIcon icon={faLinkedinIn} />
+              </a>
             </div>
             <div className="col-auto">
-              <SocialIcon icon={faYoutube} link="https://youtube.com" />
+              <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="social-icon">
+                <FontAwesomeIcon icon={faYoutube} />
+              </a>
             </div>
             <div className="col-auto">
-              <SocialIcon icon={faEnvelope} link="mailto:hello@commic.com" />
+              <a href="mailto:hello@commic.com" className="social-icon">
+                <FontAwesomeIcon icon={faEnvelope} />
+              </a>
             </div>
           </div>
 
@@ -65,41 +77,45 @@ const Footer = () => {
 
           <div className="footer-divider my-3"></div>
 
-          <div className="footer-container">
-            <div className="footer-header">
-              <h1>GET IN TOUCH</h1>
+          <div className="footer-bottom">
+            <div className="footer-content-wrapper">
+              <h2 className="get-in-touch">GET IN TOUCH</h2>
+              <div className="contact-section">
+                <div className="contact-info">
+                  <p className="label">Call us at</p>
+                  <p className="phone">79319324298</p>
+                  <p className="timing">Monday to Friday: 09:00AM - 09:00PM</p>
+                  <p className="timing">Saturday: 09:00AM - 06:00PM</p>
+                </div>
+
+                <div className="links-section">
+                  <div className="link-group">
+                    <h3>Support</h3>
+                    <a href="mailto:hello@commic.com">hello@commic.com</a>
+                  </div>
+
+                  <div className="link-group">
+                    <h3>Careers</h3>
+                    <Link to="/career">We're hiring!</Link>
+                  </div>
+
+                  <div className="link-group">
+                    <h3>PR Inquiries</h3>
+                    <a href="mailto:pr@commix.com">pr@commix.com</a>
+                  </div>
+
+                  <div className="link-group">
+                    <h3>Influencer collab</h3>
+                    <Link to="/collab">Join Us</Link>
+                  </div>
+                </div>
+              </div>
             </div>
 
-            <div className="footer-content">
-              <div className="footer-column mb-3">
-                <p>Call us at</p>
-                <div className="divider-line"></div>
-                <p>
-                  79319324298<br />
-                  <span className="timing-line">Monday to Friday: 09:00AM - 09:00PM</span><br />
-                  <span className="timing-line">Saturday: 09:00AM - 06:00PM</span>
-                </p>
-              </div>
-
-              <div className="footer-column mb-3">
-                <h4>Support</h4>
-                <a href="mailto:hello@commic.com">hello@commic.com</a>
-              </div>
-
-              <div className="footer-column mb-3">
-                <h4>Careers</h4>
-                <Link to="/career">We're hiring!</Link>
-              </div>
-
-              <div className="footer-column mb-3">
-                <h4>PR Inquiries</h4>
-                <a href="mailto:pr@commix.com">pr@commix.com</a>
-              </div>
-
-              <div className="footer-column mb-3">
-                <h4>Influencer Collab</h4>
-                <Link to="/collab">Join Us</Link>
-              </div>
+            <div className="footer-divider"></div>
+            
+            <div className="copyright">
+              Copyright@2024 Commix. All rights reserved.
             </div>
           </div>
         </>
@@ -120,20 +136,20 @@ const Footer = () => {
 
           <div className="mobile-footer-contact">
             <div className="contact-item">
-              <SocialIcon icon={faPhone} link="tel:79319324298" />
+              <FontAwesomeIcon icon={faPhone} />
               <span>79319324298</span>
             </div>
             <div className="contact-item">
-              <SocialIcon icon={faEnvelope} link="mailto:hello@commic.com" />
+              <FontAwesomeIcon icon={faEnvelope} />
               <span>hello@commic.com</span>
             </div>
           </div>
 
           <div className="mobile-footer-social">
-            <SocialIcon icon={faInstagram} link="https://instagram.com" />
-            <SocialIcon icon={faFacebookF} link="https://facebook.com" />
-            <SocialIcon icon={faTwitter} link="https://twitter.com" />
-            <SocialIcon icon={faYoutube} link="https://youtube.com" />
+            <FontAwesomeIcon icon={faInstagram} />
+            <FontAwesomeIcon icon={faFacebookF} />
+            <FontAwesomeIcon icon={faTwitter} />
+            <FontAwesomeIcon icon={faYoutube} />
           </div>
         </div>
       )}

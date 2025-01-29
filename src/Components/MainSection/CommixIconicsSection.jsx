@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import Slider from 'react-slick';
+import { gsap } from 'gsap';
 
 const CommixIconicsSection = () => {
+  const sliderRef = useRef(null);
+
   const productSliderSettings = {
     infinite: true,
     speed: 500,
@@ -10,10 +13,10 @@ const CommixIconicsSection = () => {
     centerMode: true,
     centerPadding: '0',
     autoplay: true,
-    autoplaySpeed: 2000,
+    autoplaySpeed: 3000,
     pauseOnHover: false,
     cssEase: 'ease',
-    initialSlide: 1, // Start with second slide
+    initialSlide: 2, // Start with second slide
     responsive: [
       {
         breakpoint: 768,
@@ -36,8 +39,31 @@ const CommixIconicsSection = () => {
     { name: 'Custom Cream', image: 'iconic3.png', price: '$23.00' }
   ];
 
+  useEffect(() => {
+    const slider = sliderRef.current;
+
+    const handleSlideChange = () => {
+      const slides = slider.querySelectorAll('.product-cards');
+      slides.forEach((slide, index) => {
+        const isActive = index === 1; // Center slide
+        gsap.to(slide, {
+          scale: isActive ? 1.2 : 1,
+          duration: 0.5,
+          ease: 'power2.out'
+        });
+      });
+    };
+
+    handleSlideChange(); // Initial call
+
+    slider.addEventListener('afterChange', handleSlideChange);
+    return () => {
+      slider.removeEventListener('afterChange', handleSlideChange);
+    };
+  }, []);
+
   return (
-    <section className="commix-iconics-section">
+    <section className="commix-iconics-section" ref={sliderRef} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
       <div className="heading-container">
         <img src={require('../../Assets/Image/bloomLeft.png')} alt="Flower Icon" className="decor-icon left-icon" />
         <h2 className="section-heading">

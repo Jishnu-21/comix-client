@@ -42,37 +42,42 @@ export default function AdminLogin() {
   };
 
   return (
-    <div className="admin-login-container">
-      <h2 className="admin-login-title">Admin Login</h2>
-      <form onSubmit={handleSubmit} className="admin-login-form">
-        <div className="admin-login-form-group">
-          <label htmlFor="email" className="admin-login-label">Email:</label>
-          <input
-            type="email"
-            id="email"
-            className="admin-login-input"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="Enter your email"
-            required
-          />
-        </div>
-        <div className="admin-login-form-group">
-          <label htmlFor="password" className="admin-login-label">Password:</label>
-          <input
-            type="password"
-            id="password"
-            className="admin-login-input"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Enter your password"
-            required
-          />
-        </div>
-        <button type="submit" className="admin-login-button">
-          Login
-        </button>
-      </form>
+    <div className="admin-login-page">
+      <video autoPlay muted loop className="background-video">
+        <source src="https://videos.pexels.com/video-files/9150545/9150545-hd_1920_1080_24fps.mp4" type="video/mp4" />
+      </video>
+      <div className="admin-login-container">
+        <h2 className="admin-login-title">Admin Login</h2>
+        <form onSubmit={handleSubmit} className="admin-login-form">
+          <div className="admin-login-form-group">
+            <label htmlFor="email" className="admin-login-label">Email:</label>
+            <input
+              type="email"
+              id="email"
+              className="admin-login-input"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Enter your email"
+              required
+            />
+          </div>
+          <div className="admin-login-form-group">
+            <label htmlFor="password" className="admin-login-label">Password:</label>
+            <input
+              type="password"
+              id="password"
+              className="admin-login-input"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Enter your password"
+              required
+            />
+          </div>
+          <button type="submit" className="admin-login-button">
+            Login
+          </button>
+        </form>
+      </div>
     </div>
   );
 }

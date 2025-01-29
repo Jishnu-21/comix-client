@@ -157,7 +157,7 @@ function App() {
 
 const ChatbotWrapper = () => {
   const location = useLocation();
-  const noChatbotRoutes = ['/login', '/signup', '/order-success', '/admin/', '/admin/login']
+  const noChatbotRoutes = ['/login', '/signup', '/order-success', '/admin/', '/admin/login/']
   // Check if the current route is one of the specified routes or if it's a NotFound route
   const showChatbot = !noChatbotRoutes.includes(location.pathname);
 

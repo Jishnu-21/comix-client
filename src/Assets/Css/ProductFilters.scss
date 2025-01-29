@@ -61,16 +61,26 @@
             padding: 15px;
         }
 
-        .list-group-item {
+        .list-group {
             background-color: transparent;
-            color: white;
             border: none;
-            padding: 10px 15px;
-            transition: background-color 0.3s, color 0.3s;
 
-            &:hover {
-                background-color: rgba(255, 255, 255, 0.1);
-                color: $highlight-color;
+            .list-group-item {
+                background-color: transparent;
+                border: none;
+                color: $white;
+                padding: 8px 15px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+
+                &:hover {
+                    background-color: rgba($highlight-color, 0.1);
+                }
+
+                span {
+                    display: block;
+                    width: 100%;
+                }
             }
         }
     }

@@ -8,7 +8,7 @@ const YouTubeVideo = ({ videoId, title }) => {
     <div className="youtube-video-wrapper">
       <div className="youtube-video-container">
         <iframe
-          src={`https://www.youtube.com/embed/${videoId}`}
+          src='https://youtu.be/lJIrF4YjHfQ'
           title={title || "YouTube video player"}
           frameBorder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"

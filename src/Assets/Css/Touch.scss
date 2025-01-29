@@ -6,11 +6,6 @@
   margin-bottom: -80px;
   z-index: 1;
 
-  @media (max-width: 767px) {
-    margin-top: 0;
-    padding-top: 2rem;
-  }
-
   .touch-content {
     position: relative;
     z-index: 1;
@@ -114,76 +109,98 @@
     background-repeat: no-repeat;
     opacity: 0.1;
   }
-}
 
-// Add media query for responsiveness
-@media (max-width: 768px) {
-  .touch-subscribe-section {
-    padding: 3rem 0 10rem;
-    
+  @media (max-width: 768px) {
+    padding: 2rem 0 4rem;
+    margin-bottom: -40px;
+
     .touch-content {
-      padding-bottom: 80px;
+      padding-bottom: 40px;
     }
 
     .touch-heading-container {
-      flex-direction: column;
+      flex-direction: row;
+      margin-bottom: 1rem;
+
       .touch-section-heading {
-        font-size: 1.5rem;
+        font-size: 1.3rem;
+        white-space: nowrap;
       }
 
       .touch-decor-icon {
-        width: 2rem;
+        width: 1.4rem;
+        margin: 0 0.4rem;
       }
     }
 
     .touch-section-description {
-      font-size: 0.9rem;
+      font-size: 0.85rem;
+      margin: 0.8rem 1rem 1.5rem;
+      line-height: 1.4;
     }
 
     .touch-subscribe-form {
       flex-direction: column;
-      padding: 0 15px;
-      
-      .touch-email-input {
-        width: 70%;
-        margin: 0 auto 20px;
-        border-radius: 5px;
-        border-right: 1px solid black;
-        font-size: 0.875rem;
+      padding: 0 0.5rem;
+
+      .touch-email-input,
+      .touch-submit-button {
+        width: 95%;
+        height: 2.6rem;
+        margin: 0 auto 0.8rem;
+        font-size: 0.8rem;
+        border-radius: 4px;
       }
 
       .touch-submit-button {
-        width: 70%;
-        margin: 0 auto;
-        border-radius: 5px;
+        padding: 0 1rem;
       }
     }
   }
-}
 
-// New media query for smaller screens
-@media (max-width: 576px) {
-  .touch-subscribe-section {
+  @media (max-width: 480px) {
+    padding: 1.5rem 0 3rem;
+
     .touch-heading-container {
       .touch-section-heading {
-        font-size: 1.25rem;
+        font-size: 1.1rem;
       }
 
       .touch-decor-icon {
-        width: 1.5rem;
-        margin: 0 0.5rem;
+        width: 1.1rem;
+        margin: 0 0.3rem;
       }
     }
 
     .touch-section-description {
-      font-size: 0.875rem;
+      font-size: 0.78rem;
+      margin: 0.6rem 0.8rem 1.2rem;
     }
 
     .touch-subscribe-form {
       .touch-email-input,
       .touch-submit-button {
-        font-size: 0.8125rem;
+        width: 100%;
+        height: 2.4rem;
+        font-size: 0.75rem;
+        margin-bottom: 0.6rem;
       }
+    }
+  }
+
+  @media (max-width: 360px) {
+    .touch-heading-container {
+      .touch-section-heading {
+        font-size: 1rem;
+      }
+
+      .touch-decor-icon {
+        width: 1rem;
+      }
+    }
+
+    .touch-section-description {
+      font-size: 0.72rem;
     }
   }
 }
