@@ -5,6 +5,7 @@ import { faBars, faSearch, faShoppingCart, faHome, faComments, faUserCircle, faG
 import './MobileHeader.scss'; // Create a separate SCSS file for styles
 import { API_URL } from '../config/api';
 import { useNavigate } from 'react-router-dom';
+import ChatbotModal from './Chatbot/ChatbotModal';
 
 const MobileHeader = ({ cartItemCount, onMenuClick, marqueeText, onLogout, categories }) => {
   const [isSearchVisible, setIsSearchVisible] = useState(false);
@@ -17,6 +18,7 @@ const MobileHeader = ({ cartItemCount, onMenuClick, marqueeText, onLogout, categ
     { title: 'Skin Care', image: '/images/lip3.jpg' },
     { title: 'Body Care', image: '/images/lip4.jpg' },
   ]);
+  const [isChatbotOpen, setIsChatbotOpen] = useState(false);
   const navigate = useNavigate();
   useEffect(() => {
     const fetchBestSellers = async () => {
@@ -168,10 +170,10 @@ const MobileHeader = ({ cartItemCount, onMenuClick, marqueeText, onLogout, categ
           <FontAwesomeIcon icon={faHome} />
           Home
         </Link>
-        <Link to="/cart" className="footer-item">
-          <FontAwesomeIcon icon={faShoppingCart} />
-          Cart
-        </Link>
+        <button className="footer-item" onClick={() => setIsChatbotOpen(true)}>
+          <FontAwesomeIcon icon={faComments} />
+          Chatbot
+        </button>
         <Link to="/offers" className="footer-item">
           <FontAwesomeIcon icon={faGift} />
           Offers
@@ -181,6 +183,7 @@ const MobileHeader = ({ cartItemCount, onMenuClick, marqueeText, onLogout, categ
           Profile
         </Link>
       </div>
+      <ChatbotModal isOpen={isChatbotOpen} onClose={() => setIsChatbotOpen(false)} />
     </header>
   );
 };

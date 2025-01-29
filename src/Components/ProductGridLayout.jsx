@@ -5,7 +5,6 @@ import CardComponent from './CardComponent';
 import '../../Assets/Css/ProductPage/ProductGridLayout.scss';
 import axios from 'axios'; // Import axios for API calls
 import { API_URL } from '../../config/api';
-import MobileFilter from './MobileFilter';
 
 const itemsPerPage = 9;
 const ProductGridLayout = ({ searchTerm, sortOption, setSortOption }) => {
@@ -205,7 +204,7 @@ const ProductGridLayout = ({ searchTerm, sortOption, setSortOption }) => {
             price={product.variants && product.variants.length > 0 ? product.variants[0].price : 'N/A'}
             description={product.description}
             slug={product.slug}
-            category={product.category}
+            category={product.category_id.name}
           />
         ))}
       </div>

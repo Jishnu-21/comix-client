@@ -106,6 +106,7 @@ const ProductGridLayout = ({ searchTerm, sortOption, setSortOption }) => {
       return [...prev, subcategoryId]; // Add subcategory if not selected
     });
   };
+  
 
   const handleFilterChange = (newFilters) => {
     setSelectedCategories(newFilters.category || selectedCategories);
@@ -271,7 +272,7 @@ const ProductGridLayout = ({ searchTerm, sortOption, setSortOption }) => {
                   image={product.image_urls[0]}
                   title={product.name}
                   price={product.variants?.[0]?.price || 'N/A'}
-                  description={product.category_id?.name || 'Uncategorized'}
+                  category={product.category_id?.name || 'Uncategorized'}
                   slug={product.slug}
                 />
               </SwiperSlide>
@@ -290,7 +291,7 @@ const ProductGridLayout = ({ searchTerm, sortOption, setSortOption }) => {
                   image={product.image_urls[0]}
                   title={product.name}
                   price={product.variants?.[0]?.price || 'N/A'}
-                  description={product.category_id?.name || 'Uncategorized'}
+                  category={product.category_id?.name || 'Uncategorized'}
                   slug={product.slug}
                 />
               </div>

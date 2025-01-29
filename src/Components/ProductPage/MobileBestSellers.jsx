@@ -22,7 +22,7 @@ const MobileBestSellers = ({ bestSellers }) => {
               image={product.image_urls[0]}
               title={product.name}
               price={product.variants?.[0]?.price || 'N/A'}
-              description={product.description}
+              category={product.category_id?.name || 'Uncategorized'}
               slug={product.slug}
             />
           </SwiperSlide>

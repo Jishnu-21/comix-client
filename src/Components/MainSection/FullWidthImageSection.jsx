@@ -1,137 +1,103 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import gsap from 'gsap';
 import ScrollTrigger from 'gsap/ScrollTrigger';
 import '../../Assets/Css/FullWidthImageSection.scss';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const VIDEO_URL = 'https://www.apple.com/media/us/mac-pro/2013/16C1b6b5-1d91-4fef-891e-ff2fc1c1bb58/videos/macpro_main_desktop.mp4';
-const CACHE_NAME = 'video-cache-v1';
-
-let cachedVideoBlob = null;
-
 const FullWidthImageSection = () => {
-  const [isLoaded, setIsLoaded] = useState(false);
   const containerRef = useRef(null);
   const videoRef = useRef(null);
-  const scrollTriggerRef = useRef(null);
+  const [videoLoaded, setVideoLoaded] = useState(false);
+  const scrollTrigger = useRef(null);
+  const videoUrl = 'https://www.apple.com/media/us/mac-pro/2013/16C1b6b5-1d91-4fef-891e-ff2fc1c1bb58/videos/macpro_main_desktop.mp4';
 
-  const loadVideo = async () => {
-    try {
-      // Check for Cache API availability
-      const isCacheSupported = typeof window !== 'undefined' && 'caches' in window;
-      if (!isCacheSupported) {
-        throw new Error('Cache API not supported');
-      }
-
-      if (!cachedVideoBlob) {
-        const cache = await caches.open(CACHE_NAME);
-        let videoResponse = await cache.match(VIDEO_URL);
-
-        if (!videoResponse) {
-          const response = await fetch(VIDEO_URL);
-          if (!response.ok) {
-            throw new Error(`Network response not OK: ${response.status}`);
-          }
-          
-          // Clone response for cache storage
-          await cache.put(VIDEO_URL, response.clone());
-          videoResponse = response;
-        }
-
-        const blob = await videoResponse.blob();
-        cachedVideoBlob = URL.createObjectURL(blob);
-      }
-
-      if (videoRef.current) {
-        videoRef.current.src = cachedVideoBlob;
-      }
-    } catch (error) {
-      console.warn(`Video caching failed: ${error.message}. Using direct URL.`);
-      if (videoRef.current) {
-        videoRef.current.src = VIDEO_URL;
-      }
-    }
-  };
-
+  // Video loading handler
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      loadVideo();
-    }
+    const video = videoRef.current;
+    if (!video) return;
+
+    const handleLoadedData = () => {
+      setVideoLoaded(true);
+      initScrollAnimation();
+    };
+
+    video.src = videoUrl;
+    video.preload = 'auto';
+    video.addEventListener('loadedmetadata', handleLoadedData);
+
+    return () => {
+      video.removeEventListener('loadedmetadata', handleLoadedData);
+    };
   }, []);
 
-  useEffect(() => {
-    if (videoRef.current) {
-      const video = videoRef.current;
+  // Scroll animation setup
+  const initScrollAnimation = () => {
+    const video = videoRef.current;
+    if (!video || !containerRef.current) return;
 
-      const initVideo = () => {
-        video.pause();
-        video.currentTime = 0;
-        ScrollTrigger.refresh(true);
-      };
+    // Calculate animation duration based on video length
+    const scrollDistance = containerRef.current.offsetHeight * 2;
+    const frameRate = 30;
+    const totalFrames = video.duration * frameRate;
 
-      const setupScrollTrigger = () => {
-        if (scrollTriggerRef.current) {
-          scrollTriggerRef.current.kill();
-        }
-
-        ScrollTrigger.normalizeScroll(true);
-
-        const endValue = video.duration * 150;
-
-        scrollTriggerRef.current = ScrollTrigger.create({
-          trigger: containerRef.current,
-          start: 'top top',
-          end: `+=${endValue}`,
-          scrub: 1,
-          pin: true,
-          anticipatePin: 1,
-          pinSpacing: true,
-          ease: "none",
-          immediateRender: true,
-          onUpdate: (self) => {
-            if (video.duration) {
-              const videoTime = Math.min(self.progress * video.duration, video.duration);
-              gsap.to(video, {
-                duration: 0.1,
-                currentTime: videoTime,
-                overwrite: true,
-                ease: "none"
-              });
-            }
-          },
-          onLeave: () => video.currentTime >= video.duration - 0.1
+    scrollTrigger.current = ScrollTrigger.create({
+      trigger: containerRef.current,
+      start: 'top top',
+      end: `+=${scrollDistance}`,
+      scrub: 0.5,
+      pin: true,
+      anticipatePin: 1,
+      markers: false, // Set to true for debugging
+      onUpdate: (self) => {
+        const progress = self.progress;
+        const currentTime = Math.min(progress * video.duration, video.duration);
+        
+        // Use RAF for smoother animation
+        requestAnimationFrame(() => {
+          video.currentTime = currentTime;
         });
-      };
+      }
+    });
 
-      video.addEventListener('loadeddata', () => {
-        setIsLoaded(true);
-        initVideo();
-        setupScrollTrigger();
-      });
+    // Mobile touch optimization
+    ScrollTrigger.config({
+      limitCallbacks: true,
+      ignoreMobileResize: true
+    });
+  };
 
-      return () => {
-        if (scrollTriggerRef.current) {
-          scrollTriggerRef.current.kill();
-        }
-        ScrollTrigger.normalizeScroll(false);
-      };
-    }
+  // Cleanup
+  useEffect(() => {
+    return () => {
+      if (scrollTrigger.current) {
+        scrollTrigger.current.kill();
+      }
+      ScrollTrigger.clearMatchMedia();
+    };
   }, []);
 
   return (
-    <section className={`full-width-image-section ${!isLoaded ? 'loading' : ''}`} ref={containerRef}>
-      {!isLoaded && <div className="loading-placeholder">Loading video...</div>}
-      <div className="video-wrapper">
+    <section 
+      className={`full-width-video-section ${videoLoaded ? 'loaded' : 'loading'}`}
+      ref={containerRef}
+    >
+      <div className="video-container">
         <video
           ref={videoRef}
           muted
           playsInline
-          className="full-width-video"
-          onError={(e) => console.error('Video playback error:', e)}
-          preload="metadata"
+          preload="auto"
+          className="scroll-video"
+          webkit-playsinline="true"
         />
       </div>
+      
+      {!videoLoaded && (
+        <div className="loading-overlay">
+          <div className="loading-spinner" />
+        </div>
+      )}
     </section>
   );
 };

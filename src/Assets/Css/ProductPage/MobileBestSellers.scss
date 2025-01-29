@@ -32,7 +32,7 @@
 
         .product-card {
           margin: 0;
-          height: 100%;
+          height: 100%; // Ensure all cards take full height
           display: flex;
           flex-direction: column;
           box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
@@ -67,12 +67,11 @@
               font-weight: 500;
               margin-bottom: 4px;
               line-height: 1.2;
-              display: -webkit-box;
-              -webkit-line-clamp: 2;
-              -webkit-box-orient: vertical;
-              overflow: hidden;
-              text-overflow: ellipsis;
-              height: 2.4em;
+              display: block; // Use block display
+              overflow: hidden; // Hide overflow
+              text-overflow: ellipsis; // Show ellipsis
+              height: 1rem; // Set fixed height for clipping
+              max-height: 1rem; // Ensure it doesn't exceed this height
             }
 
             .product-category {
