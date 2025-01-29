@@ -31,10 +31,36 @@ const ImageComparisonSlider = ({ beforeImage, afterImage, height = '600px' }) =>
     document.removeEventListener('mouseup', handleMouseUp);
   };
 
+  const handleTouchStart = (e) => {
+    e.stopPropagation();
+    document.addEventListener('touchmove', handleTouchMove);
+    document.addEventListener('touchend', handleTouchEnd);
+  };
+
+  const handleTouchMove = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (containerRef.current) {
+      const containerRect = containerRef.current.getBoundingClientRect();
+      const containerWidth = containerRect.width;
+      const touchX = e.touches[0].clientX - containerRect.left;
+      const newPosition = (touchX / containerWidth) * 100;
+      setSliderPosition(Math.min(Math.max(newPosition, 0), 100));
+    }
+  };
+
+  const handleTouchEnd = (e) => {
+    e.stopPropagation();
+    document.removeEventListener('touchmove', handleTouchMove);
+    document.removeEventListener('touchend', handleTouchEnd);
+  };
+
   useEffect(() => {
     return () => {
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseup', handleMouseUp);
+      document.removeEventListener('touchmove', handleTouchMove);
+      document.removeEventListener('touchend', handleTouchEnd);
     };
   }, []);
 
@@ -80,6 +106,7 @@ const ImageComparisonSlider = ({ beforeImage, afterImage, height = '600px' }) =>
         className="slider"
         style={{ left: `${sliderPosition}%` }}
         onMouseDown={handleMouseDown}
+        onTouchStart={handleTouchStart}
       >
         <div className="slider-button">
           <span>&lt;|&gt;</span>
