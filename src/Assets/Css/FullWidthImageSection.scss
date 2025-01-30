@@ -1,4 +1,7 @@
 .full-width-video-section {
+  @media (max-width: 767px) {
+    display: none;
+  }
   position: relative;
   width: 100vw;
   left: 50%;
