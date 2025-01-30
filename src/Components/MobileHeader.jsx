@@ -84,7 +84,7 @@ const MobileHeader = ({ cartItemCount, onMenuClick, marqueeText, onLogout, categ
         <button className="menu-button" onClick={toggleSidebar}>
           <FontAwesomeIcon icon={faBars} />
         </button>
-        <Link to="/" className="logo">
+        <Link to="/" className="mobile-logo">
           <img src={require('../Assets/Image/logo/Mask group.png')} alt="Logo" />
         </Link>
         <button className="search-button" onClick={handleSearchToggle}>

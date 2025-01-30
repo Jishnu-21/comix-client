@@ -51,9 +51,8 @@ const Touch = () => {
 
   return (
     <section className='touch-subscribe-section' style={backgroundStyle}>
+     <SectionTitle title="LET'S STAY IN TOUCH" />
       <div className='touch-content'>
-      <SectionTitle title="LET'S STAY IN TOUCH" />
-
         <p className='touch-section-description'>
           Get The Latest Beauty Tips Straight To Your Inbox. Can't Wait To Connect
         </p>

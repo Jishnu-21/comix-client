@@ -12,6 +12,8 @@
     right: 0;
     z-index: 1000;
     height: 80px;
+
+    
     &.chatbot-open {
         filter: blur(4px);
         position: fixed;
@@ -91,12 +93,16 @@
         margin-right: -40px;
       }
 
-      .logo {
-
+      .mobile-logo {
+        display: flex;
+        position: relative;
+        align-items: center;
+        left: 15px;
+        bottom: 3px;
         img {
           height: 30px;
-          display: block; // Center the logo
-          margin: 5 auto; // Centering
+          display: block;
+          margin: 0 auto;
         }
       }
 
