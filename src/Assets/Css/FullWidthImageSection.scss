@@ -46,6 +46,10 @@
       animation: spin 1s ease-in-out infinite;
     }
   }
+  
+  @media (orientation: portrait) and (max-width: 768px) {
+    height: 150vh; /* More scroll area for portrait */
+  }
 }
 
 @keyframes spin {

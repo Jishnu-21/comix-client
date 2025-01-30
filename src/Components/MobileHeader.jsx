@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faSearch, faShoppingCart, faHome, faComments, faUserCircle, faGift, faSignOutAlt, faTimes } from '@fortawesome/free-solid-svg-icons';
-import './MobileHeader.scss'; // Create a separate SCSS file for styles
+import './MobileHeader.scss';
 import { API_URL } from '../config/api';
 import { useNavigate } from 'react-router-dom';
 import ChatbotModal from './Chatbot/ChatbotModal';
@@ -20,26 +20,25 @@ const MobileHeader = ({ cartItemCount, onMenuClick, marqueeText, onLogout, categ
   ]);
   const [isChatbotOpen, setIsChatbotOpen] = useState(false);
   const navigate = useNavigate();
+
+  // Fetch best sellers
   useEffect(() => {
     const fetchBestSellers = async () => {
       try {
         const response = await fetch(`${API_URL}/products/`);
         const data = await response.json();
         if (data.success) {
-          // Take only the first 3 products as best sellers
           const topProducts = data.products.slice(0, 3);
           setBestSellers(topProducts);
-        } else {
-          console.error('Failed to fetch best sellers:', data.message);
         }
       } catch (error) {
         console.error('Error fetching best sellers:', error);
       }
     };
-
     fetchBestSellers();
   }, []);
 
+  // Handle body overflow for sidebar
   useEffect(() => {
     if (isSidebarOpen) {
       document.body.style.overflow = 'hidden';
@@ -48,34 +47,39 @@ const MobileHeader = ({ cartItemCount, onMenuClick, marqueeText, onLogout, categ
     }
   }, [isSidebarOpen]);
 
-  const handleSearchToggle = () => {
-    setIsSearchVisible(!isSearchVisible);
-  };
+  // Handle body overflow and scrolling for chatbot modal
+  useEffect(() => {
+    if (isChatbotOpen) {
+      document.body.style.overflow = 'hidden';
+      document.documentElement.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+      document.documentElement.style.overflow = 'auto';
+    }
+  }, [isChatbotOpen]);
 
-  const toggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen);
-  };
+  const handleSearchToggle = () => setIsSearchVisible(!isSearchVisible);
+  const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
 
   const handleSearch = () => {
-    // Add your search logic here
     if (searchTerm.trim()) {
-      window.location.href = "/product";
+      navigate("/product", { state: { searchTerm } });
     }
   };
 
   const handleSearchKeyPress = (e) => {
-    if (e.key === 'Enter') {
-      handleSearch();
-    }
+    if (e.key === 'Enter') handleSearch();
   };
 
   return (
-    <header className="mobile-header">
+    <>
+    <header className={`mobile-header ${isChatbotOpen ? 'chatbot-open' : ''}`}>
       <div className="header-top">
         <div className="marquee-container">
           <div className="marquee-item">{marqueeText}</div>
         </div>
       </div>
+      
       <div className="header-content">
         <button className="menu-button" onClick={toggleSidebar}>
           <FontAwesomeIcon icon={faBars} />
@@ -88,11 +92,10 @@ const MobileHeader = ({ cartItemCount, onMenuClick, marqueeText, onLogout, categ
         </button>
         <Link to="/cart" className="cart-button">
           <FontAwesomeIcon icon={faShoppingCart} />
-          {cartItemCount > 0 && (
-            <span className="cart-item-count">{cartItemCount}</span>
-          )}
+          {cartItemCount > 0 && <span className="cart-item-count">{cartItemCount}</span>}
         </Link>
       </div>
+
       {isSearchVisible && (
         <div className="search-dropdown">
           <div className="search-header">
@@ -156,7 +159,7 @@ const MobileHeader = ({ cartItemCount, onMenuClick, marqueeText, onLogout, categ
         </button>
         <nav className="sidebar-nav">
           {categories.map((category) => (
-            <Link to={`/category/${category.slug}`} className="sidebar-item" onClick={toggleSidebar} key={category._id}>
+            <Link to={`/product`} className="sidebar-item" onClick={toggleSidebar} key={category._id}>
               <FontAwesomeIcon icon={faGift} /> {category.name}
             </Link>
           ))}
@@ -183,8 +186,16 @@ const MobileHeader = ({ cartItemCount, onMenuClick, marqueeText, onLogout, categ
           Profile
         </Link>
       </div>
-      <ChatbotModal isOpen={isChatbotOpen} onClose={() => setIsChatbotOpen(false)} />
     </header>
+    {isChatbotOpen && (
+        <div className="chatbot-modal-overlay">
+          <ChatbotModal 
+            isOpen={isChatbotOpen} 
+            onClose={() => setIsChatbotOpen(false)} 
+          />
+        </div>
+      )}
+    </>
   );
 };
 

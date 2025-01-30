@@ -48,8 +48,9 @@ const Faq = () => {
   ];
 
   return (
+    <>
+    <Header/>
     <div className="faq-page">
-      <Header/>
       <div className="container faq-container">
         <h1 className="faq-title text-center">Frequently Asked Questions</h1>
         <nav className="faq-breadcrumb text-center mb-4">
@@ -103,9 +104,10 @@ const Faq = () => {
           </div>
         </div>
       </div>
-      <Touch/>
-      <Footer/>
-    </div>
+    </div>  
+    <Touch/>
+    <Footer/>
+    </>
   )
 }
 

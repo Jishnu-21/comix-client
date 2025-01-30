@@ -115,8 +115,8 @@ function App() {
 
   return (
     <Router>
-      <ScrollToTop />
       <RouteHandler />
+      <ScrollToTop />
       <div className="App">
         <Toaster position="top-center" richColors />
         <Routes>

@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, } from 'react';
 import { Link, useNavigate } from 'react-router-dom'; 
 import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
@@ -54,6 +54,8 @@ const Header = () => {
   const [isFooterVisible, setIsFooterVisible] = useState(false);
   const [categories, setCategories] = useState([]);
   const [categoryProducts, setCategoryProducts] = useState({});
+
+  const [bestSellers, setBestSellers] = useState([]);
   const marqueeItems = [
     "🎉 Welcome to Comix - Your Beauty Destination!",
     "✨ Free Shipping on Orders Over ₹499",
@@ -71,23 +73,27 @@ const Header = () => {
     { title: 'Gifting', image: './images/lip5.jpg' }
   ];
 
-  const bestSellers = [
-    {
-      title: 'Ace Of Face Foundation Stick',
-      image: './images/blog1.jpg',
-      price: '₹999'
-    },
-    {
-      title: 'Ace Of Face Foundation Stick',
-      image: './images/blog2.jpg',
-      price: '₹999'
-    },
-    {
-      title: 'Ace Of Face Foundation Stick',
-      image: './images/blog3.jpg',
-      price: '₹999'
-    }
-  ];
+
+
+  useEffect(() => {
+    const fetchBestSellers = async () => {
+      try {
+        const response = await fetch(`${API_URL}/products/`);
+        const data = await response.json();
+        if (data.success) {
+          // Take only the first 3 products as best sellers
+          const topProducts = data.products.slice(0, 3);
+          setBestSellers(topProducts);
+        } else {
+          console.error('Failed to fetch best sellers:', data.message);
+        }
+      } catch (error) {
+        console.error('Error fetching best sellers:', error);
+      }
+    };
+
+    fetchBestSellers();
+  }, []);
 
   const handleSearchChange = (e) => {
     const value = e.target.value;
@@ -551,11 +557,11 @@ const Header = () => {
                   </div>
                   <div className="best-sellers">
                     {bestSellers.map((item, index) => (
-                      <div key={index} className="best-seller-item">
-                        <img src={item.image} alt={item.title} />
+                  <div key={item.id} className="best-seller-item" onClick={() => navigate(`/product/${item.slug}`)}>
+                        <img src={item.image_urls[0]} alt={item.image_urls[1]} />
                         <div className="item-details">
-                          <span className="title">{item.title}</span>
-                          <span className="price">{item.price}</span>
+                          <span className="title">{item.name}</span>
+                          <span className="price">Rs:{item.variants[0].price}</span>
                         </div>
                       </div>
                     ))}

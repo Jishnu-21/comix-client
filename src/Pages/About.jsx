@@ -10,7 +10,6 @@ import Touch from '../Components/Touch';
 const About = () => {
   return <>
     <Header/>
-    <SectionTitle title="About Us"/>
     <AboutContent/>
     <OwnerShowcase/>
     <Quote/>

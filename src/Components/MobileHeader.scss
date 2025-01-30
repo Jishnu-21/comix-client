@@ -1,5 +1,7 @@
 .mobile-header {
   @media screen and (max-width: 767px) {
+
+    
     background-color: #2C2E3A;
     color: white;
     display: flex;
@@ -10,6 +12,24 @@
     right: 0;
     z-index: 1000;
     height: 80px;
+    &.chatbot-open {
+        filter: blur(4px);
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        
+        &::after {
+          content: '';
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: rgba(0, 0, 0, 0.3);
+          z-index: 999; // Lower than chatbot modal
+        }
+      }
+
 
     .header-top {
       background-color: #1E202E; // Background for marquee
@@ -451,6 +471,8 @@
       }
     }
   }
+
+  
 }
 
 @keyframes marquee {
@@ -461,3 +483,16 @@
     transform: translateX(-100%); // Move completely off-screen
   }
 }
+
+.chatbot-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2000; // Higher than header blur
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: transparent;
+  }

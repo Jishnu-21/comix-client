@@ -114,4 +114,32 @@
       }
     }
   }
+
+  @media (min-width: 768px) and (max-width: 1024px) {
+    .best-sellers-swiper {
+      .swiper-slide {
+        width: calc(50% - 10px) !important; // Two cards per view with some spacing
+        
+        .product-card {
+          // Adjust size to match product cards in iPad Pro
+          width: 100%;
+          height: auto;
+        }
+      }
+    }
+  }
+
+  @media (min-width: 1024px) and (max-width: 1366px) {
+    .best-sellers-swiper {
+      .swiper-slide {
+        width: calc(33.33% - 10px) !important; // Three cards per view for larger iPads
+        
+        .product-card {
+          // Adjust size to match product cards in iPad Pro
+          width: 100%;
+          height: auto;
+        }
+      }
+    }
+  }
 }

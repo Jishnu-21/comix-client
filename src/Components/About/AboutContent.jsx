@@ -3,7 +3,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import SplitType from 'split-type';
 import '../../Assets/Css/About/AboutContent.scss';
-
+import SectionTitle from '../SectionTitle';
 gsap.registerPlugin(ScrollTrigger);
 
 const AboutContent = () => {
@@ -46,6 +46,7 @@ const AboutContent = () => {
 
   return (
     <div className="about-content">
+          <SectionTitle title="About Us"/>
       <div className="content-section">
         <div className="image-container">
           <img src="/images/about1.jpg" alt="About Us Section 1" />
