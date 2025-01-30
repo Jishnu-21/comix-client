@@ -28,7 +28,7 @@ const MobileHeader = ({ cartItemCount, onMenuClick, marqueeText, onLogout, categ
         const response = await fetch(`${API_URL}/products/`);
         const data = await response.json();
         if (data.success) {
-          const topProducts = data.products.slice(0, 3);
+          const topProducts = data.products.slice(0, 4);
           setBestSellers(topProducts);
         }
       } catch (error) {
@@ -82,8 +82,7 @@ const MobileHeader = ({ cartItemCount, onMenuClick, marqueeText, onLogout, categ
       
       <div className="header-content">
         <button className="menu-button" onClick={toggleSidebar}>
-          <FontAwesomeIcon icon={faBars} />
-        </button>
+        <FontAwesomeIcon icon={faBars} />        </button>
         <Link to="/" className="mobile-logo">
           <img src={require('../Assets/Image/logo/Mask group.png')} alt="Logo" />
         </Link>
@@ -121,14 +120,14 @@ const MobileHeader = ({ cartItemCount, onMenuClick, marqueeText, onLogout, categ
           
           <div className="search-content">
             <div className="section hot-picks">
-              <h3>Hot Picks 🔥</h3>
-              <div className="picks-grid">
+              <h3>CATEGORIES</h3>
+              <div className="sellers-grid">
                 {hotPicks.map((item, index) => (
-                  <div key={index} className="pick-item">
+                  <div key={index} className="seller-item">
                     <div className="image-container">
                       <img src={item.image} alt={item.title} />
                     </div>
-                    <span>{item.title}</span>
+                    <span className='category-title'>{item.title}</span>
                   </div>
                 ))}
               </div>

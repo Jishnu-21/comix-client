@@ -20,13 +20,28 @@ const MainSlider = () => {
     try {
       const response = await axios.get(`${API_URL}/banners`);
       const homepageBanners = response.data.banners.filter(banner => banner.type === 'homepage');
-      setBanners(homepageBanners.length > 0 ? homepageBanners : [{
-        _id: 'default',
-        title: 'Welcome to Our Store',
-        description: 'Check out our amazing products',
-        link: '/',
-        image_url: defaultImage
-      }]);
+
+      // Check screen size
+      const isMobile = window.innerWidth < 768; // Mobile breakpoint
+
+      if (isMobile) {
+        // Set mobile banners
+        const mobileBanners = [
+          { _id: 'lap-banner1', title: 'Mobile Banner 1', image_url: '/banner1.webp' },
+          { _id: 'lap-banner2', title: 'Mobile Banner 2', image_url: '/banner3.webp' },
+          { _id: 'lap-banner3', title: 'Mobile Banner 3', image_url: '/banner.webp' }
+        ];
+        setBanners(mobileBanners);
+      } else {
+        // Set desktop banners
+        setBanners(homepageBanners.length > 0 ? homepageBanners : [{
+          _id: 'default',
+          title: 'Welcome to Our Store',
+          description: 'Check out our amazing products',
+          link: '/',
+          image_url: defaultImage
+        }]);
+      }
     } catch (error) {
       console.error('Error fetching banners:', error);
       setBanners([{
@@ -80,20 +95,12 @@ const MainSlider = () => {
             <div key={banner._id} className="slider-item">
               <div className="slide-content">
                 <div className="slide-background" style={{
-                  backgroundImage: `linear-gradient(to right, 
-                    rgba(255, 255, 255, 0.9) 0%, 
-                    rgba(255, 255, 255, 0.8) 15%, 
-                    rgba(255, 255, 255, 0.6) 25%,
-                    rgba(255, 255, 255, 0.2) 35%,
-                    rgba(255, 255, 255, 0) 45%
-                  ), url(${banner.image_url})`,
-                  backgroundPosition: 'center right',
-                  backgroundSize: 'fill'
+                  backgroundImage: `url(${banner.image_url})`,
+                  backgroundPosition: 'center',
+                  backgroundSize: 'cover'
                 }} />
                 <div className="content-wrapper">
-                  <h1>{banner.title}</h1>
-                  <p>{banner.description}</p>
-                  {renderShopNowButton(banner.link)}
+            
                 </div>
               </div>
             </div>

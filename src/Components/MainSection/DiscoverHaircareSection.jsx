@@ -60,10 +60,10 @@ const DiscoverHaircareSection = () => {
   }, [hasAnimated]); // Add hasAnimated to the dependency array
 
   const products = [
-    { name: 'Custom Shampoo', image: 'product1.png', category: 'HAIRCARE', price: '$23.00' },
-    { name: 'Custom Conditioner', image: 'product2.png', category: 'HAIRCARE', price: '$23.00' },
-    { name: 'Custom Cream', image: 'product3.png', category: 'HAIRCARE', price: '$23.00', smallImage: true },
-    { name: 'Custom Facewash', image: 'product4.png', category: 'HAIRCARE', price: '$23.00' },
+    { name: 'Custom Shampoo', image: 'primary.webp', category: 'HAIRCARE', price: '$23.00' },
+    { name: 'Custom Conditioner', image: 'primary5.webp', category: 'HAIRCARE', price: '$23.00' },
+    { name: 'Custom Cream', image: 'primary3.webp', category: 'HAIRCARE', price: '$23.00' },
+    { name: 'Custom Facewash', image: 'primary5.webp', category: 'HAIRCARE', price: '$23.00' },
   ];
 
   const videoSrc = 'f7175214cf3337ef11c0d61e15bb3970.mp4';

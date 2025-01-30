@@ -7,19 +7,18 @@
 
   @media (max-width: 767px) {
     bottom: 70px;
-    right: 10px;
-    left: 10px;
+    left: 240px;
     
-    &:not(.open) {
-      .chatbot-image-container {
-        display: none;
-      }
+    // Ensure chatbot image is always visible
+    .chatbot-image-container {
+      display: block;
     }
   }
 
   &.open {
+    // Ensure chatbot image is visible when open
     .chatbot-image-container {
-      display: none;
+      display: block;
     }
   }
 }

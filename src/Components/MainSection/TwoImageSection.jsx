@@ -3,8 +3,8 @@ import React from 'react';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import leftImage from '../../Assets/Image/leftImage.png';
-import rightImage from '../../Assets/Image/rightImage.png';
+import leftImage from '../../Assets/Image/secondbanner1.webp';
+import rightImage from '../../Assets/Image/secondbanner2.webp';
 
 const TwoImageSection = () => {
   const isMobile = window.innerWidth <= 768;

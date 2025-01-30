@@ -4,6 +4,7 @@ import axios from 'axios';
 import '../Assets/Css/Touch.scss'
 import { API_URL } from '../config/api';
 import SectionTitle from '../Components/SectionTitle';
+
 const Touch = () => {
   const [email, setEmail] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
