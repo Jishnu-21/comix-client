@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faSearch, faShoppingCart, faHome, faComments, faUserCircle, faGift, faSignOutAlt, faTimes } from '@fortawesome/free-solid-svg-icons';
-import './MobileHeader.scss';
+import '..Assets/Css/MobileHeader.scss';
 import { API_URL } from '../config/api';
 import { useNavigate } from 'react-router-dom';
 import ChatbotModal from './Chatbot/ChatbotModal';
