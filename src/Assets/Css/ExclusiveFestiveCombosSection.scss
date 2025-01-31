@@ -1,17 +1,17 @@
-.exclusive-festive-combos-section {
+.comix-exclusive-section {
   padding: 2rem;
   width: 100%;
 
-  .combo-items-container {
+  .comix-exclusive-grid {
     display: grid;
-    grid-template-columns: 0.7fr 1.6fr 0.7fr;
-    gap: 2rem;
+    grid-template-columns: 0.8fr 1.8fr 0.8fr;
+    gap: 1.5rem;
     width: 100%;
     margin: 0 auto;
-    align-items: center;
+    align-items: stretch;
 
     @media (max-width: 1200px) {
-      grid-template-columns: 0.7fr 1.6fr 0.7fr;
+      grid-template-columns: 0.8fr 1.8fr 0.8fr;
       gap: 1.5rem;
       padding: 0 1rem;
     }
@@ -21,7 +21,7 @@
       gap: 2rem;
       margin: 0 auto;
       
-      .combo-item {
+      .comix-exclusive-card {
         &:nth-child(2) {
           order: -1;
         }
@@ -34,10 +34,18 @@
     }
   }
 
-  .combo-item {
+  .comix-exclusive-card {
     position: relative;
     overflow: hidden;
     height: 350px;
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    transition: transform 0.3s ease;
+
+    &:hover {
+      transform: scale(1.02);
+    }
 
     @media (max-width: 1200px) {
       height: 300px;
@@ -52,14 +60,7 @@
     }
   }
 
-  .combo-image {
-    width: 100%;
-    height: 100%;
-    display: block;
-    object-fit: cover;
-  }
-
-  .combo-content {
+  .comix-exclusive-overlay {
     position: absolute;
     top: 0;
     left: 0;
@@ -81,17 +82,17 @@
     }
   }
 
-  .discount-tag {
+  .comix-exclusive-tag {
     align-self: flex-end;
     background-color: #ff4444;
     padding: 0.5rem 1rem;
     font-weight: bold;
   }
 
-  .content-text {
+  .comix-exclusive-text {
     text-align: center;
 
-    h3 {
+    .comix-exclusive-title {
       font-size: 1.4rem;
       font-weight: bold;
       margin-bottom: 0.5rem;
@@ -102,8 +103,9 @@
       }
     }
 
-    p {
+    .comix-exclusive-subtitle {
       font-size: 1.1rem;
+      opacity: 0.9;
 
       @media (max-width: 576px) {
         font-size: 1rem;
@@ -111,19 +113,16 @@
     }
   }
 
-  .shop-now-btn {
-    align-self: center;
-    background-color: black;
-    color: white;
+  .comix-exclusive-button {
+    background-color: #000;
+    color: #fff;
     border: none;
-    padding: 0.8rem 2rem;
-    font-weight: bold;
+    padding: 0.75rem 2rem;
+    font-weight: 500;
     cursor: pointer;
     transition: background-color 0.3s ease;
-
-    @media (max-width: 576px) {
-      padding: 0.6rem 1.5rem;
-    }
+    align-self: center;
+    text-transform: uppercase;
 
     &:hover {
       background-color: #333;

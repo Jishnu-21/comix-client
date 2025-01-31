@@ -1,26 +1,26 @@
 // FeaturedSection.jsx
 import React, { useState } from 'react';
 import SectionTitle from '../Components/SectionTitle';
+import '../Assets/Css/FeaturedSection.scss';
+
 const FeaturedSection = () => {
   const [hoveredCard, setHoveredCard] = useState(null);
 
-
   return (
-    <section className="featured-section">
-    <SectionTitle title="Skincare That Loves You Back" />
-
-      <div className="image-grid">
+    <section className="comix-featured-section">
+      <SectionTitle title="Skincare That Loves You Back" />
+      <div className="comix-featured-grid">
         {['left', 'right'].map((side, index) => (
           <div 
             key={index}
-            className="product-cards"
+            className="comix-featured-card"
             onMouseEnter={() => setHoveredCard(index)}
             onMouseLeave={() => setHoveredCard(null)}
           >
-            <div className="media-container">
+            <div className="comix-featured-media-wrapper">
               {hoveredCard === index ? (
                 <video
-                  className="product-media"
+                  className="comix-featured-media"
                   autoPlay
                   loop
                   muted
@@ -32,15 +32,15 @@ const FeaturedSection = () => {
               ) : (
                 <img
                   src={require(`../Assets/Image/subscribe-${side}.png`)}
-                  alt={`Product ${index + 1}`}
-                  className="product-media"
+                  alt={`Subscribe and save ${side} image`}
+                  className="comix-featured-media"
                 />
               )}
             </div>
-            <div className="product-text">
-              <h3>PRODUCT TITLE</h3>
-              <p>Product description goes here. This is a brief overview of the product features.</p>
-              <button className="shop-now-btn">SHOP NOW</button>
+            <div className="comix-featured-content">
+              <h3 className="comix-featured-title">SUBSCRIBE & SAVE 15%</h3>
+              <p className="comix-featured-description">Rinse And Repeat with Comix</p>
+              <button className="comix-featured-button">SUBSCRIBE NOW</button>
             </div>
           </div>
         ))}

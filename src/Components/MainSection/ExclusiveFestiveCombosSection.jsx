@@ -26,25 +26,27 @@ const ExclusiveFestiveCombosSection = () => {
   ];
 
   return (
-    <section className="exclusive-festive-combos-section">
+    <div className="comix-exclusive-section">
       <SectionTitle title="The Timeless Combos" />
-      
-      <div className="combo-items-container">
+      <div className="comix-exclusive-grid">
         {comboItems.map((item, index) => (
-          <div className="combo-item" key={index}>
-            <img className="combo-image" src={item.image} alt={item.title} />
-            <div className="combo-content">
-              {item.discount && <div className="discount-tag">{item.discount}</div>}
-              <div className="content-text">
-                <h3>{item.title}</h3>
-                <p>{item.subtitle}</p>
+          <div 
+            key={index} 
+            className="comix-exclusive-card"
+            style={{ backgroundImage: `url(${item.image})`, backgroundSize: 'cover', backgroundPosition: 'center' }}
+          >
+            <div className="comix-exclusive-overlay">
+              {item.discount && <div className="comix-exclusive-tag">{item.discount}</div>}
+              <div className="comix-exclusive-text">
+                <h3 className="comix-exclusive-title">{item.title}</h3>
+                <p className="comix-exclusive-subtitle">{item.subtitle}</p>
               </div>
-              <button className="shop-now-btn">SHOP NOW</button>
+              <button className="comix-exclusive-button">SHOP NOW</button>
             </div>
           </div>
         ))}
       </div>
-    </section>
+    </div>
   );
 };
 
