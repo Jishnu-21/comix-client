@@ -10,13 +10,14 @@ html, body {
   
   .main-slider-container {
     width: 100%;
+    margin-bottom: 1rem;
     
     .slider-item {
       width: 100%;
       
       .slide-content {
         width: 100%;
-        height: calc(100vh - 135px); // Default height for desktop
+        height: calc(100vh - 135px); 
         position: relative;
         overflow: hidden;
 
@@ -32,7 +33,7 @@ html, body {
 
         // Mobile devices
         @media (max-width: 767.98px) {
-          height: 45vh;
+          height: 40vh;
         }
 
         .slide-background {
@@ -47,7 +48,7 @@ html, body {
 
           @media (max-width: 767.98px) {
             background-position: cover;
-            height:45vh;
+            height:40vh;
           }
         }
 
@@ -229,45 +230,12 @@ html, body {
   }
 }
 
-// Common section header styles
-%section-header {
-  margin-bottom: 3rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-wrap: wrap;
-
-  .decor-icon {
-    display: inline-block;
-    width: 40px; 
-    height: auto;
-    margin: 0 15px;
-  }
-
-  .section-heading {
-    font-size: 28px;
-    color: black;
-    text-align: center;
-
-    @media (max-width: 768px) {
-      font-size: 24px;
-    }
-
-    @media (max-width: 480px) {
-      font-size: 20px;
-      width: 100%;
-      margin-top: 10px;
-    }
-  }
-}
 
 .new-launched-section {
-  margin-top: 5rem;
+  margin-top: 50px;
   width: 100%;
 
-  .heading-container {
-    @extend %section-header;
-  }
+
 
   .image-container {
     width: 100%;
@@ -311,7 +279,7 @@ html, body {
 }
 
 .discover-haircare-section {
-  margin-top: 5rem;
+  margin-top: 50px;
   width: 100%;
   max-width: 1200px;
   margin-left: auto;
@@ -326,10 +294,7 @@ html, body {
     max-width: 1800px;
   }
 
-  .heading-container {
-    @extend %section-header;
-  }
-
+ 
   .products-container {
     padding: 0 15px;
   }
@@ -553,7 +518,7 @@ html, body {
 }
 
 .two-image-section {
-  margin-top: 5rem;
+  margin-top: 50px;
   width: 100%;
   max-width: 1200px;
   margin-left: auto;
@@ -587,17 +552,16 @@ html, body {
   padding: 0 20px;
   text-align: center;
   overflow: hidden;
-  min-height: 100vh;
+  min-height: 40vh;
+  margin-top: 50px;
 
   display: flex;
   flex-direction: column;
   justify-content: center;
 
-  .heading-container {
-    @extend %section-header;
-  }
-
+ 
   .slider-container {
+    margin-top: 20px;
     
     @media (max-width: 768px) {
       padding: 0;
@@ -668,7 +632,6 @@ html, body {
   }
 
   @media (max-width: 1200px) {
-    min-height: 100vh;
     .product-cards {
       width: 250px;
       height: 450px;
@@ -676,7 +639,6 @@ html, body {
   }
 
   @media (max-width: 992px) {
-    min-height: 100vh;
     .product-cards {
       width: 220px;
       height: 400px;
@@ -684,23 +646,16 @@ html, body {
   }
 
   @media (max-width: 768px) {
-    min-height: 100vh;
-    margin-top: 1.5rem;
-    margin-bottom: 1.5rem;
-    padding: 0 15px;
 
-    .heading-container {
-      margin-bottom: 0.5rem;
-    }
+
 
     .slider-container {
       .slick-list {
-        padding: 15px 0 !important;
+        padding: 0px 0 !important;
       }
     }
 
     .product-cards {
-      padding: 5px;
       width: 90%;
       height: 400px;
     }
@@ -711,7 +666,6 @@ html, body {
   }
 
   @media (max-width: 480px) {
-    min-height: 100vh;
     .product-cards {
       width: 100%;
       height: 350px;
@@ -759,12 +713,12 @@ html, body {
   margin-left: auto;
   margin-right: auto;
   padding: 0 15px;
-  margin-top: 5rem;
+  margin-top: 50px;
   margin-bottom: 7rem;
 
   @media (max-width: 768px) {
     padding: 0;
-    margin-top: 3rem;
+    margin-top: 2rem;
     margin-bottom: 5rem;
   }
 
@@ -777,7 +731,6 @@ html, body {
   }
 
   .heading-container {
-    @extend %section-header;
     
     .decor-line {
       display: inline-block;
@@ -790,7 +743,7 @@ html, body {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 1.25rem;
+    margin-top: 2rem;
 
     @media (max-width: 768px) {
       margin-top: 0;
@@ -814,7 +767,7 @@ html, body {
 
 .offer-section {
   width: 100%;
-  margin-top: 5rem;
+  margin-top: 50px;
   display: flex;
   justify-content: center;
   @media screen and (max-width: 768px) {
@@ -888,8 +841,8 @@ html, body {
 .featured-section {
   width: 100%;
   max-width: 1200px;
-  margin: 7rem auto;
   padding: 0 15px;
+  margin-top: 50px;
 
   @media (min-width: 1440px) {
     max-width: 1400px;
@@ -900,7 +853,6 @@ html, body {
   }
 
   .heading-container {
-    @extend %section-header;
     
     .decor-line {
       display: inline-block;
@@ -994,9 +946,8 @@ html, body {
 }
 
 .blog-section {
-  margin-top: 5rem;
+  margin-top: 50px;
   width: 100%;
-  margin-bottom: 3rem;
   max-width: 1200px;
   margin-left: auto;
   margin-right: auto;
@@ -1215,12 +1166,8 @@ html, body {
 }
 
 .subscribe-section {
-  margin-top: 9.375rem;
+  margin-top: 50px;
   text-align: center;
-
-  .heading-container {
-    @extend %section-header;
-  }
 
   .section-description {
     font-size: 1rem;
@@ -1407,7 +1354,7 @@ html, body {
 
 @media (max-width: 48em) { /* 768px */
   .exclusive-festive-combos-section {
-    margin-top: 3.75rem;
+    margin-top: 2rem;
   }
 
   .exclusive-festive-combos-section .heading-container .section-heading {
@@ -1415,12 +1362,12 @@ html, body {
   }
 
   .offer-section {
-    margin-top: 5rem;
+    margin-top: 2rem;
   }
 
   .featured-section,
   .blog-section {
-    margin-top: 5rem;
+    margin-top: 2rem;
   }
 
   .featured-section .heading-container,
@@ -1435,7 +1382,7 @@ html, body {
   }
 
   .subscribe-section {
-    margin-top: 6.25rem;
+    margin-top: 2rem;
   }
 
   .subscribe-form {

@@ -33,6 +33,9 @@ import ScrollToTop from './Components/ScrollToTop';
 import axios from 'axios';
 import { API_URL } from './config/api';
 import Career from './Pages/Career.jsx';
+import PrivacyPolicy from './Pages/PrivacyPolicy.jsx';
+import TermsOfService from './Pages/TermsOfService.jsx';
+import RefundPolicy from './Pages/RefundPolicy.jsx';
 
 function App() {
   const dispatch = useDispatch();
@@ -130,12 +133,14 @@ function App() {
           <Route path="/order-success" element={<OrderCompleted/>}/>
           <Route path="/offers" element={<Offer />} />
           <Route path="/career" element={<Career />} />
-
           <Route path="/profile" element={<Profile />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/admin/login" element={<AdminLogin/>}/>
           <Route path="*" element={<NotFound />} />
+          <Route path="/policy/privacy" element={<PrivacyPolicy/>}/>
+          <Route path="/policy/terms" element={<TermsOfService/>}/>
+          <Route path="/policy/refund" element={<RefundPolicy/>}/>
 
           {/* Public routes (redirect to home if already authenticated) */}
           <Route element={<ProtectedRoute />}>

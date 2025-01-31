@@ -28,7 +28,7 @@ const withScrollAnimation = (WrappedComponent, { delay = 0 } = {}) => {
       <motion.div
         initial="hidden"
         whileInView="visible"
-        viewport={{ margin: "-10px 0px", amount: 0.15, once: false }}
+        viewport={{ margin: "-50px 0px", amount: 0.15, once: true }}
         variants={containerVariants}
       >
         <WrappedComponent {...props} />

@@ -1,37 +1,132 @@
 .exclusive-festive-combos-section {
-  .combo-image-container {
-    display: flex;
-    justify-content: center;
+  padding: 2rem;
+  width: 100%;
+
+  .combo-items-container {
+    display: grid;
+    grid-template-columns: 0.7fr 1.6fr 0.7fr;
+    gap: 2rem;
+    width: 100%;
+    margin: 0 auto;
     align-items: center;
-    
-    .combo-image {
-      width: 100%;
-      height: auto;
 
-      @media (max-width: 767.98px) {
-        content: url('../../Assets/Image/combo1.jpg');
-        margin-bottom: 10px;
+    @media (max-width: 1200px) {
+      grid-template-columns: 0.7fr 1.6fr 0.7fr;
+      gap: 1.5rem;
+      padding: 0 1rem;
+    }
+
+    @media (max-width: 992px) {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+      margin: 0 auto;
+      
+      .combo-item {
+        &:nth-child(2) {
+          order: -1;
+        }
       }
+    }
 
-      @media (min-width: 768px) {
-        content: url('../../Assets/Image/combo-image.png');
-        display: block;
+    @media (max-width: 576px) {
+      gap: 1.5rem;
+      padding: 0 0.5rem;
+    }
+  }
+
+  .combo-item {
+    position: relative;
+    overflow: hidden;
+    height: 350px;
+
+    @media (max-width: 1200px) {
+      height: 300px;
+    }
+
+    @media (max-width: 992px) {
+      height: 400px;
+    }
+
+    @media (max-width: 576px) {
+      height: 300px;
+    }
+  }
+
+  .combo-image {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+  }
+
+  .combo-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 1.5rem;
+    background: linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.2),
+      rgba(0, 0, 0, 0.5)
+    );
+    color: white;
+
+    @media (max-width: 576px) {
+      padding: 1rem;
+    }
+  }
+
+  .discount-tag {
+    align-self: flex-end;
+    background-color: #ff4444;
+    padding: 0.5rem 1rem;
+    font-weight: bold;
+  }
+
+  .content-text {
+    text-align: center;
+
+    h3 {
+      font-size: 1.4rem;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+
+      @media (max-width: 576px) {
+        font-size: 1.2rem;
+      }
+    }
+
+    p {
+      font-size: 1.1rem;
+
+      @media (max-width: 576px) {
+        font-size: 1rem;
       }
     }
   }
 
-  @media (max-width: 767px) {
-    .combo-image-container {
-      flex-direction: column;
-       
-      .combo-image {
-        content: url('../../Assets/Image/combo1.jpg');
-        margin-bottom: 10px;
-      }
+  .shop-now-btn {
+    align-self: center;
+    background-color: black;
+    color: white;
+    border: none;
+    padding: 0.8rem 2rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 
-      .combo-image:nth-child(2) {
-        content: url('../../Assets/Image/combo2.jpg');
-      }
+    @media (max-width: 576px) {
+      padding: 0.6rem 1.5rem;
+    }
+
+    &:hover {
+      background-color: #333;
     }
   }
 }

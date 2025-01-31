@@ -11,6 +11,8 @@ import OfferSection from './MainSection/OfferSection';
 import FeaturedSection from './FeaturedSection';
 import BlogSection from './MainSection/BlogSection';
 import withScrollAnimation from './withScrollAnimation';
+import ProductSpotlight from './ProductSpotlight';
+import MakeupSlider from './MainSection/MakeUpSlider';
 
 const MainSection = () => {
   const AnimatedNewLaunchedSection = withScrollAnimation(NewLaunchedSection, { delay: 0 });
@@ -29,9 +31,11 @@ const MainSection = () => {
         <AnimatedNewLaunchedSection />
         <AnimatedDiscoverHaircareSection />
         <AnimatedTwoImageSection />
+        <ProductSpotlight/>
         <AnimatedCommixIconicsSection />
         <FullWidthImageSection />
-        <AnimatedExclusiveFestiveCombosSection />
+        <MakeupSlider/>
+      <AnimatedExclusiveFestiveCombosSection />
         <AnimatedOfferSection />
         <AnimatedFeaturedSection />
         <AnimatedBlogSection />

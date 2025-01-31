@@ -19,6 +19,8 @@ import Touch from '../Components/Touch';
 import { IoArrowBack } from "react-icons/io5";
 import { FaHeart } from "react-icons/fa";
 import LoadingScreen from '../Components/LoadingScreen';
+import MobileHeader from '../Components/MobileHeader';
+import { useNavigate } from 'react-router-dom';
 
 const ProductDetail = () => {
   const { slug } = useParams();
@@ -143,13 +145,7 @@ const ProductDetail = () => {
       <div className="container">
         {isMobile ? (
           <>
-            <div className="mobile-product-header">
-              <button className="back-button" onClick={handleBack}>
-                <IoArrowBack />
-              </button>
-              <h1>{product.name}</h1>
-            </div>
-            
+          <Header/>
             <div className="mobile-product-content">
               <MobileImageSlider images={product.image_urls} />
               <ProductDetailInfo 

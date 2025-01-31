@@ -1,0 +1,119 @@
+.spinner-offer {
+  position: fixed;
+  right: -400px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 350px;
+  background: white;
+  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 10px 0 0 10px;
+  padding: 20px;
+  transition: right 0.3s ease-in-out;
+  z-index: 1000;
+
+  &.visible {
+    right: 0;
+  }
+
+  .close-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #666;
+    
+    &:hover {
+      color: #333;
+    }
+  }
+
+  .spinner-content {
+    text-align: center;
+
+    h2 {
+      color: #333;
+      margin-bottom: 10px;
+    }
+
+    p {
+      color: #666;
+      margin-bottom: 20px;
+    }
+  }
+
+  .spinner-wheel {
+    width: 250px;
+    height: 250px;
+    border-radius: 50%;
+    background: #f0f0f0;
+    margin: 20px auto;
+    position: relative;
+    border: 2px solid #ddd;
+    transition: transform 3s ease-out;
+
+    &.spinning {
+      transform: rotate(1800deg);
+    }
+
+    .wheel-section {
+      position: absolute;
+      width: 50%;
+      height: 50%;
+      transform-origin: 100% 100%;
+      background: linear-gradient(45deg, #4CAF50, #45a049);
+      clip-path: polygon(0 0, 100% 0, 100% 100%);
+      
+      &:nth-child(2) { transform: rotate(72deg); }
+      &:nth-child(3) { transform: rotate(144deg); }
+      &:nth-child(4) { transform: rotate(216deg); }
+      &:nth-child(5) { transform: rotate(288deg); }
+    }
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin: 20px 0;
+
+    input {
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 14px;
+
+      &:focus {
+        outline: none;
+        border-color: #4CAF50;
+      }
+    }
+
+    .spin-button {
+      background: #4CAF50;
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      
+      &:hover {
+        background: #45a049;
+      }
+
+      &:disabled {
+        background: #cccccc;
+        cursor: not-allowed;
+      }
+    }
+  }
+
+  .terms {
+    font-size: 12px;
+    color: #999;
+    margin-top: 20px;
+  }
+} 

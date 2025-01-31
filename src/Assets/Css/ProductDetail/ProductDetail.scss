@@ -1,6 +1,17 @@
 @import '../variables.scss';
 
 .product-detail-page {
+  // Hide mobile header bottom in product detail page
+  .mobile-header {
+    @media screen and (max-width: 767px) {
+      height: 50px !important; // Override default height
+      
+      .mobile-footer {
+        display: none; // Hide the marquee/announcement bar
+      }
+    }
+  }
+
   .container {
     margin-top: 50px;
     
@@ -160,6 +171,21 @@
       display: flex;
       gap: 12px;
       box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+      transform: translateY(0);
+      transition: transform 0.3s ease-in-out;
+      
+      &.hidden {
+        transform: translateY(100%);
+      }
+      
+      .sidebar.open ~ & {
+        transform: translateY(100%);
+      }
+
+      .search-dropdown ~ & {
+        transform: translateY(100%);
+      }
+
       
       .wishlist-btn {
         width: 50px;

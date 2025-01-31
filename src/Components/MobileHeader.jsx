@@ -21,6 +21,16 @@ const MobileHeader = ({ cartItemCount, onMenuClick, marqueeText, onLogout, categ
   const [isChatbotOpen, setIsChatbotOpen] = useState(false);
   const navigate = useNavigate();
 
+  const menuItems = [
+    { label: 'SHOP All', path: '/shop-all' },
+    { label: 'ROUTINE', path: '/routine' },
+    { label: 'SHOP BY CONCERN', path: '/shop-by-concern' },
+    { label: 'NEW LAUNCHES', path: '/new-launches', badge: 'NEW' },
+    { label: 'GIFT KIT', path: '/gift-kit' },
+    { label: 'ABOUT US', path: '/about-us' },
+    { label: 'CONTACT US', path: '/contact-us' },
+  ];
+
   // Fetch best sellers
   useEffect(() => {
     const fetchBestSellers = async () => {
@@ -42,8 +52,18 @@ const MobileHeader = ({ cartItemCount, onMenuClick, marqueeText, onLogout, categ
   useEffect(() => {
     if (isSidebarOpen) {
       document.body.style.overflow = 'hidden';
+      // Add class to mobile-fixed-bottom
+      const mobileFixedBottom = document.querySelector('.mobile-fixed-bottom');
+      if (mobileFixedBottom) {
+        mobileFixedBottom.classList.add('hidden');
+      }
     } else {
       document.body.style.overflow = 'auto';
+      // Remove class from mobile-fixed-bottom
+      const mobileFixedBottom = document.querySelector('.mobile-fixed-bottom');
+      if (mobileFixedBottom) {
+        mobileFixedBottom.classList.remove('hidden');
+      }
     }
   }, [isSidebarOpen]);
 
@@ -57,6 +77,18 @@ const MobileHeader = ({ cartItemCount, onMenuClick, marqueeText, onLogout, categ
       document.documentElement.style.overflow = 'auto';
     }
   }, [isChatbotOpen]);
+
+  // Add useEffect to handle mobile-fixed-bottom visibility when search is open
+  useEffect(() => {
+    const mobileFixedBottom = document.querySelector('.mobile-fixed-bottom');
+    if (mobileFixedBottom) {
+      if (isSearchVisible) {
+        mobileFixedBottom.classList.add('hidden');
+      } else {
+        mobileFixedBottom.classList.remove('hidden');
+      }
+    }
+  }, [isSearchVisible]);
 
   const handleSearchToggle = () => setIsSearchVisible(!isSearchVisible);
   const toggleSidebar = () => setIsSidebarOpen(!isSidebarOpen);
@@ -73,30 +105,43 @@ const MobileHeader = ({ cartItemCount, onMenuClick, marqueeText, onLogout, categ
 
   return (
     <>
-    <header className={`mobile-header ${isChatbotOpen ? 'chatbot-open' : ''}`}>
-      <div className="header-top">
-        <div className="marquee-container">
-          <div className="marquee-item">{marqueeText}</div>
+     <header className={`mobile-header ${isChatbotOpen ? 'chatbot-open' : ''}`}>
+        <div className="header-top">
+          <div className="marquee-container">
+            <div className="marquee-item">{marqueeText}</div>
+          </div>
         </div>
-      </div>
-      
-      <div className="header-content">
-        <button className="menu-button" onClick={toggleSidebar}>
-        <FontAwesomeIcon icon={faBars} />        </button>
-        <Link to="/" className="mobile-logo">
-          <img src={require('../Assets/Image/logo/Mask group.png')} alt="Logo" />
-        </Link>
-        <button className="search-button" onClick={handleSearchToggle}>
-          <FontAwesomeIcon icon={isSearchVisible ? faTimes : faSearch} />
-        </button>
-        <Link to="/cart" className="cart-button">
-          <FontAwesomeIcon icon={faShoppingCart} />
-          {cartItemCount > 0 && <span className="cart-item-count">{cartItemCount}</span>}
-        </Link>
-      </div>
+        
+        {/* Updated Header Content */}
+        <div className="header-content">
+          <div className="nav-group left">
+            <button className="menu-button" onClick={toggleSidebar}>
+              <FontAwesomeIcon icon={faBars} />
+            </button>
+            <button className="search-button" onClick={handleSearchToggle}>
+              <FontAwesomeIcon icon={isSearchVisible ? faTimes : faSearch} />
+            </button>
+          </div>
+         
+          <div className="nav-group center">
+            <Link to="/" className="mobile-logo">
+              <img src={require('../Assets/Image/logo/Mask group.png')} alt="Logo" />
+            </Link>
+          </div>
+
+          <div className="nav-group right"> 
+            <Link to="/profile" className="profile-button">
+              <FontAwesomeIcon icon={faUserCircle} />
+            </Link>
+            <Link to="/cart" className="cart-button">
+              <FontAwesomeIcon icon={faShoppingCart} />
+              {cartItemCount > 0 && <span className="cart-item-count">{cartItemCount}</span>}
+            </Link>
+          </div>
+        </div>
 
       {isSearchVisible && (
-        <div className="search-dropdown">
+      <div className="search-dropdown open">
           <div className="search-header">
             <div className="search-logo">
               <img src={require('../Assets/Image/logo/Mask group.png')} alt="Logo" />
@@ -153,18 +198,25 @@ const MobileHeader = ({ cartItemCount, onMenuClick, marqueeText, onLogout, categ
         </div>
       )}
       <div className={`sidebar ${isSidebarOpen ? 'open' : ''}`}>
-        <button className="close-button" onClick={toggleSidebar}>
-          <FontAwesomeIcon icon={faTimes} />
-        </button>
+        <div className="sidebar-header">
+          <img src={require('../Assets/Image/logo/Mask group.png')} alt="Logo" className="sidebar-logo" />
+          <button className="close-button" onClick={toggleSidebar}>
+            <FontAwesomeIcon icon={faTimes} />
+          </button>
+        </div>
         <nav className="sidebar-nav">
-          {categories.map((category) => (
-            <Link to={`/product`} className="sidebar-item" onClick={toggleSidebar} key={category._id}>
-              <FontAwesomeIcon icon={faGift} /> {category.name}
+          {menuItems.map((item, index) => (
+            <Link 
+              to={item.path} 
+              className="sidebar-item" 
+              onClick={toggleSidebar} 
+              key={index}
+            >
+              {item.label}
+              {item.badge && <span className="badge">{item.badge}</span>}
+              <FontAwesomeIcon icon={faTimes} className="chevron" />
             </Link>
           ))}
-          <button className="sidebar-item" onClick={onLogout}>
-            <FontAwesomeIcon icon={faSignOutAlt} /> Logout
-          </button>
         </nav>
       </div>
       <div className="mobile-footer">

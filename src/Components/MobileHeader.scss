@@ -1,3 +1,6 @@
+@import  '../Assets/Css/Variables.scss';
+
+
 .mobile-header {
   @media screen and (max-width: 767px) {
 
@@ -69,55 +72,99 @@
     }
 
     .header-content {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 10px 15px;
-
-      .menu-button,
-      .search-button,
-      .cart-button {
-        background: none;
-        border: none;
-        color: white;
-        font-size: 24px;
-        cursor: pointer;
-        margin: -5px 5px;
-
-        &:hover {
-          color: #f39c12; // Change color on hover
-        }
-      }
-
-      .search-button {
-        margin-right: -40px;
-      }
-
-      .mobile-logo {
         display: flex;
-        position: relative;
+        justify-content: space-between;
         align-items: center;
-        left: 14px;
-        img {
-          height: 25px;
-          display: block;
-          margin: 0 auto;
+        padding: 10px 20px;
+        height: 50px;
+        background: #2C2E3A;
+  
+        .nav-group {
+          display: flex;
+          align-items: center;
+  
+          &.left {
+            flex: 1;
+            justify-content: flex-start;
+          }
+  
+          &.center {
+            flex: 1;
+            justify-content: center;
+            margin: 0 0px;
+          }
+  
+          &.right {
+            flex: 1;
+            justify-content: flex-end;
+            
+            .search-button,
+            .profile-button,
+            .menu-button,
+            .cart-button {
+              width: 38px;
+              height: 38px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              position: relative;
+
+              svg {
+                font-size: 22px;
+              }
+            }
+          }
+        }
+  
+        button, .profile-button, .cart-button {
+          background: none;
+          border: none;
+          color: white;
+          font-size: 22px;
+          cursor: pointer;
+          padding: 8px;
+          margin: 0;
+          display: flex;
+          align-items: center;
+          transition: color 0.2s ease;
+  
+          &:hover {
+            color: #f39c12;
+          }
+        }
+  
+        .mobile-logo {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          
+          img {
+            height: 28px;
+            max-width: 130px;
+            object-fit: contain;
+          }
+        }
+  
+        .cart-button {
+          .cart-item-count {
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            background: red;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 11px;
+            line-height: 1;
+            font-weight: bold;
+            min-width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
         }
       }
-
-      .cart-item-count {
-        position: relative;
-        top: -17px;
-        right: 10px;
-        background-color: red;
-        color: white;
-        border-radius: 50%;
-        padding: 2px 6px;
-        font-size: 12px;
-        text-decoration: none;
-        display: inline-block;
-      }
-    }
 
     .search-bar {
       display: flex;
@@ -390,19 +437,84 @@
       position: fixed;
       top: 0;
       left: 0;
-      width: 80%;
+      width: 100%;
       height: 100%;
       background-color: #2C2E3A;
-      z-index: 2000;
+      z-index: 40000;
       display: flex;
       flex-direction: column;
-      padding: 20px;
       transform: translateX(-100%);
       transition: transform 0.3s ease;
-      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
 
       &.open {
         transform: translateX(0);
+      }
+
+      .sidebar-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+
+        .sidebar-logo {
+          height: 25px;
+          width: auto;
+        }
+
+        .close-button {
+          background: none;
+          border: none;
+          color: white;
+          font-size: 24px;
+          cursor: pointer;
+          padding: 0;
+          margin: 0;
+
+          &:hover {
+            color: white;
+          }
+        }
+      }
+
+      .sidebar-nav {
+        padding-top: 10px;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        padding: 0 20px;
+
+        .sidebar-item {
+          color: white;
+          text-decoration: none;
+          font-size: 16px;
+          padding: 15px 0;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+          font-weight: 500;
+          position: relative;
+
+          .badge {
+            background-color: #ffff00;
+            color: #000;
+            padding: 2px 6px;
+            font-size: 12px;
+            border-radius: 4px;
+            margin-left: 8px;
+            text-transform: uppercase;
+          }
+
+          .chevron {
+            font-size: 12px;
+            color: #666;
+          }
+
+          &:hover {
+            color: #666;
+          }
+        }
       }
     }
 
@@ -413,54 +525,6 @@
     .mobile-header.sidebar-open ~ .content {
       filter: blur(5px);
       pointer-events: none;
-    }
-
-    .close-button {
-      background: none;
-      border: none;
-      color: #fff;
-      font-size: 24px;
-      cursor: pointer;
-      align-self: flex-end;
-      margin-bottom: 20px;
-
-      &:hover {
-        color: #f39c12;
-      }
-    }
-
-    .sidebar-nav {
-      display: flex;
-      flex-direction: column;
-      width: 100%;
-      margin-top: 20px;
-
-      .sidebar-item {
-        color: #fff;
-        text-decoration: none;
-        font-size: 18px;
-        padding: 15px 0;
-        display: flex;
-        align-items: center;
-        border-bottom: 1px solid rgba(#fff, 0.1);
-
-        &:hover {
-          color: #f39c12;
-        }
-
-        svg {
-          margin-right: 15px;
-          width: 20px;
-        }
-      }
-
-      button.sidebar-item {
-        background: none;
-        border: none;
-        text-align: left;
-        width: 100%;
-        cursor: pointer;
-      }
     }
 
     .mobile-footer {

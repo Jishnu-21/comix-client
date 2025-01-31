@@ -1,24 +1,88 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useMediaQuery } from 'react-responsive';
 import '../Assets/Css/Footer.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faInstagram, faFacebookF, faTwitter, faLinkedinIn, faYoutube } from '@fortawesome/free-brands-svg-icons';
 import { faEnvelope, faPhone } from '@fortawesome/free-solid-svg-icons';
 
 const Footer = () => {
+  const [openDropdown, setOpenDropdown] = useState(null);
+  const isMobile = useMediaQuery({ maxWidth: 767 });
+
   const footerLinks = [
-    { name: 'Stores', link: '/stores' },
-    { name: 'Elite', link: '/elite' },
-    { name: 'Terms', link: '/terms' },
-    { name: 'Returns', link: '/returns' },
-    { name: 'FAQ', link: '/faq' },
-    { name: 'About', link: '/about' }
+    {
+      name: 'Policies',
+      details: ['Privacy Policy', 'Shipping Policy', 'Refund Policy', 'Terms of Service']
+    },
+    {
+      name: 'Main Menu',
+      details: ['Home', 'Shop All', 'About Us', 'Contact']
+    },
+    {
+      name: 'Customer Service',
+      details: ['FAQs', 'Track Order', 'Returns', 'Contact Support']
+    }
   ];
 
-  const isMobile = window.innerWidth <= 768;
+  const toggleDropdown = (index) => {
+    setOpenDropdown(openDropdown === index ? null : index);
+  };
 
   return (
     <footer className={`footer ${isMobile ? 'mobile-footer' : ''}`}>
+      {isMobile && (
+        <div className="mobile-footer-content">
+          <div className="footer-top">
+            <div className="rounded-logo">
+              <img
+                src={`${process.env.PUBLIC_URL}/images/logo.gif`}
+                alt="Footer logo"
+                className="footer-logo"
+              />
+            </div>
+          </div>
+          
+          <div className="footer-sections">
+            <div className="footer-info">
+              <p className="footer-description">
+                Renue is a direct-to-consumer pharma and FMCG lifestyle brand. We cultivate a connection between nature's brilliance and the scientific precision of minerals.
+              </p>
+              <div className="footer-contact">
+                <h3>Contact Us</h3>
+                <p>PERFORM NUTRI SOLUTIONS LLP</p>
+                <p><a href="tel:+919004711317">+91 90047 11317</a></p>
+                <p><a href="mailto:customercare@renueminerals.com">customercare@renueminerals.com</a></p>
+              </div>
+            </div>
+
+            <div className="footer-links">
+              {footerLinks.map((section, index) => (
+                <div key={index} className="footer-link-item">
+                  <button 
+                    className={`footer-link-button ${openDropdown === index ? 'active' : ''}`}
+                    onClick={() => toggleDropdown(index)}
+                  >
+                    <span>{section.name}</span>
+                    <span className="toggle-icon">{openDropdown === index ? '−' : '+'}</span>
+                  </button>
+                  <div className={`dropdown-content ${openDropdown === index ? 'show' : ''}`}>
+                    {section.details.map((item, itemIndex) => (
+                      <a key={itemIndex} href="#">{item}</a>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          
+          <div className="footer-bottom">
+            <p className="footer-copyright">
+              &copy; 2024 renue minerals store. All rights reserved.
+            </p>
+          </div>
+        </div>
+      )}
       {!isMobile && (
         // Desktop Footer
         <>
@@ -58,17 +122,19 @@ const Footer = () => {
                 <FontAwesomeIcon icon={faYoutube} />
               </a>
             </div>
-            <div className="col-auto">
-              <a href="mailto:hello@commic.com" className="social-icon">
-                <FontAwesomeIcon icon={faEnvelope} />
-              </a>
-            </div>
           </div>
 
           <div className="footer-divider my-3"></div>
 
           <div className="footer-links d-flex flex-wrap justify-content-center">
-            {footerLinks.map((footerItem, index) => (
+            {[
+              { name: 'Stores', link: '/stores' },
+              { name: 'Elite', link: '/elite' },
+              { name: 'Terms', link: '/terms' },
+              { name: 'Returns', link: '/returns' },
+              { name: 'FAQ', link: '/faq' },
+              { name: 'About', link: '/about' }
+            ].map((footerItem, index) => (
               <Link key={index} to={footerItem.link} className="footer-link-item mx-3">
                 {footerItem.name}
               </Link>
@@ -119,39 +185,6 @@ const Footer = () => {
             </div>
           </div>
         </>
-      )}
-
-      {isMobile && (
-        // Mobile Footer
-        <div className="mobile-footer-content">
-          <div className="mobile-footer-links">
-            {footerLinks.map((footerItem, index) => (
-              <Link key={index} to={footerItem.link} className="mobile-footer-link">
-                {footerItem.name}
-              </Link>
-            ))}
-          </div>
-
-          <div className="mobile-footer-divider"></div>
-
-          <div className="mobile-footer-contact">
-            <div className="contact-item">
-              <FontAwesomeIcon icon={faPhone} />
-              <span>79319324298</span>
-            </div>
-            <div className="contact-item">
-              <FontAwesomeIcon icon={faEnvelope} />
-              <span>hello@commic.com</span>
-            </div>
-          </div>
-
-          <div className="mobile-footer-social">
-            <FontAwesomeIcon icon={faInstagram} />
-            <FontAwesomeIcon icon={faFacebookF} />
-            <FontAwesomeIcon icon={faTwitter} />
-            <FontAwesomeIcon icon={faYoutube} />
-          </div>
-        </div>
       )}
     </footer>
   );
