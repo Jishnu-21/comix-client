@@ -21,6 +21,8 @@ import { FaHeart } from "react-icons/fa";
 import LoadingScreen from '../Components/LoadingScreen';
 import MobileHeader from '../Components/MobileHeader';
 import { useNavigate } from 'react-router-dom';
+import KeyIngredients from '../Components/ProductDetail/KeyIngredients';
+import HowToUse from '../Components/ProductDetail/HowToUse';
 
 const ProductDetail = () => {
   const { slug } = useParams();
@@ -141,69 +143,114 @@ const ProductDetail = () => {
 
   return (
     <div className={`product-detail-page fade-in ${isMobile ? 'mobile-view' : ''}`}>
-      {!isMobile && <Header />}
+      {isMobile ? <MobileHeader /> : <Header />}
       <div className="container">
         {isMobile ? (
           <>
-          <Header/>
-            <div className="mobile-product-content">
-              <MobileImageSlider images={product.image_urls} />
-              <ProductDetailInfo 
-                product={product} 
-                ref={productDetailRef}
-                isMobile={isMobile}
+          <div className="mobile-product-content">
+            <MobileImageSlider images={product.image_urls} />
+            <ProductDetailInfo 
+              product={product} 
+              ref={productDetailRef}
+              isMobile={isMobile}
+            />
+            <ProductDropdownInfo
+              description={product.description}
+              ingredients={product.ingredients}
+              faqs={product.faqs}
+              additionalDetails={product.additional_info}
+              productId={product._id}
+              product={product}
+            />
+            <div className="mobile-before-after">
+              <h2>Before and After</h2>
+              <ImageComparisonSlider 
+                beforeImage={beforeImage}
+                afterImage={afterImage}
+                height="300px"
               />
-              <ProductDropdownInfo
-                description={product.description}
-                ingredients={product.ingredients}
-                faqs={product.faqs}
-                additionalDetails={product.additional_info}
-                productId={product._id}
-                product={product}
-              />
-              <div className="mobile-before-after">
-                <h2>Before and After</h2>
-                <ImageComparisonSlider 
-                  beforeImage={beforeImage}
-                  afterImage={afterImage}
-                  height="300px"
-                />
-              </div>
-              {recentlyVisited.length > 0 && (
-                <div className="recently-viewed">
-                  <SectionTitle title="SHOP FROM RECENTLY VIEWED" />
-                  <div className="row mt-5 mb-5">
-                    {recentlyVisited.map((visit) => (
-                      <CardComponent
-                        key={visit.productId._id}
-                        image={visit.productId.image_urls[0]}
-                        title={visit.productId.name}
-                        price={visit.productId.variants[0].price}
-                        description={visit.productId.description}
-                        slug={visit.productId.slug}
-                      />
-                    ))}
-                  </div>
+            </div>
+            <div className="icon-section">
+                <div className="icon">
+                 <img src="/images/fda.png" alt="FDA Approved" />
+                 <span>FDA APPROVED</span>
+                 </div>
+                <div className="icon">
+                <img src="/images/sulphate.png" alt="Sulphate Free" />
+                  <span>SULPHATE FREE</span>
+               </div>
+               <div className="icon">
+               <img src="/images/paraben.png" alt="Paraben Free" />
+               <span>PARABEN FREE</span>
+               </div>
+              <div className="icon">
+              <img src="/images/cruelty.png" alt="Cruelty Free" />
+              <span>CRUELTY FREE</span>
+             </div>
+            </div>
+
+            <div className="comix-benefits-marquee">
+        <div className="comix-benefits-track">
+          {[...Array(2)].map((_, index) => (
+            <div key={index} className="comix-benefits-content">
+              {[
+                'Cleansing',
+                'Hydrating',
+                'Strengthening',
+                'Balancing',
+                'Soothing',
+                'Polishing',
+                'Revitalizing',
+                'Protecting',
+                'Refreshing',
+                'Nourishing'
+              ].map((benefit, idx) => (
+                <React.Fragment key={idx}>
+                  <span className="comix-benefit-word">{benefit}</span>
+                  <span className="comix-benefit-separator">✧</span>
+                </React.Fragment>
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
+            <KeyIngredients ingredients={product.hero_ingredients} />
+            <HowToUse steps={product.how_to_use} category={product.category} />
+            {recentlyVisited.length > 0 && (
+              <div className="recently-viewed">
+                <SectionTitle title="SHOP FROM RECENTLY VIEWED" />
+                <div className="row mt-5 mb-5">
+                  {recentlyVisited.map((visit) => (
+                    <CardComponent
+                      key={visit.productId._id}
+                      image={visit.productId.image_urls[0]}
+                      title={visit.productId.name}
+                      price={visit.productId.variants[0].price}
+                      description={visit.productId.description}
+                      slug={visit.productId.slug}
+                    />
+                  ))}
                 </div>
-              )}
-            </div>
-          
-            <div className="mobile-fixed-bottom">
-              <button 
-                className="wishlist-btn"
-                onClick={() => productDetailRef.current?.handleToggleFavorite()}
-              >
-                <FaHeart className={productDetailRef.current?.isFavorite ? 'active' : ''} />
-              </button>
-              <button 
-                className="add-to-bag-btn"
-                onClick={() => productDetailRef.current?.handleAddToBag()}
-                disabled={productDetailRef.current?.isAddingToCart}
-              >
-                {productDetailRef.current?.isAddingToCart ? 'Adding...' : 'Add to Bag'}
-              </button>
-            </div>
-          </>
+              </div>
+            )}
+          </div>
+        
+          <div className="mobile-fixed-bottom">
+            <button 
+              className="wishlist-btn"
+              onClick={() => productDetailRef.current?.handleToggleFavorite()}
+            >
+              <FaHeart className={productDetailRef.current?.isFavorite ? 'active' : ''} />
+            </button>
+            <button 
+              className="add-to-bag-btn"
+              onClick={() => productDetailRef.current?.handleAddToBag()}
+              disabled={productDetailRef.current?.isAddingToCart}
+            >
+              {productDetailRef.current?.isAddingToCart ? 'Adding...' : 'Add to Bag'}
+            </button>
+          </div>
+        </>
         ) : (
           <>
             {/* iPad Air and Mini Layout */}
@@ -232,6 +279,7 @@ const ProductDetail = () => {
                           height="400px"
                         />
                       </div>
+                      
                     </div>
                   </div>
                 </div>
@@ -251,6 +299,24 @@ const ProductDetail = () => {
                       height="400px"
                     />
                   </div>
+                  <div className="icon-section">
+                <div className="icon">
+                 <img src="/images/fda.png" alt="FDA Approved" />
+                 <span>FDA APPROVED</span>
+                 </div>
+                <div className="icon">
+                <img src="/images/sulphate.png" alt="Sulphate Free" />
+                  <span>SULPHATE FREE</span>
+               </div>
+               <div className="icon">
+               <img src="/images/paraben.png" alt="Paraben Free" />
+               <span>PARABEN FREE</span>
+               </div>
+              <div className="icon">
+              <img src="/images/cruelty.png" alt="Cruelty Free" />
+              <span>CRUELTY FREE</span>
+             </div>
+            </div>
                 </div>
                 <div className="col-xl-7 col-lg-6 col-md-12 col-sm-12">
                   <ProductDetailInfo product={product} />
@@ -287,6 +353,49 @@ const ProductDetail = () => {
           </div>
         )}
       </div>
+
+
+      {!isMobile && (
+        <>
+             <div className="comix-benefits-marquee">
+        <div className="comix-benefits-track">
+          {[...Array(2)].map((_, index) => (
+            <div key={index} className="comix-benefits-content">
+              {[
+                'Cleansing',
+                'Hydrating',
+                'Strengthening',
+                'Balancing',
+                'Soothing',
+                'Polishing',
+                'Revitalizing',
+                'Protecting',
+                'Refreshing',
+                'Nourishing'
+              ].map((benefit, idx) => (
+                <React.Fragment key={idx}>
+                  <span className="comix-benefit-word">{benefit}</span>
+                  <span className="comix-benefit-separator">✧</span>
+                </React.Fragment>
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
+          <KeyIngredients ingredients={product.hero_ingredients} />
+          <HowToUse 
+            steps={product.how_to_use || `
+              1. Wet your face with lukewarm water
+              2. Take a small amount of product and gently massage in circular motions
+              3. Focus on areas with specific concerns
+              4. Rinse thoroughly with water
+              5. Pat dry with a clean towel
+            `} 
+            category={product.category}
+          />
+        </>
+      )}
+
       {!isMobile && (
         <>
           <Touch />

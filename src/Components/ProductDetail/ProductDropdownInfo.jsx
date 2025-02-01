@@ -284,7 +284,7 @@ const ProductDropdownInfo = ({ description, ingredients, faqs, additionalDetails
       />
       <DropdownSection
         title="HOW TO USE"
-        content={<div className="how-to-use-section">{formatHowToUse(product?.how_to_use)}</div>}
+        content={<div className="functions-section">{formatHowToUse(product?.how_to_use)}</div>}
         isOpen={openSection === 'how_to_use'}
         toggleOpen={() => toggleSection('how_to_use')}
       />

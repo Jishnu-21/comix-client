@@ -9,26 +9,36 @@ import { faEnvelope, faPhone } from '@fortawesome/free-solid-svg-icons';
 const Footer = () => {
   const [openDropdown, setOpenDropdown] = useState(null);
   const isMobile = useMediaQuery({ maxWidth: 767 });
-
   const footerLinks = [
     {
       name: 'Policies',
-      details: ['Privacy Policy', 'Shipping Policy', 'Refund Policy', 'Terms of Service']
+      details: [
+        { name: 'Privacy Policy', path: '/policy/privacy' },
+        { name: 'Refund Policy', path: '/policy/refund' },
+        { name: 'Terms of Service', path: '/policy/terms' }
+      ]
     },
     {
-      name: 'Main Menu',
-      details: ['Home', 'Shop All', 'About Us', 'Contact']
+      name: 'General',
+      details: [
+        { name: 'Home', path: '/' },
+        { name: 'Blogs', path: '/blog' },
+        { name: 'About Us', path: '/about' },
+        { name: 'Careera', path: '/career' }
+      ]
     },
     {
       name: 'Customer Service',
-      details: ['FAQs', 'Track Order', 'Returns', 'Contact Support']
+      details: [
+        { name: 'FAQs', path: '/faqs' },
+      ]
     }
   ];
-
+  
   const toggleDropdown = (index) => {
     setOpenDropdown(openDropdown === index ? null : index);
   };
-
+  
   return (
     <footer className={`footer ${isMobile ? 'mobile-footer' : ''}`}>
       {isMobile && (
@@ -46,16 +56,15 @@ const Footer = () => {
           <div className="footer-sections">
             <div className="footer-info">
               <p className="footer-description">
-                Renue is a direct-to-consumer pharma and FMCG lifestyle brand. We cultivate a connection between nature's brilliance and the scientific precision of minerals.
-              </p>
+              Commix, where self-care is something to smile about. In a world that never slows down, we know it is difficult to find time for yourself. While we are aware of what goes into our personal care products              </p>
               <div className="footer-contact">
                 <h3>Contact Us</h3>
-                <p>PERFORM NUTRI SOLUTIONS LLP</p>
+                <p>Commix Pvt Ltd</p>
                 <p><a href="tel:+919004711317">+91 90047 11317</a></p>
-                <p><a href="mailto:customercare@renueminerals.com">customercare@renueminerals.com</a></p>
+                <p><a href="mailto:customercare@renueminerals.com">customercare@commix.com</a></p>
               </div>
             </div>
-
+  
             <div className="footer-links">
               {footerLinks.map((section, index) => (
                 <div key={index} className="footer-link-item">
@@ -68,7 +77,7 @@ const Footer = () => {
                   </button>
                   <div className={`dropdown-content ${openDropdown === index ? 'show' : ''}`}>
                     {section.details.map((item, itemIndex) => (
-                      <a key={itemIndex} href="#">{item}</a>
+                      <a key={itemIndex} href={item.path}>{item.name}</a>
                     ))}
                   </div>
                 </div>
@@ -78,7 +87,7 @@ const Footer = () => {
           
           <div className="footer-bottom">
             <p className="footer-copyright">
-              &copy; 2024 renue minerals store. All rights reserved.
+              &copy; 2025 Commix . All rights reserved.
             </p>
           </div>
         </div>

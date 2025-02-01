@@ -10,7 +10,6 @@ html, body {
   
   .main-slider-container {
     width: 100%;
-    margin-bottom: 1rem;
     
     .slider-item {
       width: 100%;
@@ -515,7 +514,7 @@ html, body {
 }
 
 .two-image-section {
-  margin-top: 50px;
+  margin-top: 70px;
   width: 100%;
   max-width: 1200px;
   margin-left: auto;
@@ -528,6 +527,10 @@ html, body {
 
   @media (min-width: 1920px) {
     max-width: 1800px;
+  }
+
+  @media (max-width: 768px) {
+    margin-top: 70px;
   }
 
   .two-images-container {

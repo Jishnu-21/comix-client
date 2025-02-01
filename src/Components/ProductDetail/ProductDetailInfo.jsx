@@ -362,22 +362,68 @@ const ProductDetailInfo = forwardRef(({ product, isMobile }, ref) => {
         </div>
       )}
 
+      {deviceType === 'mobile' && (
+         <div className="payment-methods">
+         <div className="payment-methods-image-container">
+           <img 
+             src="/images/payments.png" 
+             alt="Available payment methods" 
+             className="payment-methods-image" 
+           />
+         </div>
+         <div className="payment-features">
+           <div className="feature-card prepaid">
+             <span>5% Prepaid Discount</span>
+           </div>
+           <div className="feature-card cod">
+             <span>COD Available</span>
+           </div>
+           <div className="feature-card delivery">
+             <span>Delivers in 3 - 5 days</span>
+           </div>
+         </div>
+       </div>
+      )}
+
       {deviceType !== 'mobile' && (
-        <div className="action-buttons-container">
-          <button 
-            className={`wishlist-btn ${isFavorite ? 'active' : ''}`}
-            onClick={handleToggleFavorite}
-          >
-            <FaHeart />
-          </button>
-          <button 
-            className="add-to-bag-btn"
-            onClick={handleAddToBag}
-            disabled={isAddingToCart || !selectedVariant}
-          >
-            {isAddingToCart ? 'Adding...' : 'Add to Bag'}
-          </button>
-        </div>
+        <>
+          <div className="action-buttons-container">
+            <button 
+              className={`favorite-btn ${isFavorite ? 'active' : ''}`}
+              onClick={handleToggleFavorite}
+            >
+              <FaHeart />
+            </button>
+            <button
+              className={`add-to-bag-btn ${isAddingToCart ? 'loading' : ''}`}
+              onClick={handleAddToBag}
+              disabled={isAddingToCart}
+            >
+              {isAddingToCart ? 'Adding...' : 'Add to Bag'}
+            </button>
+          </div>
+
+          <div className="payment-methods">
+            <div className="payment-methods-image-container">
+              <img 
+                src="/images/payments.png" 
+                alt="Available payment methods" 
+                className="payment-methods-image" 
+              />
+            </div>
+            <div className="payment-features">
+              <div className="feature-card prepaid">
+                <span>5% Prepaid Discount</span>
+              </div>
+              <div className="feature-card cod">
+                <span>COD Available</span>
+              </div>
+              <div className="feature-card delivery">
+                <span>Delivers in 3 - 5 days</span>
+              </div>
+            </div>
+          </div>
+        </>
       )}
     </div>
   );

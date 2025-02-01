@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import Slider from 'react-slick';
 import SectionTitle from './SectionTitle';
@@ -7,13 +7,20 @@ import { API_URL } from '../config/api';
 import '../Assets/Css/ProductSpotlight.scss';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { useDispatch } from 'react-redux';
+import { updateCartItemCount } from '../features/cart/cartSlice';
+import { addToGuestCart } from '../services/guestCartService';
+import { toast } from 'sonner';
 
 const ProductSpotlight = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [activeCategory, setActiveCategory] = useState('');
   const [categories, setCategories] = useState([]);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isAddingToCart, setIsAddingToCart] = useState({});
 
   const sliderSettings = {
     dots: true,
@@ -101,7 +108,8 @@ const ProductSpotlight = () => {
             product.name && 
             product.images && 
             Array.isArray(product.images) && 
-            product.images.length > 0
+            product.images.length > 0 &&
+            product.slug
           );
           setProducts(validProducts.slice(0, 6));
         } else {
@@ -129,14 +137,138 @@ const ProductSpotlight = () => {
     );
   };
 
-  const handleAddToCart = (productId) => {
-    // Add to cart logic here
-    console.log('Adding to cart:', productId);
+  const showCartSuccessNotification = (product, selectedVariant) => {
+    toast.custom((t) => (
+      <div className="custom-toast-content">
+        <div className="product-info">
+          <img 
+            src={product.images?.[0]} 
+            alt={product.name} 
+            className="product-image" 
+          />
+          <div className="product-details">
+            <h4>{product.name}</h4>
+            <p className="variant">{selectedVariant?.name}</p>
+            <p className="price">₹{selectedVariant?.price}</p>
+          </div>
+        </div>
+        <div className="action-buttons">
+          <button 
+            className="view-cart-btn" 
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              toast.dismiss(t);
+              navigate('/cart');
+            }}
+          >
+            View Cart
+          </button>
+          <button 
+            className="buy-now-btn" 
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              toast.dismiss(t);
+              navigate('/checkout');
+            }}
+          >
+            Buy Now
+          </button>
+        </div>
+      </div>
+    ), {
+      duration: 2000,
+      position: 'top-right',
+      className: 'cart-notification-toast'
+    });
   };
 
-  const getActiveCategorySlug = () => {
-    const category = categories.find(cat => cat._id === activeCategory);
-    return category ? category.slug : '';
+  const handleAddToCart = async (product, e) => {
+    e.preventDefault(); // Prevent navigation
+    
+    try {
+      setIsAddingToCart(prev => ({ ...prev, [product._id]: true }));
+
+      const userString = localStorage.getItem('user');
+      const selectedVariant = product.variants?.[0];
+      
+      if (!selectedVariant) {
+        toast.error('Product not available', { position: 'bottom-right' });
+        return;
+      }
+
+      if (selectedVariant.stock_quantity < 1) {
+        toast.error('Product is out of stock', { position: 'bottom-right' });
+        return;
+      }
+      
+      // Prepare product data with all necessary fields
+      const productData = {
+        _id: product._id,
+        name: product.name,
+        description: product.description,
+        image_urls: product.images,
+        variants: product.variants,
+        slug: product.slug
+      };
+      
+      if (!userString) {
+        const updatedCart = addToGuestCart(
+          productData,
+          selectedVariant,
+          1
+        );
+        
+        const newCount = updatedCart.reduce((sum, item) => sum + item.quantity, 0);
+        dispatch(updateCartItemCount(newCount));
+        
+        showCartSuccessNotification(product, selectedVariant);
+        return;
+      }
+
+      const user = JSON.parse(userString);
+      const response = await axios.post(`${API_URL}/cart/add`, {
+        user_id: user.user.id,
+        product_id: product._id,
+        variant_name: selectedVariant.name,
+        quantity: 1,
+        image_url: product.images?.[0]
+      });
+
+      if (response.data.cartItem) {
+        showCartSuccessNotification(product, selectedVariant);
+        const newCount = await fetchCartItemCount(user.user.id);
+        dispatch(updateCartItemCount(newCount));
+      }
+    } catch (error) {
+      console.error('Add to cart error:', error);
+      toast.error(error.response?.data?.message || 'Failed to add to cart', { position: 'bottom-right' });
+    } finally {
+      setIsAddingToCart(prev => ({ ...prev, [product._id]: false }));
+    }
+  };
+
+  const renderAddToCartButton = (product) => {
+    return (
+      <button 
+        className="ps-add-to-cart-btn"
+        onClick={(e) => handleAddToCart(product, e)}
+        disabled={isAddingToCart[product._id]}
+      >
+        {isAddingToCart[product._id] ? 'Adding...' : 'Add to Cart'}
+      </button>
+    );
+  };
+
+  const fetchCartItemCount = async (userId) => {
+    try {
+      const response = await axios.get(`${API_URL}/cart/count/${userId}`);
+      return response.data.count;
+    } catch (error) {
+      console.error('Error fetching cart count:', error);
+      return 0;
+    }
   };
 
   return (
@@ -180,7 +312,7 @@ const ProductSpotlight = () => {
             {products.map(product => (
               <div key={product._id} className="ps-slider-item">
                 <div className="ps-product-card-spot">
-                  <Link to={`/product/${product._id}`} className="ps-product-link">
+                  <Link to={`/product/${product.slug}`} className="ps-product-link">
                     {renderProductImage(product)}
                     <div className="ps-product-info">
                       <h3 className="ps-product-name">{product.name}</h3>
@@ -193,12 +325,7 @@ const ProductSpotlight = () => {
                       </div>
                     </div>
                   </Link>
-                  <button 
-                    className="ps-add-to-cart-btn"
-                    onClick={() => handleAddToCart(product._id)}
-                  >
-                    Add to Cart
-                  </button>
+                  {renderAddToCartButton(product)}
                 </div>
               </div>
             ))}
@@ -209,7 +336,7 @@ const ProductSpotlight = () => {
       )}
 
       <div className="ps-view-all-container">
-        <Link to={`/category/${getActiveCategorySlug()}`} className="ps-view-all-btn">
+        <Link to='/product' className="ps-view-all-btn">
           View All
         </Link>
       </div>

@@ -1,0 +1,118 @@
+.key-ingredients-section {
+  padding: 60px 20px;
+  background-color: white;
+
+  .section-title {
+    text-align: center;
+    font-size: 28px;
+    font-weight: 600;
+    margin-bottom: 40px;
+    color: #333;
+  }
+
+  .ingredients-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+
+    .ingredient-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+
+      .ingredient-image {
+        width: 100%;
+        aspect-ratio: 1;
+        margin-bottom: 20px;
+        overflow: hidden;
+
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+      }
+
+      .ingredient-content {
+        .ingredient-name {
+          font-size: 18px;
+          font-weight: 600;
+          margin-bottom: 8px;
+          color: #333;
+        }
+
+        .ingredient-benefit {
+          font-size: 14px;
+          color: #666;
+          line-height: 1.4;
+          margin-bottom: 8px;
+        }
+
+        .ingredient-description {
+          font-size: 13px;
+          color: #888;
+          line-height: 1.4;
+        }
+      }
+    }
+  }
+
+  // Tablet landscape
+  @media (max-width: 1024px) {
+    padding: 50px 15px;
+    
+    .ingredients-grid {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 25px;
+    }
+  }
+
+  // Tablet portrait
+  @media (max-width: 768px) {
+    padding: 40px 15px;
+    
+    .ingredients-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+
+    .section-title {
+      font-size: 24px;
+      margin-bottom: 30px;
+    }
+  }
+
+  // Mobile
+  @media (max-width: 480px) {
+    padding: 30px 15px;
+    
+    .ingredients-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+
+      .ingredient-card {
+        .ingredient-image {
+          margin-bottom: 12px;
+        }
+
+        .ingredient-content {
+          .ingredient-name {
+            font-size: 16px;
+            margin-bottom: 6px;
+          }
+
+          .ingredient-benefit {
+            font-size: 13px;
+          }
+
+          .ingredient-description {
+            font-size: 12px;
+          }
+        }
+      }
+    }
+  }
+}
