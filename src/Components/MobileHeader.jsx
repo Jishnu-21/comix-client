@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBars, faSearch, faShoppingCart, faHome, faComments, faUserCircle, faGift, faSignOutAlt, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faBars, faSearch, faShoppingCart, faHome, faComments, faUserCircle, faGift, faSignOutAlt, faTimes, faHeart } from '@fortawesome/free-solid-svg-icons';
 import '../Assets/Css/MobileHeader.scss';
 import { API_URL } from '../config/api';
 import { useNavigate } from 'react-router-dom';
@@ -253,8 +253,8 @@ const MobileHeader = ({ cartItemCount, onMenuClick, marqueeText, onLogout }) => 
           Offers
         </Link>
         <Link to="/profile" className="footer-item">
-          <FontAwesomeIcon icon={faUserCircle} />
-          Profile
+          <FontAwesomeIcon icon={faHeart} />
+          Favorites
         </Link>
       </div>
     </header>
