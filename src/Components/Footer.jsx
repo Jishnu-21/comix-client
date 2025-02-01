@@ -24,13 +24,13 @@ const Footer = () => {
         { name: 'Home', path: '/' },
         { name: 'Blogs', path: '/blog' },
         { name: 'About Us', path: '/about' },
-        { name: 'Careera', path: '/career' }
+        { name: 'Careers', path: '/career' }
       ]
     },
     {
       name: 'Customer Service',
       details: [
-        { name: 'FAQs', path: '/faqs' },
+        { name: 'FAQs', path: '/faq' },
       ]
     }
   ];

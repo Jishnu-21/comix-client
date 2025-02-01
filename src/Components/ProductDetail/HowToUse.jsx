@@ -16,18 +16,28 @@ const HowToUse = ({ steps, category }) => {
 
   if (!formattedSteps || formattedSteps.length === 0) return null;
 
-  const getCategoryImage = (categoryName) => {
-    if (!categoryName) return '/images/skincare.gif';
+  const getCategoryImage = (categoryId) => {
+    if (!categoryId) return '/images/skincare.gif';
     
     const categoryMap = {
-      'Skin Care': '/images/skincare.gif',
-      'Hair Care': '/images/haircare.png',
-      'Oral Care': '/images/oral care.png',
-      'Body Care': '/images/bodycare.png'
+      '67935d7c5e8e847cc68a212f': '/images/haircare.png',      // Hair Care
+      '679635d0a547744085f05ffb': '/images/skincare.gif',      // Skin Care
+      '6797dc7caaf46dbfaee6fdb6': '/images/oral care.png',     // Oral Care
+      '6797dc8caaf46dbfaee6fdbc': '/images/bodycare.png'       // Body Care
     };
     
-    const normalizedCategory = categoryName.toLowerCase();
-    return categoryMap[normalizedCategory] || '/images/skincare.gif';
+    return categoryMap[categoryId] || '/images/skincare.gif';
+  };
+
+  const getCategoryName = (categoryId) => {
+    const categoryNames = {
+      '67935d7c5e8e847cc68a212f': 'Hair Care',
+      '679635d0a547744085f05ffb': 'Skin Care',
+      '6797dc7caaf46dbfaee6fdb6': 'Oral Care',
+      '6797dc8caaf46dbfaee6fdbc': 'Body Care'
+    };
+    
+    return categoryNames[categoryId] || 'Product';
   };
 
   return (
@@ -50,7 +60,7 @@ const HowToUse = ({ steps, category }) => {
         <div className="category-image">
           <img 
             src={getCategoryImage(category)} 
-            alt={`How to use - ${category || 'Product'}`} 
+            alt={`How to use - ${getCategoryName(category)}`} 
           />
         </div>
       </div>
