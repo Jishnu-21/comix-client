@@ -478,7 +478,7 @@ const Header = () => {
           <div className="header-top">
             <div className="marquee-container">
               <div className="marquee-item">
-                🎉 Welcome to Comix - Your Beauty Destination!
+                🎉 Welcome to Commix - Your Beauty Destination!
               </div>
               <div className="marquee-item">
                🎉 Free Shipping on Orders Over ₹499 🎁 Get 10% Off on Your First Order
