@@ -57,7 +57,7 @@ const Header = () => {
 
   const [bestSellers, setBestSellers] = useState([]);
   const marqueeItems = [
-    "🎉 Welcome to Comix - Your Beauty Destination!",
+    "🎉 Welcome to Commix - Your Beauty Destination!",
     "✨ Free Shipping on Orders Over ₹499",
     "🎁 Get 10% Off on Your First Order"
   ];
