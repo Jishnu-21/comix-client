@@ -21,6 +21,17 @@ const ProductSpotlight = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isAddingToCart, setIsAddingToCart] = useState({});
+  const [isMobileOrTablet, setIsMobileOrTablet] = useState(false);
+
+  useEffect(() => {
+    const checkDevice = () => {
+      setIsMobileOrTablet(window.innerWidth <= 1024);
+    };
+
+    checkDevice();
+    window.addEventListener('resize', checkDevice);
+    return () => window.removeEventListener('resize', checkDevice);
+  }, []);
 
   const sliderSettings = {
     dots: true,
@@ -28,7 +39,7 @@ const ProductSpotlight = () => {
     speed: 500,
     slidesToShow: 4,
     slidesToScroll: 1,
-    autoplay: true,
+    autoplay: !isMobileOrTablet,
     autoplaySpeed: 4000,
     pauseOnHover: true,
     arrows: true,
@@ -55,7 +66,8 @@ const ProductSpotlight = () => {
           slidesToShow: 2,
           slidesToScroll: 1,
           infinite: products.length > 2,
-          dots: true
+          dots: true,
+          autoplay: false
         }
       },
       {
@@ -67,7 +79,8 @@ const ProductSpotlight = () => {
           dots: true,
           arrows: false,
           centerMode: false,
-          centerPadding: '0'
+          centerPadding: '0',
+          autoplay: false
         }
       }
     ]

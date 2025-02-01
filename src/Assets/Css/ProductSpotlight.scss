@@ -235,6 +235,24 @@
           }
         }
       }
+
+      @media (max-width: 1024px) {
+        .slick-track {
+          touch-action: pan-x; // Enable horizontal touch scrolling
+          -webkit-overflow-scrolling: touch; // Smooth scrolling on iOS
+        }
+
+        .slick-list {
+          overflow-x: auto; // Show horizontal scrollbar if needed
+          scroll-behavior: smooth; // Smooth scrolling
+          -webkit-overflow-scrolling: touch;
+          
+          &::-webkit-scrollbar {
+            display: none; // Hide scrollbar on webkit browsers
+          }
+          scrollbar-width: none; // Hide scrollbar on Firefox
+        }
+      }
     }
 
     .ps-slider-item {
@@ -424,6 +442,21 @@
         }
       }
     }
+  }
+
+  .slick-dots {
+    @media (max-width: 1024px) {
+      position: relative;
+      bottom: 0;
+      margin-top: 20px;
+    }
+  }
+
+  @media (max-width: 1024px) {
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
   }
 
   @media (max-width: 768px) {

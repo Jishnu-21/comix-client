@@ -6,12 +6,13 @@ import '../Assets/Css/MobileHeader.scss';
 import { API_URL } from '../config/api';
 import { useNavigate } from 'react-router-dom';
 import ChatbotModal from './Chatbot/ChatbotModal';
-
-const MobileHeader = ({ cartItemCount, onMenuClick, marqueeText, onLogout, categories }) => {
+import axios from 'axios';
+const MobileHeader = ({ cartItemCount, onMenuClick, marqueeText, onLogout }) => {
   const [isSearchVisible, setIsSearchVisible] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [bestSellers, setBestSellers] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [hotPicks, setHotPicks] = useState([
     { title: 'Hair Care', image: '/images/lip1.jpg' },
     { title: 'Oral Care', image: '/images/lip2.jpg' },
@@ -46,6 +47,18 @@ const MobileHeader = ({ cartItemCount, onMenuClick, marqueeText, onLogout, categ
       }
     };
     fetchBestSellers();
+  }, []);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/categories`);
+        setCategories(response.data.categories || []);
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+      }
+    };
+    fetchCategories();
   }, []);
 
   // Handle body overflow for sidebar
@@ -205,18 +218,25 @@ const MobileHeader = ({ cartItemCount, onMenuClick, marqueeText, onLogout, categ
           </button>
         </div>
         <nav className="sidebar-nav">
-          {menuItems.map((item, index) => (
-            <Link 
-              to={item.path} 
-              className="sidebar-item" 
-              onClick={toggleSidebar} 
-              key={index}
-            >
-              {item.label}
-              {item.badge && <span className="badge">{item.badge}</span>}
-              <FontAwesomeIcon icon={faTimes} className="chevron" />
+        <Link to="/" className="sidebar-item" onClick={toggleSidebar}>
+              HOME
             </Link>
-          ))}
+            {categories.map((category) => (
+              <Link 
+                key={category._id} 
+                to={`/product`} 
+                className="sidebar-item" 
+                onClick={toggleSidebar}
+              >
+                {category.name.toUpperCase()}
+              </Link>
+            ))}
+            <Link to="/offers" className="sidebar-item" onClick={toggleSidebar}>
+              OFFERS
+            </Link>
+            <Link to="/blog" className="sidebar-item" onClick={toggleSidebar}>
+              BLOGS
+            </Link>
         </nav>
       </div>
       <div className="mobile-footer">
