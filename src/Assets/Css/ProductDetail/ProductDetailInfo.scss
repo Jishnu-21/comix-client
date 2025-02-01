@@ -108,6 +108,10 @@
 
   .price-section {
     margin-bottom: 30px;
+    @media screen and (max-width: 768px) {
+      margin: 8px;
+      
+    }
 
     .regular-price {
       font-size: 24px;
