@@ -28,7 +28,7 @@ const MakeupSlider = () => {
   const reels = [
     {
       id: 1,
-      videoUrl: 'https://cdn.pixabay.com/video/2024/04/22/209022_large.mp4',
+      videoUrl: 'https://d5ap13rps3ht6.cloudfront.net/8a742554-d177-11ef-808e-8aae7afc63b8/daa7257f-d17a-11ef-877c-9a35e5f0f4dd/dad9706c-d17a-11ef-877c-9a35e5f0f4dd_video.mp4',
       title: 'Everyday Glam Makeup Tutorial',
       description: 'Learn how to create a stunning everyday glam look perfect for any occasion! This tutorial features our best-selling products for a flawless finish. ✨💄',
       products: [
