@@ -50,7 +50,7 @@ const ProductDetail = () => {
         if (response.data.success) {
           console.log('Product details:', response.data.product);
           // Log hero ingredients specifically
-          console.log('Hero Ingredients:', response.data.product.hero_ingredients);
+          console.log('Category', response.data.product.category_id.name);
           setProduct(response.data.product);
           await trackProductVisit(response.data.product);
         } else {
@@ -215,7 +215,7 @@ const ProductDetail = () => {
         </div>
       </div>
             <KeyIngredients ingredients={product.hero_ingredients} />
-            <HowToUse steps={product.how_to_use} category={product.category} />
+            <HowToUse steps={product.how_to_use} category={product.category_id.name} />
             {recentlyVisited.length > 0 && (
               <div className="recently-viewed">
                 <SectionTitle title="SHOP FROM RECENTLY VIEWED" />

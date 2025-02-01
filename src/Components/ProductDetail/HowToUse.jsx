@@ -16,15 +16,18 @@ const HowToUse = ({ steps, category }) => {
 
   if (!formattedSteps || formattedSteps.length === 0) return null;
 
-  const getCategoryImage = (category) => {
+  const getCategoryImage = (categoryName) => {
+    if (!categoryName) return '/images/skincare.gif';
+    
     const categoryMap = {
-      'skin care': '/images/skincare.gif',
-      'hair care': '/images/haircare.png',
-      'oral care': '/images/oral care.png',
-      'body care': '/images/bodycare.png'
+      'Skin Care': '/images/skincare.gif',
+      'Hair Care': '/images/haircare.png',
+      'Oral Care': '/images/oral care.png',
+      'Body Care': '/images/bodycare.png'
     };
     
-    return categoryMap[category?.toLowerCase()] || '/images/skincare.gif';
+    const normalizedCategory = categoryName.toLowerCase();
+    return categoryMap[normalizedCategory] || '/images/skincare.gif';
   };
 
   return (
@@ -45,7 +48,10 @@ const HowToUse = ({ steps, category }) => {
           ))}
         </div>
         <div className="category-image">
-          <img src={getCategoryImage(category)} alt={`How to use - ${category}`} />
+          <img 
+            src={getCategoryImage(category)} 
+            alt={`How to use - ${category || 'Product'}`} 
+          />
         </div>
       </div>
     </div>

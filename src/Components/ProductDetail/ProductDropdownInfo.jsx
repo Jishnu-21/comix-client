@@ -249,7 +249,6 @@ const ProductDropdownInfo = ({ description, ingredients, faqs, additionalDetails
                 <div className="hero-ingredients-grid">
                   {product.hero_ingredients.map((heroIng, index) => {
                     // Log the hero ingredient data to debug
-                    console.log('Hero Ingredient:', heroIng);
                     
                     return (
                       <div key={index} className="hero-ingredient-card">
