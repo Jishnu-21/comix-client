@@ -780,12 +780,29 @@
       padding: 2rem;
     }
 
+
+    
+  .login-image-container {
+    position: absolute;
+    top: 820px;
+    right: -20px;
+    width: 50%;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .login-image {
+    width: 90%;
+    object-fit: cover;
+  }
+  
     .login-container {
       position: relative;
-      top: 30px;
+      top: 10px;
       left:00px;
       width: 100%;
-      max-width: 500px;
+      max-width: 600px;
       margin: 0 auto;
       padding: 3rem;
       background-color: rgba(30, 30, 44, 0.6);
@@ -793,15 +810,12 @@
     }
 
     .brand-logo {
-      width: 150px;
-      top: 250px;
-      right: 120px;
+      width: 250px;
+      top: 150px;
+      right: 15px;
       margin-bottom: 2.5rem;
     }
-
-    .login-image-container {
-      display: none;
-    }
+   
 
     .welcome-text {
       font-size: 1.8rem;
@@ -824,22 +838,43 @@
 @media (min-width: 768px) and (max-width: 1024px) and (max-height: 1024px) {
   .login-page {
     .container {
-      max-width: 500px; // Slightly smaller max-width for iPad Mini
+      max-width: 700px; // Slightly smaller max-width for iPad Mini
     }
-
+   
+    .signup-link {
+      font-size: 1.2rem;
+    }
+    
     .login-container {
-      left: 230px;
-      max-width: 450px; // Slightly smaller max-width for iPad Mini
+      top: -10px;
+      left: 350px;
+      max-width: 650px; // Slightly smaller max-width for iPad Mini
       padding: 2.5rem; // Adjust padding for smaller screens
     }
 
     .brand-logo {
-      width: 140px; // Slightly smaller logo for iPad Mini
+      width: 240px; // Slightly smaller logo for iPad Mini
       margin-bottom: 2rem; // Adjust margin for smaller screens
-      top: 150px;
-      right: 650px;
+      top: 100px;
+      right: 750px;
     }
 
+    
+  .login-image-container {
+    position: absolute;
+    top: 680px;
+    right: -20px;
+    width: 50%;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .login-image {
+    width: 90%;
+    object-fit: cover;
+  }
+  
     .welcome-text {
       font-size: 1.6rem; // Slightly smaller font size for iPad Mini
       margin-bottom: 2rem;
@@ -866,9 +901,8 @@
     }
 
     .login-container {
-      top: 450px;
-      left: 250px;
-      max-width: 600px; // Make the form compact, similar to mobile
+      max-width: 600px;
+      top: -50px; // Make the form compact, similar to mobile
       width: 100%; // Ensure it stretches to fill the container
       padding: 2rem; // Moderate padding for spacing
       background-color: rgba(30, 30, 44, 0.6);
@@ -876,10 +910,26 @@
       margin: 0 auto; // Center the form horizontally
     }
 
+  .login-image-container {
+  position: absolute;
+  top: 850px;
+  right: 0;
+  width: 50%;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.login-image {
+  width: 100%;
+  object-fit: cover;
+}
+
+
     .brand-logo {
-     top: 280px;
-     right: 130px;
-      width: 200px; // Smaller logo, similar to mobile
+     top: 100px;
+     right: -80px;
+      width: 380px; // Smaller logo, similar to mobile
       margin-bottom: 2rem; // Moderate margin for spacing
     }
 
