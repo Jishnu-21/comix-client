@@ -54,7 +54,7 @@ const ChatbotModal = ({ isOpen, onClose, is404Page }) => {
       setInputMessage('');
   
       try {
-        const response = await axios.post('http://localhost:5000/api/groq/chat', {
+        const response = await axios.post(`${API_URL}/groq/chat`, {
           message: inputMessage
         });
   
