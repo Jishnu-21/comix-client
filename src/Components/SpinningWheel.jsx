@@ -2,22 +2,23 @@
 
 import React, { useState, useEffect } from "react";
 import { X } from "lucide-react";
+import { Wheel } from 'react-custom-roulette';
 
 const offers = [
-  { text: "20% OFF", color: "#FF6B6B" },
-  { text: "Free Shipping", color: "#4ECDC4" },
-  { text: "50% OFF", color: "#45B7D1" },
-  { text: "Buy 1 Get 1", color: "#96CEB4" },
-  { text: "10% OFF", color: "#FFEEAD" },
-  { text: "5$ Coupon", color: "#D4A5A5" },
-  { text: "15% OFF", color: "#9B59B6" },
-  { text: "Free Gift", color: "#3498DB" },
+  { option: "20% OFF", style: { backgroundColor: "#FF6B6B", textColor: "white" } },
+  { option: "Free Shipping", style: { backgroundColor: "#4ECDC4", textColor: "white" } },
+  { option: "50% OFF", style: { backgroundColor: "#45B7D1", textColor: "white" } },
+  { option: "Buy 1 Get 1", style: { backgroundColor: "#96CEB4", textColor: "white" } },
+  { option: "10% OFF", style: { backgroundColor: "#FFEEAD", textColor: "black" } },
+  { option: "5$ Coupon", style: { backgroundColor: "#D4A5A5", textColor: "white" } },
+  { option: "15% OFF", style: { backgroundColor: "#9B59B6", textColor: "white" } },
+  { option: "Free Gift", style: { backgroundColor: "#3498DB", textColor: "white" } },
 ];
 
 const SpinningWheel = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [isSpinning, setIsSpinning] = useState(false);
-  const [rotation, setRotation] = useState(0);
+  const [prizeNumber, setPrizeNumber] = useState(0);
   const [phoneNumber, setPhoneNumber] = useState("");
   const [showOffer, setShowOffer] = useState(false);
   const [selectedOffer, setSelectedOffer] = useState(null);
@@ -37,11 +38,11 @@ const SpinningWheel = () => {
   useEffect(() => {
     const isOpenedBefore = localStorage.getItem("wheelOpened");
     if (isOpenedBefore) {
-      setIsVisible(false);
+      setIsVisible(true);
     } else {
       const timer = setTimeout(() => {
         setIsVisible(true);
-      }, 100);
+      }, 500);
 
       return () => clearTimeout(timer);
     }
@@ -59,28 +60,30 @@ const SpinningWheel = () => {
     };
   }, [isVisible]);
 
-  const spinWheel = () => {
+  const handleSpinClick = () => {
     if (!isSpinning) {
+      const newPrizeNumber = Math.floor(Math.random() * offers.length);
+      setPrizeNumber(newPrizeNumber);
       setIsSpinning(true);
-      const randomRotation = 1800 + Math.floor(Math.random() * 1800);
-      setRotation(rotation + randomRotation);
-
-      setTimeout(() => {
-        setIsSpinning(false);
-        const finalRotation = (rotation + randomRotation) % 360;
-        const selectedIndex =
-          Math.floor((360 - (finalRotation % 360)) / (360 / offers.length));
-        setSelectedOffer(offers[selectedIndex]);
-        setShowOffer(true);
-      }, 5000);
     }
+  };
+
+  const handleSpinStop = () => {
+    setIsSpinning(false);
+    setSelectedOffer(offers[prizeNumber]);
+    setShowOffer(true);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("Phone number:", phoneNumber);
-    spinWheel();
+    handleSpinClick();
   };
+
+  const wheelData = offers.map(offer => ({
+    option: offer.option,
+    style: offer.style
+  }));
 
   return (
     <>
@@ -102,7 +105,7 @@ const SpinningWheel = () => {
         <div className={`relative bg-white h-full shadow-2xl flex ${isMobile ? "flex-col" : ""}`}>
           <button
             onClick={() => setIsVisible(false)}
-            className="absolute top-4 left-4 text-gray-500 hover:text-gray-700 transition-colors z-30"
+            className="absolute top-4 left-[24px] text-gray-500 hover:text-gray-700 transition-colors z-30"
           >
             <X size={24} />
           </button>
@@ -120,7 +123,7 @@ const SpinningWheel = () => {
               </h3>
               <p className="text-gray-600">
                 {showOffer
-                  ? `Congratulations! You've won ${selectedOffer?.text}`
+                  ? `Congratulations! You've won ${selectedOffer?.option}`
                   : "Enter your phone number to spin the wheel"}
               </p>
             </div>
@@ -156,71 +159,34 @@ const SpinningWheel = () => {
             </div>
           </div>
 
-          {/* Vertical Half Wheel */}
+          {/* Wheel Container */}
           <div
-            className={`relative overflow-hidden ${isMobile ? "h-[300px] order-1" : "flex-1"}`}
+            className={`relative flex items-center ${
+              isMobile 
+                ? "h-[300px] order-1 justify-center" 
+                : "flex-1 justify-end pl-[120px]"
+            }`}
           >
-            {/* Center Point */}
-            <div
-              className={`absolute w-4 h-4 bg-white rounded-full z-20 shadow-md ${
-                isMobile ? "bottom-0 left-1/2 -translate-x-1/2" : "top-1/2 right-0 -translate-y-1/2"
-              }`}
-            />
-
-            {/* Pointer */}
-            <div
-              className={`absolute w-6 h-6 bg-red-500 z-10 ${
-                isMobile
-                  ? "bottom-0 left-1/2 -translate-x-1/2 clip-triangle-up"
-                  : "top-1/2 right-0 -translate-y-1/2 clip-triangle-right"
-              }`}
-            />
-
-            {/* Full Wheel for Mobile, Half Wheel for Desktop */}
-            <div
-              className={`absolute w-[600px] h-[600px] rounded-full overflow-hidden transition-transform duration-5000 ease-out ${
-                isMobile ? "left-1/2 -translate-x-1/2 bottom-0" : "right-[-300px] top-[calc(50%-300px)]"
-              }`}
-              style={{
-                transform: `rotate(${rotation}deg)`,
-              }}
-            >
-              {offers.map((offer, index) => {
-                const angle = (360 / offers.length) * index;
-                const textRotation = isMobile ? angle + 90 : angle;
-                return (
-                  <div
-                    key={index}
-                    className="absolute w-full h-full origin-center"
-                    style={{
-                      transform: `rotate(${angle}deg)`,
-                      clipPath: isMobile
-                        ? "polygon(0 50%, 100% 50%, 100% 100%, 0 100%)"
-                        : "polygon(50% 0, 100% 0, 100% 100%, 50% 100%)",
-                    }}
-                  >
-                    <div
-                      className="absolute w-full h-full"
-                      style={{ backgroundColor: offer.color }}
-                    >
-                      <div
-                        className="absolute flex items-center justify-center w-full"
-                        style={{
-                          top: isMobile ? "75%" : "50%",
-                          right: isMobile ? "50%" : "25%",
-                          transform: isMobile
-                            ? `translate(50%, -50%) rotate(${-textRotation}deg)`
-                            : `translate(50%, -50%) rotate(${-textRotation + 90}deg)`,
-                        }}
-                      >
-                        <span className="text-white font-bold whitespace-nowrap">
-                          {offer.text}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
+            <div className={`${isMobile ? "w-[250px]" : "w-[400px]"}`}>
+              <Wheel
+                mustStartSpinning={isSpinning}
+                prizeNumber={prizeNumber}
+                data={wheelData}
+                onStopSpinning={handleSpinStop}
+                backgroundColors={offers.map(offer => offer.style.backgroundColor)}
+                textColors={offers.map(offer => offer.style.textColor)}
+                fontSize={isMobile ? 14 : 16}
+                outerBorderColor="#ccc"
+                outerBorderWidth={3}
+                innerRadius={0}
+                innerBorderColor="#ccc"
+                innerBorderWidth={2}
+                radiusLineColor="#ccc"
+                radiusLineWidth={1}
+                perpendicularText
+                textDistance={75}
+                spinDuration={0.8}
+              />
             </div>
           </div>
         </div>
