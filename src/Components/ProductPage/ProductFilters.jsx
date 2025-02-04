@@ -1,94 +1,87 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from "react-router-dom";
-import "../../Assets/Css/ProductPage/ProductFilters.scss"; // Import the SCSS file for this component
-import axios from 'axios';
+import "../../Assets/Css/ProductPage/ProductFilters.scss";
 import { API_URL } from '../../config/api';
 
-const ProductFilters = ({ selectedCategories, onCategorySelect, onFilterChange }) => {
+const ProductFilters = ({ selectedFilters = {}, onFilterChange }) => {
   const [openSection, setOpenSection] = useState(null);
-  const [selectedPriceRange, setSelectedPriceRange] = useState(null);
-  const [categories, setCategories] = useState([]);  // Initialize as empty array
+  const [categories, setCategories] = useState([]);
   const [popularSubcategories, setPopularSubcategories] = useState([]);
-  const [selectedSubcategories, setSelectedSubcategories] = useState([]);
+  const [selectedSubcategories, setSelectedSubcategories] = useState(selectedFilters.subcategories || []);
 
-  console.log('Selected Categories:', selectedCategories);
   useEffect(() => {
     getCategories();
   }, []);
+
+  useEffect(() => {
+    // Safely update subcategories from props
+    if (selectedFilters && Array.isArray(selectedFilters.subcategories)) {
+      setSelectedSubcategories(selectedFilters.subcategories);
+    }
+  }, [selectedFilters?.subcategories]);
 
   const toggleSection = (section) => {
     setOpenSection(openSection === section ? null : section);
   };
 
   const handlePriceRangeSelect = (range) => {
-    // Check if the selected range is already active
-    if (
-      selectedPriceRange &&
-      selectedPriceRange.min === range.min &&
-      selectedPriceRange.max === range.max
-    ) {
-      // Deselect the price range if it's already selected
-      setSelectedPriceRange(null);
-      onFilterChange({ priceRange: null }); // Notify parent component
-    } else {
-      // Select the new price range
-      setSelectedPriceRange(range);
-      onFilterChange({ priceRange: range }); // Notify parent component
-    }
-  };
+    const isCurrentlySelected = 
+      selectedFilters?.priceRange?.min === range.min && 
+      selectedFilters?.priceRange?.max === range.max;
 
-  const priceRanges = [
-    { label: '> Rs500.00', value: { min: 0, max: 500 } },
-    { label: 'Rs500.00 - Rs1000.00', value: { min: 500, max: 1000 } },
-    { label: '< Rs1000.00', value: { min: 1000, max: Infinity } },
-  ];
+    onFilterChange({
+      ...selectedFilters,
+      priceRange: isCurrentlySelected ? null : range
+    });
+  };
 
   const getCategories = async () => {
     try {
-      const response = await axios.get(`${API_URL}/categories/`);
-      console.log('Categories response:', response.data);
-      // Ensure we're setting an array
-      const categoriesData = Array.isArray(response.data) ? response.data : response.data.categories || [];
+      const response = await fetch(`${API_URL || ''}/categories/`);
+      if (!response.ok) throw new Error('Failed to fetch categories');
+      
+      const data = await response.json();
+      const categoriesData = Array.isArray(data) ? data : data.categories || [];
       setCategories(categoriesData);
       
-      // Get all subcategories from all categories
       const allSubcategories = categoriesData.reduce((acc, category) => {
         return [...acc, ...(category.subcategories || [])];
       }, []);
       
-      // Randomly select 6 subcategories
-      const shuffled = allSubcategories.sort(() => 0.5 - Math.random());
+      const shuffled = [...allSubcategories].sort(() => 0.5 - Math.random());
       setPopularSubcategories(shuffled.slice(0, 6));
     } catch (error) {
       console.error('Error fetching categories:', error);
-      setCategories([]); // Set empty array on error
+      setCategories([]);
+      setPopularSubcategories([]);
     }
-  }
-
-  const formatPrice = (value) => `$${value}`;
+  };
 
   const handleCategorySelect = (categoryId) => {
-    const newSelectedCategories = selectedCategories.includes(categoryId)
-      ? selectedCategories.filter(id => id !== categoryId) // Remove if already selected
-      : [...selectedCategories, categoryId]; // Add if not selected
-
-    onCategorySelect(newSelectedCategories); // Update parent with new selection
+    onFilterChange({
+      ...selectedFilters,
+      category: selectedFilters?.category === categoryId ? null : categoryId,
+      subcategories: [] // Reset subcategories when changing category
+    });
   };
 
-  const onSubcategorySelect = (subcategoryId) => {
-    const newSelectedSubcategories = selectedSubcategories.includes(subcategoryId)
-      ? selectedSubcategories.filter(id => id !== subcategoryId) // Remove if already selected
-      : [...selectedSubcategories, subcategoryId]; // Add if not selected
+  const handleSubcategorySelect = (subcategoryId) => {
+    const newSubcategories = selectedSubcategories.includes(subcategoryId)
+      ? selectedSubcategories.filter(id => id !== subcategoryId)
+      : [...selectedSubcategories, subcategoryId];
 
-    setSelectedSubcategories(newSelectedSubcategories); // Update local state
-    onFilterChange({ subcategories: newSelectedSubcategories }); // Update parent with new selection
+    onFilterChange({
+      ...selectedFilters,
+      subcategories: newSubcategories
+    });
   };
 
-  useEffect(() => {
-    onFilterChange({ subcategories: selectedSubcategories });
-  }, [selectedSubcategories]);
+  const priceRanges = [
+    { label: '< Rs500.00', value: { min: 0, max: 500 } },
+    { label: 'Rs500.00 - Rs1000.00', value: { min: 500, max: 1000 } },
+    { label: '> Rs1000.00', value: { min: 1000, max: Infinity } }
+  ];
 
-  // Desktop version remains the same
+  // Rest of the component remains the same, just add optional chaining where needed
   const DesktopFilter = () => (
     <div className="product-filters p-4">
       <div className="accordion" id="filterAccordion">
@@ -113,38 +106,15 @@ const ProductFilters = ({ selectedCategories, onCategorySelect, onFilterChange }
                   <li key={category._id} className="list-group-item">
                     <span
                       onClick={() => handleCategorySelect(category._id)}
-                      style={{ cursor: 'pointer', color: selectedCategories.includes(category._id) ? 'gold' : 'white' }}
+                      style={{ 
+                        cursor: 'pointer', 
+                        color: selectedFilters?.category === category._id ? 'gold' : 'white'
+                      }}
                     >
                       {category.name}
                     </span>
                   </li>
                 ))}
-              </ul>
-            </div>
-          </div>
-        </div>
-
-        {/* Skin Type Filter */}
-        <div className="accordion-item">
-          <h2 className="accordion-header" id="headingTwo">
-            <button
-              className={`accordion-button ${openSection !== 'skinType' ? 'collapsed' : ''}`}
-              type="button"
-              onClick={() => toggleSection('skinType')}
-            >
-              Skin Type
-            </button>
-          </h2>
-          <div
-            className={`accordion-collapse ${openSection === 'skinType' ? 'show' : ''}`}
-            aria-labelledby="headingTwo"
-          >
-            <div className="accordion-body">
-              <ul className="list-group">
-                <li className="list-group-item">All Skin Types</li>
-                <li className="list-group-item">Oily</li>
-                <li className="list-group-item">Dry</li>
-                <li className="list-group-item">Combination</li>
               </ul>
             </div>
           </div>
@@ -167,12 +137,17 @@ const ProductFilters = ({ selectedCategories, onCategorySelect, onFilterChange }
           >
             <div className="accordion-body">
               <ul className="list-group">
-                {priceRanges.map((range, index) => (
-                  <li key={index} className="list-group-item">
+                {priceRanges.map((range) => (
+                  <li key={range.label} className="list-group-item">
                     <span
                       onClick={() => handlePriceRangeSelect(range.value)}
-                      className={`price-button ${selectedPriceRange && selectedPriceRange.min === range.value.min && selectedPriceRange.max === range.value.max ? 'selected' : ''}`}
-                      style={{ cursor: 'pointer', color: selectedPriceRange && selectedPriceRange.min === range.value.min && selectedPriceRange.max === range.value.max ? 'gold' : 'white' }}
+                      className={`price-button ${
+                        selectedFilters?.priceRange?.min === range.value.min ? 'selected' : ''
+                      }`}
+                      style={{ 
+                        cursor: 'pointer', 
+                        color: selectedFilters?.priceRange?.min === range.value.min ? 'gold' : 'white' 
+                      }}
                     >
                       {range.label}
                     </span>
@@ -189,8 +164,10 @@ const ProductFilters = ({ selectedCategories, onCategorySelect, onFilterChange }
           {popularSubcategories.map((subcategory) => (
             <span
               key={subcategory._id}
-              onClick={() => onSubcategorySelect(subcategory._id)}
-              className={`subcategory-button ${selectedSubcategories.includes(subcategory._id) ? 'selected' : ''}`}
+              onClick={() => handleSubcategorySelect(subcategory._id)}
+              className={`subcategory-button ${
+                selectedSubcategories.includes(subcategory._id) ? 'selected' : ''
+              }`}
             >
               {subcategory.name}
             </span>
@@ -200,7 +177,6 @@ const ProductFilters = ({ selectedCategories, onCategorySelect, onFilterChange }
     </div>
   );
 
-  // New iPad/Tablet version
   const TabletFilter = () => (
     <div className="tablet-filter">
       <div className="filter-buttons mb-3">
@@ -211,14 +187,6 @@ const ProductFilters = ({ selectedCategories, onCategorySelect, onFilterChange }
           aria-expanded="false"
         >
           Categories
-        </button>
-        <button 
-          className="filter-btn" 
-          data-bs-toggle="collapse" 
-          data-bs-target="#skinTypeCollapse" 
-          aria-expanded="false"
-        >
-          Skin Type
         </button>
         <button 
           className="filter-btn" 
@@ -236,23 +204,19 @@ const ProductFilters = ({ selectedCategories, onCategorySelect, onFilterChange }
             <div className="filter-card">
               <h3>Categories</h3>
               <ul className="filter-list">
-                <li>Skincare</li>
-                <li>Makeup</li>
-                <li>Haircare</li>
-                <li>Bodycare</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-        <div className="col">
-          <div className="collapse" id="skinTypeCollapse">
-            <div className="filter-card">
-              <h3>Skin Type</h3>
-              <ul className="filter-list">
-                <li>All Skin Types</li>
-                <li>Oily</li>
-                <li>Dry</li>
-                <li>Combination</li>
+                {categories.map((category) => (
+                  <li key={category._id}>
+                    <span
+                      onClick={() => handleCategorySelect(category._id)}
+                      style={{ 
+                        cursor: 'pointer', 
+                        color: selectedFilters?.category === category._id ? 'gold' : 'white'
+                      }}
+                    >
+                      {category.name}
+                    </span>
+                  </li>
+                ))}
               </ul>
             </div>
           </div>
@@ -266,7 +230,9 @@ const ProductFilters = ({ selectedCategories, onCategorySelect, onFilterChange }
                   <span
                     key={range.label}
                     onClick={() => handlePriceRangeSelect(range.value)}
-                    className={`price-button ${selectedPriceRange && selectedPriceRange.min === range.value.min && selectedPriceRange.max === range.value.max ? 'selected' : ''}`}
+                    className={`price-button ${
+                      selectedFilters?.priceRange?.min === range.value.min ? 'selected' : ''
+                    }`}
                   >
                     {range.label}
                   </span>
@@ -283,8 +249,10 @@ const ProductFilters = ({ selectedCategories, onCategorySelect, onFilterChange }
           {popularSubcategories.map((subcategory) => (
             <span
               key={subcategory._id}
-              onClick={() => onSubcategorySelect(subcategory._id)}
-              className={`subcategory-button ${selectedSubcategories.includes(subcategory._id) ? 'selected' : ''}`}
+              onClick={() => handleSubcategorySelect(subcategory._id)}
+              className={`subcategory-button ${
+                selectedSubcategories.includes(subcategory._id) ? 'selected' : ''
+              }`}
             >
               {subcategory.name}
             </span>

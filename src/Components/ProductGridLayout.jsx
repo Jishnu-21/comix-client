@@ -7,7 +7,14 @@ import axios from 'axios'; // Import axios for API calls
 import { API_URL } from '../../config/api';
 
 const itemsPerPage = 9;
-const ProductGridLayout = ({ searchTerm, sortOption, setSortOption }) => {
+const ProductGridLayout = ({ 
+  searchTerm, 
+  sortOption, 
+  setSortOption,
+  categoryProducts,
+  categoryId,
+  isCategoryPage
+}) => {
   const [products, setProducts] = useState([]); // State to hold products
   const [bestSellers, setBestSellers] = useState([]); // State to hold best sellers
   const [currentPage, setCurrentPage] = useState(1);
@@ -24,19 +31,17 @@ const ProductGridLayout = ({ searchTerm, sortOption, setSortOption }) => {
 
   // Get filtered products
   const getFilteredProducts = () => {
-    return products.filter(product => {
-      // Filter by category
-      if (filters.category && product.category !== filters.category) {
-        return false;
-      }
+    // If it's a category page, only use categoryProducts
+    const productsToFilter = isCategoryPage ? categoryProducts : products;
 
-      // Filter by price
-      const price = parseFloat(product.variants[0].price);
+    return productsToFilter.filter(product => {
+      // Apply price filter
+      const price = parseFloat(product.variants[0]?.price || 0);
       if (price < filters.priceRange.min || price > filters.priceRange.max) {
         return false;
       }
 
-      // Filter by search term
+      // Apply search filter
       if (searchTerm && !product.name.toLowerCase().includes(searchTerm.toLowerCase())) {
         return false;
       }
@@ -46,41 +51,49 @@ const ProductGridLayout = ({ searchTerm, sortOption, setSortOption }) => {
   };
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response = await axios.get(`${API_URL}/products`); // Adjust the endpoint as necessary
-        if (response.data.success) {
-          setProducts(Array.isArray(response.data.products) ? response.data.products : []);
-        } else {
+    // Only fetch all products if we're NOT on a category page
+    if (!isCategoryPage) {
+      const fetchProducts = async () => {
+        try {
+          const response = await axios.get(`${API_URL}/products`);
+          if (response.data.success) {
+            setProducts(Array.isArray(response.data.products) ? response.data.products : []);
+          } else {
+            setError('Failed to fetch products');
+          }
+        } catch (err) {
+          console.error('Error fetching products:', err);
           setError('Failed to fetch products');
+        } finally {
+          setLoading(false);
         }
-        console.log('Fetched products:', response.data); // Log the response
-      } catch (err) {
-        console.error('Error fetching products:', err);
-        setError('Failed to fetch products');
-      } finally {
-        setLoading(false); // Set loading to false after fetching
-      }
-    };
+      };
 
+      fetchProducts();
+    } else {
+      // If we're on a category page, use the provided category products
+      setProducts(categoryProducts);
+      setLoading(false);
+    }
+
+    // Fetch best sellers
     const fetchBestSellers = async () => {
       try {
-        const response = await axios.get(`${API_URL}/products`); // Use the same endpoint for best sellers
+        const endpoint = isCategoryPage
+          ? `${API_URL}/products/bestsellers/${categoryId}`
+          : `${API_URL}/products/bestsellers`;
+        
+        const response = await axios.get(endpoint);
         if (response.data.success) {
           setBestSellers(Array.isArray(response.data.products) ? response.data.products : []);
-        } else {
-          setError('Failed to fetch best sellers');
         }
-        console.log('Fetched best sellers:', response.data); // Log the response
       } catch (err) {
         console.error('Error fetching best sellers:', err);
-        setError('Failed to fetch best sellers');
       }
     };
 
-    fetchProducts();
     fetchBestSellers();
-  }, []);
+  }, [categoryProducts, categoryId, isCategoryPage]);
 
   // Apply sorting to filtered products
   const getSortedProducts = (filteredProducts) => {
@@ -93,9 +106,9 @@ const ProductGridLayout = ({ searchTerm, sortOption, setSortOption }) => {
         case 'ZtoA':
           return b.name.localeCompare(a.name);
         case 'priceLowToHigh':
-          return parseFloat(a.variants[0].price) - parseFloat(b.variants[0].price);
+          return parseFloat(a.variants[0]?.price || 0) - parseFloat(b.variants[0]?.price || 0);
         case 'priceHighToLow':
-          return parseFloat(b.variants[0].price) - parseFloat(a.variants[0].price);
+          return parseFloat(b.variants[0]?.price || 0) - parseFloat(a.variants[0]?.price || 0);
         default:
           return 0;
       }

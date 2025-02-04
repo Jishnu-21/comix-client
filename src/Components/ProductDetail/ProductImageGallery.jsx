@@ -1,40 +1,66 @@
 import React, { useState } from 'react';
-import '../../Assets/Css/ProductDetail/ProductImageGallery.scss';
 
 const ProductImageGallery = ({ images }) => {
   const [selectedImage, setSelectedImage] = useState(images[0]);
 
   return (
-    <div className="product-image-gallery">
-      <div className="gallery-container">
-        <div className="left-thumbnails">
+    <div className="w-full">
+      <div className="grid grid-cols-[120px_380px] grid-rows-[380px_120px] gap-4 w-[515px] h-[515px]">
+        {/* Left Thumbnails */}
+        <div className="flex flex-col gap-4">
           {images.slice(0, 3).map((image, index) => (
             <div
               key={index}
-              className={`thumbnail ${image === selectedImage ? 'active' : ''}`}
+              className={`w-[120px] h-[120px] cursor-pointer overflow-hidden transition-colors duration-300
+                ${image === selectedImage ? 'border border-black' : 'border border-transparent'}
+                hover:border-black`}
               onMouseEnter={() => setSelectedImage(image)}
             >
-              <img src={image} alt={`Thumbnail ${index + 1}`} />
+              <img 
+                src={image} 
+                alt={`Thumbnail ${index + 1}`} 
+                className="w-full h-full object-cover"
+              />
             </div>
           ))}
         </div>
-        <div className="main-image-container">
-          <img src={selectedImage} alt="Selected product" className="main-image" />
+
+        {/* Main Image */}
+        <div className="w-[380px] h-[380px]">
+          <img 
+            src={selectedImage} 
+            alt="Selected product" 
+            className="w-full h-full object-cover transition-all duration-300 ease-in-out"
+          />
         </div>
-        <div className="bottom-thumbnails">
+
+        {/* Bottom Thumbnails */}
+        <div className="col-span-2 flex gap-4">
           <div
-            className={`thumbnail ${images[3] === selectedImage ? 'active' : ''}`}
+            className={`w-[120px] h-[120px] cursor-pointer overflow-hidden transition-colors duration-300
+              ${images[3] === selectedImage ? 'border border-black' : 'border border-transparent'}
+              hover:border-black`}
             onMouseEnter={() => setSelectedImage(images[3])}
           >
-            <img src={images[3]} alt="Corner Thumbnail" />
+            <img 
+              src={images[3]} 
+              alt="Corner Thumbnail" 
+              className="w-full h-full object-cover"
+            />
           </div>
           {images.slice(4).map((image, index) => (
             <div
               key={index + 4}
-              className={`thumbnail ${image === selectedImage ? 'active' : ''}`}
+              className={`w-[120px] h-[120px] cursor-pointer overflow-hidden transition-colors duration-300
+                ${image === selectedImage ? 'border border-black' : 'border border-transparent'}
+                hover:border-black`}
               onMouseEnter={() => setSelectedImage(image)}
             >
-              <img src={image} alt={`Thumbnail ${index + 5}`} />
+              <img 
+                src={image} 
+                alt={`Thumbnail ${index + 5}`} 
+                className="w-full h-full object-cover"
+              />
             </div>
           ))}
         </div>

@@ -13,6 +13,7 @@ import { Navigation, Pagination } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
+import BestSeller from './BestSeller';
 const itemsPerPage = 9;
 
 const ProductGridLayout = ({ searchTerm, sortOption, setSortOption }) => {
@@ -257,24 +258,25 @@ const ProductGridLayout = ({ searchTerm, sortOption, setSortOption }) => {
       {isMobile ? (
         <MobileBestSellers bestSellers={bestSellers} />
       ) : isIpad ? (
-        <div className="best-sellers-swiper">
+        <div className="ipad-bestseller-swiper">
           <Swiper
-            modules={[Navigation, Pagination]}
-            spaceBetween={15}
-            slidesPerView="auto"
-            navigation
+            modules={[Pagination]}
+            spaceBetween={20}
+            slidesPerView={2}
             pagination={{ clickable: true }}
-            className="best-sellers-grid"
+            className="bestseller-swiper-ipad"
           >
             {bestSellers.map((product) => (
               <SwiperSlide key={product._id}>
-                <CardComponent
-                  image={product.image_urls[0]}
-                  title={product.name}
-                  price={product.variants?.[0]?.price || 'N/A'}
-                  category={product.category_id?.name || 'Uncategorized'}
-                  slug={product.slug}
-                />
+                <div className="bestseller-card-ipad">
+                  <BestSeller
+                    image={product.image_urls[0]}
+                    title={product.name}
+                    price={product.variants?.[0]?.price || 'N/A'}
+                    category={product.category_id?.name || 'Uncategorized'}
+                    slug={product.slug}
+                  />
+                </div>
               </SwiperSlide>
             ))}
           </Swiper>
@@ -287,7 +289,7 @@ const ProductGridLayout = ({ searchTerm, sortOption, setSortOption }) => {
                 key={product._id} 
                 className="col-xl-3 col-lg-4 col-md-6"
               >
-                <CardComponent
+                <BestSeller
                   image={product.image_urls[0]}
                   title={product.name}
                   price={product.variants?.[0]?.price || 'N/A'}

@@ -58,6 +58,7 @@
     "semantic-ui-react": "^2.1.5",
     "slick-carousel": "^1.8.1",
     "sonner": "^1.5.0",
+    "spin-wheel-game": "^1.0.3-alpha.3",
     "split-type": "^0.3.4",
     "stream-browserify": "^3.0.0",
     "stream-http": "^3.2.0",

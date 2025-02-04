@@ -604,11 +604,14 @@ const Header = () => {
             {categories.map((category) => (
               <Link 
                 key={category._id} 
-                to={`/product`} 
-                className="nav-link" 
-                onClick={toggleSidebar}
-                onTouchStart={(e) => handleTouchStart(e, category._id)}
-                onTouchEnd={handleTouchEnd}
+                to="/product"
+                state={{ selectedCategory: category._id }}
+                className="nav-link"
+                onClick={() => {
+                  console.log("Clicked category (mobile):", category._id); // Debug log
+                  localStorage.setItem('lastSelectedCategory', category._id); // Store category ID
+                  toggleSidebar();
+                }}
               >
                 {category.name.toUpperCase()}
               </Link>
@@ -641,12 +644,14 @@ const Header = () => {
               className="nav-item"
               onMouseEnter={() => handleMouseEnter(index)}
               onMouseLeave={handleMouseLeaveLips}
-              onTouchStart={(e) => handleTouchStart(e, category._id)}
-              onTouchEnd={handleTouchEnd}
             >
-              <Link to={`/product`} className="nav-link">
-                {category.name.toUpperCase()}
-              </Link>
+<Link 
+  to="/product"
+  state={{ selectedCategory: category._id }} // Pass as state
+  onClick={() => localStorage.setItem('lastSelectedCategory', category._id)}
+>
+  {category.name.toUpperCase()}
+</Link>
               {category.subcategories && category.subcategories.length > 0 && activeDropdown === index && (
                 <div className="dropdown" onMouseLeave={handleMouseLeaveDropdown}>
                   {category.subcategories.map((subcategory) => (

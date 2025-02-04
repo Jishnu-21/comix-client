@@ -123,7 +123,6 @@ function App() {
       <RouteHandler />
       <ScrollToTop />
       <div className="App">
-      <SpinningWheel />
         <Toaster position="top-center" richColors />
         <Routes>
           <Route path="/" element={<Home />} />
