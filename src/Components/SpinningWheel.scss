@@ -1,0 +1,178 @@
+.spinning-wheel-container {
+  position: fixed;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 9999;
+  transition: transform 0.5s ease;
+  
+  &.hidden {
+    transform: translate(-100%, -50%);
+  }
+
+  .wheel-dialog {
+    display: flex;
+    gap: 2rem;
+    background: white;
+    padding: 2rem;
+    border-radius: 0 1rem 1rem 0;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    
+    .wheel-section {
+      flex: 1;
+      
+      .wheel-container {
+        position: relative;
+        width: 500px;
+        height: 500px;
+        margin: 0 auto;
+        
+        .center-point {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          width: 1rem;
+          height: 1rem;
+          background: white;
+          border-radius: 50%;
+          transform: translate(-50%, -50%);
+          z-index: 20;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .pointer {
+          position: absolute;
+          top: 0;
+          left: 50%;
+          transform: translate(-50%, -0.5rem);
+          width: 1.5rem;
+          height: 1.5rem;
+          background: #ef4444;
+          clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+          z-index: 10;
+        }
+        
+        .wheel {
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          border-radius: 50%;
+          overflow: hidden;
+          transition: transform 5s cubic-bezier(0.4, 0, 0.2, 1);
+          
+          .segment {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            transform-origin: center;
+            
+            .segment-content {
+              position: absolute;
+              width: 100%;
+              height: 100%;
+              transform: rotate(-22.5deg);
+              
+              span {
+                position: absolute;
+                left: 2rem;
+                top: 50%;
+                transform: rotate(-90deg);
+                color: white;
+                font-weight: bold;
+                white-space: nowrap;
+              }
+            }
+          }
+        }
+      }
+    }
+    
+    .offer-dialog {
+      width: 20rem;
+      border-left: 1px solid #e5e7eb;
+      padding-left: 2rem;
+      
+      .dialog-header {
+        text-align: center;
+        margin-bottom: 2rem;
+        
+        h3 {
+          font-size: 1.25rem;
+          font-weight: bold;
+          color: #1f2937;
+          margin-bottom: 0.5rem;
+        }
+        
+        p {
+          color: #6b7280;
+        }
+      }
+      
+      .phone-form {
+        .form-group {
+          margin-bottom: 1rem;
+          
+          label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #374151;
+            margin-bottom: 0.25rem;
+          }
+          
+          input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            transition: all 0.2s;
+            
+            &:focus {
+              outline: none;
+              border-color: #8b5cf6;
+              box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.2);
+            }
+          }
+        }
+        
+        button {
+          width: 100%;
+          padding: 0.75rem 1.5rem;
+          background: linear-gradient(to right, #10b981, #059669);
+          color: white;
+          font-weight: bold;
+          border-radius: 0.5rem;
+          transition: all 0.3s;
+          
+          &:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px rgba(16, 185, 129, 0.2);
+          }
+          
+          &:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+          }
+        }
+      }
+      
+      .terms {
+        margin-top: 1.5rem;
+        text-align: center;
+        font-size: 0.75rem;
+        color: #6b7280;
+      }
+    }
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

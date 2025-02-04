@@ -8,8 +8,8 @@ import { useDispatch } from 'react-redux';
 import { updateCartItemCount } from '../../features/cart/cartSlice';
 import { addToGuestCart } from '../../services/guestCartService';
 import '../../Assets/Css/ProductDetail/ProductDetailInfo.scss';
-import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
+import CartNotification from '../Cart/CartNotification';
 
 const ProductDetailInfo = forwardRef(({ product, isMobile }, ref) => {
   const dispatch = useDispatch();
@@ -21,6 +21,7 @@ const ProductDetailInfo = forwardRef(({ product, isMobile }, ref) => {
   const [selectedVariant, setSelectedVariant] = useState(null);
   const [expandedOffers, setExpandedOffers] = useState({});
   const [deviceType, setDeviceType] = useState('desktop');
+  const [showNotification, setShowNotification] = useState(false);
 
   useEffect(() => {
     fetchOffers();
@@ -78,13 +79,13 @@ const ProductDetailInfo = forwardRef(({ product, isMobile }, ref) => {
         text: `Check out ${product.name}`,
         url: window.location.href
       })
-      .then(() => toast.success('Shared successfully!', { position: 'bottom-right' }))
+      .then(() => console.log('Shared successfully!'))
       .catch((error) => console.log('Error sharing:', error));
     } else {
       // Fallback for browsers that don't support native sharing
       navigator.clipboard.writeText(window.location.href)
-        .then(() => toast.success('Link copied to clipboard!', { position: 'bottom-right' }))
-        .catch(() => toast.error('Failed to copy link', { position: 'bottom-right' }));
+        .then(() => console.log('Link copied to clipboard!'))
+        .catch(() => console.log('Failed to copy link'));
     }
   };
 
@@ -94,7 +95,7 @@ const ProductDetailInfo = forwardRef(({ product, isMobile }, ref) => {
 
   const handleAddToBag = async () => {
     if (!selectedVariant) {
-      toast.error('Please select a variant', { position: 'bottom-right' });
+      console.log('Please select a variant');
       return;
     }
 
@@ -102,7 +103,7 @@ const ProductDetailInfo = forwardRef(({ product, isMobile }, ref) => {
       setIsAddingToCart(true);
 
       if (selectedVariant.stock_quantity < 1) {
-        toast.error('Selected variant is out of stock', { position: 'bottom-right' });
+        console.log('Selected variant is out of stock');
         return;
       }
 
@@ -119,6 +120,7 @@ const ProductDetailInfo = forwardRef(({ product, isMobile }, ref) => {
         dispatch(updateCartItemCount(newCount));
         
         showCartSuccessNotification();
+        setShowNotification(true);
         return;
       }
 
@@ -131,14 +133,15 @@ const ProductDetailInfo = forwardRef(({ product, isMobile }, ref) => {
       });
 
       if (response.data.cartItem) {
-        toast.success('Added to cart successfully!', { position: 'bottom-right' });
+        console.log('Added to cart successfully!');
         showCartSuccessNotification();
+        setShowNotification(true);
         const newCount = await fetchCartItemCount(user.user.id);
         dispatch(updateCartItemCount(newCount));
       }
     } catch (error) {
       console.error('Add to cart error:', error);
-      toast.error(error.response?.data?.message || 'Failed to add to cart', { position: 'bottom-right' });
+      console.log('Failed to add to cart');
     } finally {
       setIsAddingToCart(false);
     }
@@ -166,7 +169,7 @@ const ProductDetailInfo = forwardRef(({ product, isMobile }, ref) => {
   const handleToggleFavorite = async () => {
     const user = JSON.parse(localStorage.getItem('user'));
     if (!user) {
-      toast.error('Please log in to manage favorites', { position: 'bottom-right' });
+      console.log('Please log in to manage favorites');
       return;
     }
 
@@ -179,66 +182,23 @@ const ProductDetailInfo = forwardRef(({ product, isMobile }, ref) => {
           }
         });
         setIsFavorite(false);
-        toast.success('Product removed from favorites!', { position: 'bottom-right' });
+        console.log('Product removed from favorites!');
       } else {
         await axios.post(`${API_URL}/favorites/add`, {
           user_id: user.user.id,
           product_id: product._id
         });
         setIsFavorite(true);
-        toast.success('Product added to favorites!', { position: 'bottom-right' });
+        console.log('Product added to favorites!');
       }
     } catch (error) {
       console.error('Error toggling favorite:', error);
-      toast.error('Failed to update favorites. Please try again.', { position: 'bottom-right' });
+      console.log('Failed to update favorites. Please try again.');
     }
   };
 
   const showCartSuccessNotification = () => {
-    toast.custom((t) => (
-      <div className="custom-toast-content">
-        <div className="product-info">
-          <img 
-            src={product.image_urls[0]} 
-            alt={product.name} 
-            className="product-image" 
-          />
-          <div className="product-details">
-            <h4>{product.name}</h4>
-            <p className="variant">{selectedVariant?.name}</p>
-            <p className="price">₹{regularPrice}</p>
-          </div>
-        </div>
-        <div className="action-buttons">
-          <button 
-            className="view-cart-btn" 
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              toast.dismiss(t);
-              navigate('/cart');
-            }}
-          >
-            View Cart
-          </button>
-          <button 
-            className="buy-now-btn" 
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              toast.dismiss(t);
-              navigate('/checkout');
-            }}
-          >
-            Buy Now
-          </button>
-        </div>
-      </div>
-    ), {
-      duration: 2000,
-      position: 'top-right',
-      className: 'cart-notification-toast'
-    });
+    console.log('Cart success notification');
   };
 
   const handleViewCart = (e) => {
@@ -284,148 +244,155 @@ const ProductDetailInfo = forwardRef(({ product, isMobile }, ref) => {
   }));
 
   return (
-    <div className={`product-detail-info ${deviceType}`}>
-      <div className="product-header">
-        <div className="title-section">
-          <h1 className="product-name">{product.name}</h1>
-          {product.category_id?.name === 'Skin Care' && (
-            <div className="skin-type-badge">
-              <span className="badge-icon">✧</span>
-              <span className="badge-text">For ALL Skin Types</span>
-            </div>
-          )}
-        </div>
-        <button className="share-button" onClick={handleShare}>
-          <FontAwesomeIcon icon={faShare} />
-          <span>Share</span>
-        </button>
-      </div>
-
-      <div className="variants-section">
-        {product.variants && product.variants.map((variant) => (
-          <button
-            key={variant._id}
-            className={`variant-btn ${selectedVariant?._id === variant._id ? 'active' : ''}`}
-            onClick={() => handleVariantSelect(variant)}
-          >
-            {variant.name}
+    <>
+      <div className={`product-detail-info ${deviceType}`}>
+        <div className="product-header">
+          <div className="title-section">
+            <h1 className="product-name">{product.name}</h1>
+            {product.category_id?.name === 'Skin Care' && (
+              <div className="skin-type-badge">
+                <span className="badge-icon">✧</span>
+                <span className="badge-text">For ALL Skin Types</span>
+              </div>
+            )}
+          </div>
+          <button className="share-button" onClick={handleShare}>
+            <FontAwesomeIcon icon={faShare} />
+            <span>Share</span>
           </button>
-        ))}
-      </div>
-
-      <div className="price-section">
-        <div className="regular-price">Rs:{regularPrice}</div>
-        <div className="product-taglines">
-          <div className="tagline-grid">
-            {displayTaglines.map((tagline, index) => (
-              <div key={index} className="tagline-item">
-                <span className="tagline-icon">✦</span>
-                <span className="tagline-text">{tagline}</span>
-              </div>
-            ))}
-          </div>
         </div>
-      </div>
 
-      {offers && offers.length > 0 && (
-        <div className="offers-section">
-          <h3 className="section-title">AVAILABLE OFFER!</h3>
-          <ul className="offers-list">
-            {displayedOffers.map((offer, index) => (
-              <li key={offer.id || index} className="offer-item">
-                <div className="offer-header">
-                  <span>{offer.description}</span>
-                  <button 
-                    className="know-more-btn"
-                    onClick={() => handleOfferClick(offer.id || index)}
-                  >
-                    {expandedOffers[offer.id || index] ? 'Show Less' : 'Know More'}
-                  </button>
-                </div>
-                <div className={`offer-details ${expandedOffers[offer.id || index] ? 'expanded' : ''}`}>
-                  <div className="details-content">
-                    <p className="discount">Discount: {offer.discount_percentage}% off</p>
-                    <p className="note">* This offer can be applied at checkout</p>
-                  </div>
-                </div>
-              </li>
-            ))}
-          </ul>
-          {offers.length > 2 && (
-            <button 
-              className="view-more-btn"
-              onClick={() => setShowAllOffers(!showAllOffers)}
-            >
-              {showAllOffers ? '- View Less' : '+ View More'}
-            </button>
-          )}
-        </div>
-      )}
-
-      {deviceType === 'mobile' && (
-         <div className="payment-methods">
-         <div className="payment-methods-image-container">
-           <img 
-             src="/images/payments.png" 
-             alt="Available payment methods" 
-             className="payment-methods-image" 
-           />
-         </div>
-         <div className="payment-features">
-           <div className="feature-card prepaid">
-             <span>5% Prepaid Discount</span>
-           </div>
-           <div className="feature-card cod">
-             <span>COD Available</span>
-           </div>
-           <div className="feature-card delivery">
-             <span>Delivers in 3 - 5 days</span>
-           </div>
-         </div>
-       </div>
-      )}
-
-      {deviceType !== 'mobile' && (
-        <>
-          <div className="action-buttons-container">
-            <button 
-              className={`favorite-btn ${isFavorite ? 'active' : ''}`}
-              onClick={handleToggleFavorite}
-            >
-              <FaHeart />
-            </button>
+        <div className="variants-section">
+          {product.variants && product.variants.map((variant) => (
             <button
-              className={`add-to-bag-btn ${isAddingToCart ? 'loading' : ''}`}
-              onClick={handleAddToBag}
-              disabled={isAddingToCart}
+              key={variant._id}
+              className={`variant-btn ${selectedVariant?._id === variant._id ? 'active' : ''}`}
+              onClick={() => handleVariantSelect(variant)}
             >
-              {isAddingToCart ? 'Adding...' : 'Add to Bag'}
+              {variant.name}
             </button>
-          </div>
+          ))}
+        </div>
 
-          <div className="payment-methods">
-            <div className="payment-methods-image-container">
-              <img 
-                src="/images/payments.png" 
-                alt="Available payment methods" 
-                className="payment-methods-image" 
-              />
-            </div>
-            <div className="payment-features">
-              <div className="feature-card prepaid">
-                <span>5% Prepaid Discount</span>
-              </div>
-              <div className="feature-card cod">
-                <span>COD Available</span>
-              </div>
-              <div className="feature-card delivery">
-                <span>Delivers in 3 - 5 days</span>
-              </div>
+        <div className="price-section">
+          <div className="regular-price">Rs:{regularPrice}</div>
+          <div className="product-taglines">
+            <div className="tagline-grid">
+              {displayTaglines.map((tagline, index) => (
+                <div key={index} className="tagline-item">
+                  <span className="tagline-icon">✦</span>
+                  <span className="tagline-text">{tagline}</span>
+                </div>
+              ))}
             </div>
           </div>
-        </>
-      )}
-    </div>
+        </div>
+
+        {offers && offers.length > 0 && (
+          <div className="offers-section">
+            <h3 className="section-title">AVAILABLE OFFER!</h3>
+            <ul className="offers-list">
+              {displayedOffers.map((offer, index) => (
+                <li key={offer.id || index} className="offer-item">
+                  <div className="offer-header">
+                    <span>{offer.description}</span>
+                    <button 
+                      className="know-more-btn"
+                      onClick={() => handleOfferClick(offer.id || index)}
+                    >
+                      {expandedOffers[offer.id || index] ? 'Show Less' : 'Know More'}
+                    </button>
+                  </div>
+                  <div className={`offer-details ${expandedOffers[offer.id || index] ? 'expanded' : ''}`}>
+                    <div className="details-content">
+                      <p className="discount">Discount: {offer.discount_percentage}% off</p>
+                      <p className="note">* This offer can be applied at checkout</p>
+                    </div>
+                  </div>
+                </li>
+              ))}
+            </ul>
+            {offers.length > 2 && (
+              <button 
+                className="view-more-btn"
+                onClick={() => setShowAllOffers(!showAllOffers)}
+              >
+                {showAllOffers ? '- View Less' : '+ View More'}
+              </button>
+            )}
+          </div>
+        )}
+
+        {deviceType === 'mobile' && (
+           <div className="payment-methods">
+           <div className="payment-methods-image-container">
+             <img 
+               src="/images/payments.png" 
+               alt="Available payment methods" 
+               className="payment-methods-image" 
+             />
+           </div>
+           <div className="payment-features">
+             <div className="feature-card prepaid">
+               <span>5% Prepaid Discount</span>
+             </div>
+             <div className="feature-card cod">
+               <span>COD Available</span>
+             </div>
+             <div className="feature-card delivery">
+               <span>Delivers in 3 - 5 days</span>
+             </div>
+           </div>
+         </div>
+        )}
+
+        {deviceType !== 'mobile' && (
+          <>
+            <div className="action-buttons-container">
+              <button 
+                className={`favorite-btn ${isFavorite ? 'active' : ''}`}
+                onClick={handleToggleFavorite}
+              >
+                <FaHeart />
+              </button>
+              <button
+                className={`add-to-bag-btn ${isAddingToCart ? 'loading' : ''}`}
+                onClick={handleAddToBag}
+                disabled={isAddingToCart}
+              >
+                {isAddingToCart ? 'Adding...' : 'Add to Bag'}
+              </button>
+            </div>
+
+            <div className="payment-methods">
+              <div className="payment-methods-image-container">
+                <img 
+                  src="/images/payments.png" 
+                  alt="Available payment methods" 
+                  className="payment-methods-image" 
+                />
+              </div>
+              <div className="payment-features">
+                <div className="feature-card prepaid">
+                  <span>5% Prepaid Discount</span>
+                </div>
+                <div className="feature-card cod">
+                  <span>COD Available</span>
+                </div>
+                <div className="feature-card delivery">
+                  <span>Delivers in 3 - 5 days</span>
+                </div>
+              </div>
+            </div>
+          </>
+        )}
+      </div>
+      <CartNotification 
+        isOpen={showNotification}
+        onClose={() => setShowNotification(false)}
+        addedProduct={product}
+      />
+    </>
   );
 });
 

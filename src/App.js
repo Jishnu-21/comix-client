@@ -37,6 +37,7 @@ import PrivacyPolicy from './Pages/PrivacyPolicy.jsx';
 import TermsOfService from './Pages/TermsOfService.jsx';
 import RefundPolicy from './Pages/RefundPolicy.jsx';
 import SocialLinks from './Components/SocialLinks.jsx';
+import SpinningWheel from './Components/SpinningWheel.jsx';
 
 function App() {
   const dispatch = useDispatch();
@@ -122,6 +123,7 @@ function App() {
       <RouteHandler />
       <ScrollToTop />
       <div className="App">
+      <SpinningWheel />
         <Toaster position="top-center" richColors />
         <Routes>
           <Route path="/" element={<Home />} />

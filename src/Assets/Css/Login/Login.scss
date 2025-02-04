@@ -1,3 +1,19 @@
+// Base mixins for responsive design
+@mixin respond-to($breakpoint) {
+  @if $breakpoint == "phone" {
+    @media (max-width: 480px) { @content; }
+  }
+  @if $breakpoint == "tablet" {
+    @media (min-width: 481px) and (max-width: 834px) { @content; }
+  }
+  @if $breakpoint == "laptop" {
+    @media (min-width: 835px) and (max-width: 1366px) { @content; }
+  }
+  @if $breakpoint == "mac" {
+    @media (min-width: 1367px) and (-webkit-min-device-pixel-ratio: 2) { @content; }
+  }
+}
+
 .login-page {
   min-height: 100vh;
   background-image: linear-gradient(rgba(30, 30, 44, 0.9), rgba(30, 30, 44, 0.9)), url('../../../../public/Sign up.jpg');
@@ -20,6 +36,8 @@
     border-radius: 9999px;
     filter: blur(24px);
   }
+
+  
 
   &::after {
     content: '';
@@ -76,6 +94,14 @@
     align-items: center;
     justify-content: center;
     padding: 2rem 1rem;
+    
+    @include respond-to("phone") {
+      padding: 1rem;
+    }
+    
+    @include respond-to("mac") {
+      max-width: 1400px;
+    }
 
     .content-wrapper {
       width: 100%;
@@ -83,6 +109,10 @@
       gap: 2rem;
       align-items: center;
       justify-items: center;
+      
+      @include respond-to("phone") {
+        gap: 1.5rem;
+      }
     }
   }
 }
@@ -97,34 +127,20 @@
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  transition: all 0.3s ease;
-  transform-origin: top center;
-
-  @media (max-height: 800px) {
-    margin: 80px auto 40px;
-    transform: scale(0.95);
+  
+  @include respond-to("phone") {
+    max-width: 90%;
+    margin: 60px auto 20px;
   }
-
-  @media (max-width: 1440px) {
-    max-width: 320px;
-    margin: 120px auto 60px;
+  
+  @include respond-to("tablet") {
+    max-width: 400px;
+    margin: 80px auto 30px;
   }
-
-  @media (max-width: 1024px) {
-    max-width: 300px;
-    margin: 100px auto 50px;
-  }
-
-  @media (max-width: 768px) {
-    max-width: 280px;
-    margin: 80px auto 40px;
-    padding: 0 15px;
-  }
-
-  @media (max-width: 480px) {
-    max-width: 260px;
-    margin: 60px auto 30px;
-    padding: 0 10px;
+  
+  @include respond-to("mac") {
+    max-width: 420px;
+    margin: 120px auto 50px;
   }
 }
 
@@ -243,6 +259,26 @@
   @media (max-width: 480px) {
     margin-bottom: 0.6rem;
   }
+  
+  @include respond-to("phone") {
+    margin-bottom: 1rem;
+  }
+  
+  input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    
+    @include respond-to("phone") {
+      padding: 0.6rem 0.8rem;
+      font-size: 0.95rem;
+    }
+    
+    @include respond-to("mac") {
+      padding: 0.9rem 1.2rem;
+      font-size: 1.1rem;
+    }
+  }
 }
 
 .form-group label {
@@ -358,6 +394,16 @@
     height: 32px;
     font-size: 0.8rem;
   }
+  
+  @include respond-to("phone") {
+    height: 40px;
+    font-size: 0.95rem;
+  }
+  
+  @include respond-to("mac") {
+    height: 50px;
+    font-size: 1.1rem;
+  }
 
   &:hover {
     background-color: #5bc0de;
@@ -424,6 +470,16 @@
     @media (max-width: 480px) {
       height: 32px;
       font-size: 0.8rem;
+    }
+    
+    @include respond-to("phone") {
+      height: 40px;
+      font-size: 0.95rem;
+    }
+    
+    @include respond-to("mac") {
+      height: 50px;
+      font-size: 1.1rem;
     }
 
     &:hover {

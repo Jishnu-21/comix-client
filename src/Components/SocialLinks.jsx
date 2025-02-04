@@ -1,10 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { FaFacebookF, FaTwitter, FaInstagram, FaLinkedinIn } from 'react-icons/fa';
 import { IoChatbubblesOutline } from 'react-icons/io5';
 import '../Assets/Css/Components/SocialLinks.scss';
 
 const SocialLinks = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const containerRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (containerRef.current && !containerRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener('touchstart', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
+    };
+  }, []);
 
   const socialLinks = [
     { icon: <FaFacebookF />, url: 'https://facebook.com', label: 'Facebook' },
@@ -14,7 +31,10 @@ const SocialLinks = () => {
   ];
 
   return (
-    <div className={`social-links-container ${isOpen ? 'open' : ''}`}>
+    <div 
+      ref={containerRef}
+      className={`social-links-container ${isOpen ? 'open' : ''}`}
+    >
       <button 
         className="toggle-button"
         onClick={() => setIsOpen(!isOpen)}

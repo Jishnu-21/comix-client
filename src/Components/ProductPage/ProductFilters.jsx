@@ -93,25 +93,19 @@ const ProductFilters = ({ selectedCategories, onCategorySelect, onFilterChange }
     <div className="product-filters p-4">
       <div className="accordion" id="filterAccordion">
         {/* Categories Filter */}
-        <div className={`accordion-item ${openSection === 'categories' ? 'open' : ''}`}>
+        <div className="accordion-item">
           <h2 className="accordion-header" id="headingOne">
             <button
-              className="accordion-button collapsed"
+              className={`accordion-button ${openSection !== 'categories' ? 'collapsed' : ''}`}
               type="button"
-              data-bs-toggle="collapse"
-              data-bs-target="#collapseOne"
-              aria-expanded="false"
-              aria-controls="collapseOne"
               onClick={() => toggleSection('categories')}
             >
               Categories
             </button>
           </h2>
           <div
-            id="collapseOne"
-            className={`accordion-collapse collapse ${openSection === 'categories' ? 'show' : ''}`}
+            className={`accordion-collapse ${openSection === 'categories' ? 'show' : ''}`}
             aria-labelledby="headingOne"
-            data-bs-parent="#filterAccordion"
           >
             <div className="accordion-body">
               <ul className="list-group">
@@ -131,25 +125,19 @@ const ProductFilters = ({ selectedCategories, onCategorySelect, onFilterChange }
         </div>
 
         {/* Skin Type Filter */}
-        <div className={`accordion-item ${openSection === 'skinType' ? 'open' : ''}`}>
+        <div className="accordion-item">
           <h2 className="accordion-header" id="headingTwo">
             <button
-              className="accordion-button collapsed"
+              className={`accordion-button ${openSection !== 'skinType' ? 'collapsed' : ''}`}
               type="button"
-              data-bs-toggle="collapse"
-              data-bs-target="#collapseTwo"
-              aria-expanded="false"
-              aria-controls="collapseTwo"
               onClick={() => toggleSection('skinType')}
             >
               Skin Type
             </button>
           </h2>
           <div
-            id="collapseTwo"
-            className={`accordion-collapse collapse ${openSection === 'skinType' ? 'show' : ''}`}
+            className={`accordion-collapse ${openSection === 'skinType' ? 'show' : ''}`}
             aria-labelledby="headingTwo"
-            data-bs-parent="#filterAccordion"
           >
             <div className="accordion-body">
               <ul className="list-group">
@@ -163,25 +151,19 @@ const ProductFilters = ({ selectedCategories, onCategorySelect, onFilterChange }
         </div>
 
         {/* Price Range Filter */}
-        <div className={`accordion-item ${openSection === 'priceRange' ? 'open' : ''}`}>
+        <div className="accordion-item">
           <h2 className="accordion-header" id="headingThree">
             <button
-              className="accordion-button collapsed"
+              className={`accordion-button ${openSection !== 'priceRange' ? 'collapsed' : ''}`}
               type="button"
-              data-bs-toggle="collapse"
-              data-bs-target="#collapseThree"
-              aria-expanded="false"
-              aria-controls="collapseThree"
               onClick={() => toggleSection('priceRange')}
             >
               Price Range
             </button>
           </h2>
           <div
-            id="collapseThree"
-            className={`accordion-collapse collapse ${openSection === 'priceRange' ? 'show' : ''}`}
+            className={`accordion-collapse ${openSection === 'priceRange' ? 'show' : ''}`}
             aria-labelledby="headingThree"
-            data-bs-parent="#filterAccordion"
           >
             <div className="accordion-body">
               <ul className="list-group">
