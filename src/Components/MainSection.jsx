@@ -13,6 +13,7 @@ import BlogSection from './MainSection/BlogSection';
 import withScrollAnimation from './withScrollAnimation';
 import ProductSpotlight from './ProductSpotlight';
 import MakeupSlider from './MainSection/MakeUpSlider';
+import SpinningWheel from './SpinningWheel';
 
 const MainSection = () => {
   const AnimatedNewLaunchedSection = withScrollAnimation(NewLaunchedSection, { delay: 0 });

@@ -3,7 +3,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
 import '../Assets/Css/Header.scss';
-import SocialIcon from '../Components/SocialIcon.jsx';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import HeaderLogo from '../Assets/Image/comix-logo.gif';
 import { checkAuthStatus, logout } from '../features/auth/authActions';
@@ -16,10 +15,7 @@ import {
   faUserCircle,  
   faBars, 
   faTimes,
-  faFire,
-  faMedal,
   faHome,
-  faGift,
   faComments
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';

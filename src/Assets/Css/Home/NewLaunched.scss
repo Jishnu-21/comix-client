@@ -1,7 +1,10 @@
 .new-launched-section {
     margin-top: 50px;
     width: 100%;
-  
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 65px;
+
     .image-container {
       width: 100%;
       display: flex;
@@ -16,11 +19,11 @@
         object-fit: contain;
   
         @media (min-width: 1440px) {
-          max-width: 1400px; // Larger screens
+          max-width: 100%;
         }
   
         @media (min-width: 1920px) {
-          max-width: 1800px; // Extra large screens
+          max-width: 100%; // Extra large screens
         }
       }
   
@@ -42,3 +45,8 @@
       }
     }
   }
+
+  @media (max-width: 768px) {
+    .new-launched-section {
+    padding: 0;
+  }}

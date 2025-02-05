@@ -5,8 +5,7 @@ import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useNavigate } from 'react-router-dom';
 import { API_URL } from '../../config/api';
-import defaultImage from '../../Assets/Image/main-image.png'
-import '../../Assets/Css/MainSection.scss'
+import defaultImage from '../../Assets/Image/main-image.png';
 
 const MainSlider = () => {
   const [banners, setBanners] = useState([]);
@@ -21,11 +20,9 @@ const MainSlider = () => {
       const response = await axios.get(`${API_URL}/banners`);
       const homepageBanners = response.data.banners.filter(banner => banner.type === 'homepage');
 
-      // Check screen size
-      const isMobile = window.innerWidth < 768; // Mobile breakpoint
+      const isMobile = window.innerWidth < 768;
 
       if (isMobile) {
-        // Set mobile banners
         const mobileBanners = [
           { _id: 'lap-banner1', title: 'Mobile Banner 1', image_url: '/banner1.webp' },
           { _id: 'lap-banner2', title: 'Mobile Banner 2', image_url: '/banner3.webp' },
@@ -33,7 +30,6 @@ const MainSlider = () => {
         ];
         setBanners(mobileBanners);
       } else {
-        // Set desktop banners
         setBanners(homepageBanners.length > 0 ? homepageBanners : [{
           _id: 'default',
           title: 'Welcome to Our Store',
@@ -65,7 +61,13 @@ const MainSlider = () => {
     pauseOnHover: true,
     cssEase: "linear",
     arrows: false,
-    adaptiveHeight: false
+    adaptiveHeight: false,
+    customPaging: function(i) {
+      return (
+        <div className="w-2 h-2 md:w-2.5 md:h-2.5 rounded-full bg-white/50 hover:bg-white/80 transition-colors duration-300" />
+      );
+    },
+    dotsClass: "slick-dots !absolute bottom-6 md:bottom-8 lg:bottom-10"
   };
 
   const renderShopNowButton = (link) => {
@@ -78,30 +80,30 @@ const MainSlider = () => {
     };
 
     return (
-      <button onClick={handleClick} className="shop-now-btn no-underline">
-        <div className="btn-content">
-          SHOP NOW
-          <FontAwesomeIcon icon={faChevronRight} className="social-icon" />
-        </div>
+      <button 
+        onClick={handleClick} 
+        className="inline-flex items-center gap-3 px-6 py-3 text-sm uppercase tracking-wider border-2 border-[#4B4A9F] text-[#4B4A9F] transition-all duration-300 hover:bg-[#4B4A9F] hover:text-white md:px-8 md:py-4 md:text-base no-underline"
+      >
+        <span>SHOP NOW</span>
+        <FontAwesomeIcon 
+          icon={faChevronRight} 
+          className="transform transition-transform duration-300 group-hover:translate-x-1"
+        />
       </button>
     );
   };
 
   return (
-    <div className="main-section">
-      <div className="main-slider-container">
+    <div className="w-full">
+      <div className="w-full [&_.slick-dots]:!flex [&_.slick-dots]:!justify-center [&_.slick-dots]:!items-center [&_.slick-dots]:!gap-2 [&_.slick-dots_li]:!m-0 [&_.slick-dots_li]:!w-auto [&_.slick-dots_li]:!h-auto">
         <Slider {...settings}>
           {banners.map((banner) => (
-            <div key={banner._id} className="slider-item">
-              <div className="slide-content">
-                <div className="slide-background" style={{
-                  backgroundImage: `url(${banner.image_url})`,
-                  backgroundPosition: 'center',
-                  backgroundSize: 'cover'
-                }} />
-                <div className="content-wrapper">
-            
-                </div>
+            <div key={banner._id} className="w-full">
+              <div className="relative w-full overflow-hidden h-[40vh] md:h-[500px] lg:h-[600px] xl:h-[calc(100vh-135px)]">
+                <div 
+                  className="absolute inset-0 bg-center bg-no-repeat bg-cover"
+                  style={{ backgroundImage: `url(${banner.image_url})` }}
+                />
               </div>
             </div>
           ))}
