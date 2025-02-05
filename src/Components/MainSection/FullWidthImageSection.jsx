@@ -11,104 +11,104 @@ const FullWidthImageSection = () => {
   const [videoLoaded, setVideoLoaded] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const scrollTrigger = useRef(null);
-  
+
   const videoUrls = {
     desktop: 'https://www.apple.com/media/us/mac-pro/2013/16C1b6b5-1d91-4fef-891e-ff2fc1c1bb58/videos/macpro_main_desktop.mp4',
     mobile: 'https://videos.pexels.com/video-files/7565637/7565637-hd_1080_1920_25fps.mp4'
   };
 
-  // Device detection and resize handler
+  // Detect mobile devices with a more reliable check
   useEffect(() => {
     const checkMobile = () => {
-      const isPortrait = window.matchMedia('(orientation: portrait)').matches;
-      const isMobileSize = window.matchMedia('(max-width: 768px)').matches;
-      setIsMobile(isMobileSize && isPortrait);
+      const mobile = window.innerWidth <= 768;
+      if (mobile !== isMobile) {
+        setIsMobile(mobile);
+        // Reinitialize scroll trigger when device type changes
+        if (scrollTrigger.current) {
+          scrollTrigger.current.kill();
+          initScrollAnimation();
+        }
+      }
     };
-
+    
     checkMobile();
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
-  }, []);
+  }, [isMobile]);
 
-  // Video loading handler
+  // Load video dynamically with cache-busting
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
 
-    const handleLoadStart = () => setVideoLoaded(false);
     const handleLoadedData = () => {
       setVideoLoaded(true);
       initScrollAnimation();
     };
 
-    video.src = isMobile ? videoUrls.mobile : videoUrls.desktop;
+    const videoSrc = `${isMobile ? videoUrls.mobile : videoUrls.desktop}?nocache=${new Date().getTime()}`;
+    video.src = videoSrc;
     video.load();
     video.muted = true;
     video.playsInline = true;
+    video.preload = "auto";
 
-    video.addEventListener('loadstart', handleLoadStart);
     video.addEventListener('loadeddata', handleLoadedData);
-
-    return () => {
-      video.removeEventListener('loadstart', handleLoadStart);
-      video.removeEventListener('loadeddata', handleLoadedData);
-    };
+    return () => video.removeEventListener('loadeddata', handleLoadedData);
   }, [isMobile]);
 
-  // Scroll animation setup
+  // Improved scroll animation with mobile optimization
   const initScrollAnimation = () => {
     if (scrollTrigger.current) scrollTrigger.current.kill();
 
     const video = videoRef.current;
-    if (!video || !containerRef.current) return;
+    const container = containerRef.current;
+    if (!video || !container) return;
 
-    // Mobile-specific adjustments
-    const scrollDistance = isMobile ? 
-      containerRef.current.offsetHeight * 1.5 : 
-      containerRef.current.offsetHeight * 2;
+    // Adjust scroll distance based on device type
+    const scrollDistance = isMobile 
+      ? window.innerHeight // Use viewport height for mobile
+      : container.offsetHeight * 2;
 
+    // Create scroll trigger with mobile-specific settings
     scrollTrigger.current = ScrollTrigger.create({
-      trigger: containerRef.current,
+      trigger: container,
       start: 'top top',
       end: `+=${scrollDistance}`,
-      scrub: 0.8,
+      scrub: isMobile ? 0.5 : true, // Faster scrub on mobile
       pin: true,
       anticipatePin: 1,
-      touch: {
-        touchMultiplier: 1.5, // Better touch sensitivity
-        capture: true
-      },
+      pinSpacing: true,
+      invalidateOnRefresh: true, // Recalculate on resize
       onUpdate: (self) => {
-        const progress = Math.min(self.progress * 1.2, 1); // Adjust for mobile
-        video.currentTime = progress * video.duration;
+        if (video.duration) {
+          const targetTime = self.progress * video.duration;
+          // Smooth the video playback
+          if (Math.abs(video.currentTime - targetTime) > 0.1) {
+            video.currentTime = targetTime;
+          }
+        }
       },
-      onLeave: () => {
-        // Smooth transition for mobile
-        gsap.to(video, { currentTime: video.duration, duration: 0.8 });
+      onRefresh: () => {
+        // Ensure proper positioning after refresh
+        ScrollTrigger.refresh(true);
       }
     });
-
-    // Mobile-specific touch handling
-    if (isMobile) {
-      ScrollTrigger.config({
-        limitCallbacks: true,
-        ignoreMobileResize: false,
-        autoRefreshEvents: 'touchstart,touchend,touchcancel'
-      });
-    }
   };
 
   // Cleanup
   useEffect(() => {
     return () => {
-      if (scrollTrigger.current) scrollTrigger.current.kill();
+      if (scrollTrigger.current) {
+        scrollTrigger.current.kill();
+      }
       ScrollTrigger.clearMatchMedia();
     };
   }, []);
 
   return (
     <section 
-      className={`full-width-video-section ${videoLoaded ? 'loaded' : 'loading'}`}
+      className={`full-width-video-section ${videoLoaded ? 'loaded' : 'loading'} ${isMobile ? 'mobile' : ''}`}
       ref={containerRef}
     >
       <div className="video-container">

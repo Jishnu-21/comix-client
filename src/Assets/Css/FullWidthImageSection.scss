@@ -1,7 +1,4 @@
 .full-width-video-section {
-  @media (max-width: 767px) {
-    display: none;
-  }
   position: relative;
   width: 100vw;
   margin-top: 5rem;
@@ -12,6 +9,27 @@
   height: 100vh;
   overflow: hidden;
   touch-action: pan-y;
+  -webkit-overflow-scrolling: touch; // Improved mobile scrolling
+
+  // Reset transforms when pinned
+  &.gsap-pin-spacer {
+    transform: none !important;
+  }
+
+  @media (max-width: 767px) {
+    height: 100vh;
+    margin-top: 3rem;
+    
+    // Prevent elastic scrolling on iOS
+    overscroll-behavior: none;
+    overflow-y: hidden;
+    
+    &.mobile {
+      // Ensure full viewport coverage
+      min-height: -webkit-fill-available;
+      height: 100vh;
+    }
+  }
 
   .video-container {
     position: absolute;
@@ -20,12 +38,17 @@
     width: 100%;
     height: 100%;
     pointer-events: none;
+    will-change: transform; // Optimize performance
+    backface-visibility: hidden; // Prevent flickering
+    -webkit-backface-visibility: hidden;
 
     .scroll-video {
       width: 100%;
       height: 100%;
       object-fit: cover;
       object-position: center;
+      transform: translateZ(0); // Force GPU acceleration
+      -webkit-transform: translateZ(0);
     }
   }
 
@@ -35,27 +58,63 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0,0,0,0.9);
+    background: rgba(0, 0, 0, 0.9);
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 2;
-
+    
+    // Smooth transition when loading completes
+    opacity: 1;
+    transition: opacity 0.3s ease-out;
+    
     .loading-spinner {
       width: 40px;
       height: 40px;
-      border: 3px solid rgba(255,255,255,0.3);
+      border: 3px solid rgba(255, 255, 255, 0.3);
       border-radius: 50%;
       border-top-color: #fff;
       animation: spin 1s ease-in-out infinite;
     }
   }
+
+  // Handle loading state transitions
+  &.loaded .loading-overlay {
+    opacity: 0;
+    pointer-events: none;
+  }
   
+  // Portrait mode adjustments
   @media (orientation: portrait) and (max-width: 768px) {
-    height: 150vh; /* More scroll area for portrait */
+    height: 100vh; // Changed from 80vh to ensure full coverage
+    
+    .video-container {
+      // Ensure video stays centered and covers container
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      
+      .scroll-video {
+        min-height: 100%;
+        min-width: 100%;
+      }
+    }
   }
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to { 
+    transform: rotate(360deg);
+  }
+}
+
+// Fix for iOS Safari viewport height issue
+@supports (-webkit-touch-callout: none) {
+  .full-width-video-section {
+    height: -webkit-fill-available;
+    
+    .video-container {
+      height: -webkit-fill-available;
+    }
+  }
 }
