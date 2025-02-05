@@ -1,5 +1,6 @@
 // OfferSection.jsx
 import React from 'react';
+import '../../Assets/Css/Home/OfferSection.scss';
 
 const OfferSection = () => {
   return (

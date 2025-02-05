@@ -24,6 +24,7 @@ import MobileCart from '../Components/Cart/MobileCart';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 import LoadingScreen from '../Components/LoadingScreen';
+import BestSeller from '../Components/ProductPage/BestSeller';
 
 const fetchCartItemCount = async (userId) => {
   try {
@@ -356,16 +357,13 @@ const Cart = () => {
               <div className="products-grid">
                 {bestSellers.slice(0, 4).map(product => (
                   <div key={product._id} className="product-card-wrapper">
-                    <div className="product-card">
-                      <div className="card-image-container">
-                        <img src={product.image_urls[0]} alt={product.name} />
-                      </div>
-                      <div className="card-content">
-                        <h3 className="card-title">{product.name}</h3>
-                        <p className="card-description">{product.description}</p>
-                        <div className="price-tag">${product.variants[0]?.price || 0}</div>
-                      </div>
-                    </div>
+                    <BestSeller
+                      image={product.image_urls[0]}
+                      title={product.name}
+                      price={product.variants[0]?.price || 0}
+                      category={product.description}
+                      slug={product._id}
+                    />
                   </div>
                 ))}
               </div>

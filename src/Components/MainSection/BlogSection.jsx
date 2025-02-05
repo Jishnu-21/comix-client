@@ -7,6 +7,7 @@ import 'slick-carousel/slick/slick-theme.css';
 import { useMediaQuery } from 'react-responsive';
 import SectionTitle from '../SectionTitle';
 import { Link } from 'react-router-dom';
+import '../../Assets/Css/Home/BlogSection.scss';
 
 const BlogSection = () => {
   const isMobile = useMediaQuery({ maxWidth: 768 });

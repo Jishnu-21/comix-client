@@ -1,14 +1,16 @@
 .comix-exclusive-section {
-  padding: 2rem;
   width: 100%;
+  padding: 2rem 0;
+  background-color: #fff;
+  overflow: hidden;
 
   .comix-exclusive-grid {
     display: grid;
     grid-template-columns: 0.8fr 1.8fr 0.8fr;
     gap: 1.5rem;
-    width: 100%;
+    width: 95%;
+    max-width: 100%;
     margin: 0 auto;
-    align-items: stretch;
 
     @media (max-width: 1200px) {
       grid-template-columns: 0.8fr 1.8fr 0.8fr;
@@ -20,17 +22,13 @@
       grid-template-columns: 1fr;
       gap: 2rem;
       margin: 0 auto;
+      width: 90%;
       
       .comix-exclusive-card {
         &:nth-child(2) {
           order: -1;
         }
       }
-    }
-
-    @media (max-width: 576px) {
-      gap: 1.5rem;
-      padding: 0 0.5rem;
     }
   }
 

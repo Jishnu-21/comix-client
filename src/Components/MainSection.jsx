@@ -8,7 +8,7 @@ import CommixIconicsSection from './MainSection/CommixIconicsSection';
 import FullWidthImageSection from './MainSection/FullWidthImageSection';
 import ExclusiveFestiveCombosSection from './MainSection/ExclusiveFestiveCombosSection';
 import OfferSection from './MainSection/OfferSection';
-import FeaturedSection from './FeaturedSection';
+import FeaturedSection from './MainSection/FeaturedSection';
 import BlogSection from './MainSection/BlogSection';
 import withScrollAnimation from './withScrollAnimation';
 import ProductSpotlight from './ProductSpotlight';

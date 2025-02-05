@@ -1,0 +1,44 @@
+.new-launched-section {
+    margin-top: 50px;
+    width: 100%;
+  
+    .image-container {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+  
+      .launch-image {
+        width: 100%;
+        max-width: 1200px; // Base max-width
+        height: auto;
+        object-fit: contain;
+  
+        @media (min-width: 1440px) {
+          max-width: 1400px; // Larger screens
+        }
+  
+        @media (min-width: 1920px) {
+          max-width: 1800px; // Extra large screens
+        }
+      }
+  
+      .desktop-image {
+        display: block;
+        
+        @media (max-width: 768px) {
+          display: none;
+        }
+      }
+  
+      .mobile-image {
+        display: none;
+        
+        @media (max-width: 768px) {
+          display: block;
+          width: 90%;
+        }
+      }
+    }
+  }

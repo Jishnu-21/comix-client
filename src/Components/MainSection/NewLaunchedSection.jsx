@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import SectionTitle from '../SectionTitle';
+import '../../Assets/Css/Home/NewLaunched.scss';
+
 
 const NewLaunchedSection = () => {
   const sectionRef = useRef(null); // Ref to hold the section reference

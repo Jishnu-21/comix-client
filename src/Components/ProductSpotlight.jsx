@@ -55,9 +55,10 @@ const ProductSpotlight = () => {
       {
         breakpoint: 1440,
         settings: {
-          slidesToShow: 3,
+          slidesToShow: 4,
           slidesToScroll: 1,
-          infinite: products.length > 3
+          infinite: products.length > 4,
+          centerMode: false
         }
       },
       {
@@ -67,7 +68,9 @@ const ProductSpotlight = () => {
           slidesToScroll: 1,
           infinite: products.length > 2,
           dots: true,
-          autoplay: false
+          autoplay: false,
+          centerMode: false,
+          centerPadding: '0'
         }
       },
       {
@@ -347,12 +350,6 @@ const ProductSpotlight = () => {
       ) : (
         <div className="ps-no-products">No products available in this category</div>
       )}
-
-      <div className="ps-view-all-container">
-        <Link to='/product' className="ps-view-all-btn">
-          View All
-        </Link>
-      </div>
     </section>
   );
 };

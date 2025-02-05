@@ -1,4 +1,5 @@
 import React from 'react';
+import '../Assets/Css/Home/SubscribeSection.scss';
 
 const SubscribeSection = () => {
   return (

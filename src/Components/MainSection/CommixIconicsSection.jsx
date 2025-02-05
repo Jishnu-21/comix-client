@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import Slider from 'react-slick';
 import { gsap } from 'gsap';
 import SectionTitle from '../SectionTitle';
+import '../../Assets/Css/Home/CommixIconics.scss'
 
 const CommixIconicsSection = () => {
   const sliderRef = useRef(null);

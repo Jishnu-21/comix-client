@@ -1,7 +1,7 @@
 // FeaturedSection.jsx
 import React, { useState } from 'react';
-import SectionTitle from '../Components/SectionTitle';
-import '../Assets/Css/FeaturedSection.scss';
+import SectionTitle from '../../Components/SectionTitle';
+import '../../Assets/Css/Home/FeaturedSection.scss';
 
 const FeaturedSection = () => {
   const [hoveredCard, setHoveredCard] = useState(null);
@@ -31,7 +31,7 @@ const FeaturedSection = () => {
                 </video>
               ) : (
                 <img
-                  src={require(`../Assets/Image/subscribe-${side}.png`)}
+                  src={require(`../../Assets/Image/subscribe-${side}.png`)}
                   alt={`Subscribe and save ${side} image`}
                   className="comix-featured-media"
                 />

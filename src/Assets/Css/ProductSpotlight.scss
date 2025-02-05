@@ -3,8 +3,8 @@
 .ps-product-spotlight {
   width: 100%;
   max-width: 1800px;
-  margin: 8rem auto;
-  padding: 0 3rem;
+  padding: 0 15px;
+  margin-top:50px;
 
   @media (min-width: 1920px) {
     max-width: 1900px;
@@ -112,11 +112,11 @@
 
   .ps-view-all-container {
     text-align: center;
-    margin-top: 4rem;
+    margin-top: 10px;
 
     .ps-view-all-btn {
       display: inline-block;
-      padding: 0.75rem 1.5rem;
+      padding: 0.55rem 1rem;
       background-color: transparent;
       border: 2px solid $header-bg;
       border-radius: 4px;
@@ -156,13 +156,15 @@
   }
 
   .ps-products-slider {
-    margin: 0 -3rem;
     padding: 1rem 3rem;
     position: relative;
+    overflow: hidden;
+    width: 100%;
 
     .slick-slider {
       visibility: visible;
       opacity: 1;
+      overflow: hidden;
       transition: opacity 0.3s ease;
 
       &.loading {
@@ -188,9 +190,8 @@
       }
 
       .slick-arrow {
-        width: 60px;
-        height: 60px;
-        background-color: white;
+        width: 7%0px;
+        height: 70px;
         border-radius: 50%;
         box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
         z-index: 1;
@@ -209,11 +210,11 @@
         }
 
         &.slick-prev {
-          left: -30px;
+          left: 20px;
         }
 
         &.slick-next {
-          right: -30px;
+          right: 20px;
         }
 
         &.slick-disabled {
@@ -607,7 +608,6 @@
     }
 
     .ps-view-all-container {
-      margin-top: 4rem;
       padding: 0 1rem;
 
       .ps-view-all-btn {
@@ -755,3 +755,4 @@
     background-position: 200% 0;
   }
 }
+
