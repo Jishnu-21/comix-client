@@ -391,6 +391,135 @@
   }
 }
 
+// Tablet Layout (iPad Air, Mini, and Pro)
+@media (min-width: 768px) and (max-width: 1199.98px) {
+  .product-detail-page {
+    overflow-x: hidden;
+    
+    .container {
+      padding: 0;
+      margin-top: 30px;
+    }
+
+    // Common vertical margin for all sections
+    .section-spacing {
+      margin-bottom: 60px;
+    }
+
+    .tablet-layout {
+      .row {
+        margin: 0;
+        
+        .col-md-12 {
+          padding: 0;
+        }
+      }
+
+      .product-content {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        
+        .product-gallery-section {
+          width: 100%;
+          max-width: 800px;
+          margin: 0 auto 60px; // Consistent margin
+          
+          .slick-slider {
+            margin-bottom: 30px;
+            
+            .slick-dots {
+              bottom: -25px;
+            }
+          }
+        }
+        
+        .product-info-wrapper {
+          width: 100%;
+          max-width: 800px;
+          margin: 0 auto;
+          padding: 0 24px;
+          
+          .product-info {
+            margin-bottom: 60px; // Consistent margin
+          }
+
+          .product-dropdown-info {
+            margin-bottom: 60px; // Consistent margin
+          }
+          
+          .image-comparison-container {
+            margin-bottom: 60px; // Consistent margin
+            
+            h2.kavya {
+              margin-bottom: 20px;
+              text-align: center;
+            }
+          }
+          
+          .icon-section {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin: 0 auto 60px; // Consistent margin
+            max-width: 600px;
+            
+            @media (min-width: 992px) {
+              grid-template-columns: repeat(4, 1fr);
+              max-width: 800px;
+            }
+            
+            .icon {
+              padding: 15px;
+              
+              img {
+                width: 60px;
+                height: 60px;
+                
+                @media (min-width: 992px) {
+                  width: 70px;
+                  height: 70px;
+                }
+              }
+              
+              span {
+                font-size: 14px;
+                
+                @media (min-width: 992px) {
+                  font-size: 15px;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    // Additional sections outside product-content
+    .key-ingredients-section {
+      margin: 0 auto 60px; // Consistent margin
+      max-width: 800px;
+      padding: 0 24px;
+    }
+
+    .how-to-use-section {
+      margin: 0 auto 60px; // Consistent margin
+      max-width: 800px;
+      padding: 0 24px;
+    }
+
+    .recently-viewed-desktop {
+      margin: 0 auto 60px; // Consistent margin
+      max-width: 800px;
+      padding: 0 24px;
+    }
+
+    .comix-benefits-marquee {
+      margin: 0 auto 60px; // Consistent margin
+    }
+  }
+}
+
 // iPad Air and Mini Layout (≥768px to <992px)
 @media (min-width: 768px) and (max-width: 991.98px) {
   .product-detail-page {
@@ -516,7 +645,6 @@
 
             .variant-selector {
               margin-bottom: 20px;
-              width: 100%;
               
               label {
                 font-size: 15px;

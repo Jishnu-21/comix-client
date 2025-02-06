@@ -25,6 +25,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 import LoadingScreen from '../Components/LoadingScreen';
 import BestSeller from '../Components/ProductPage/BestSeller';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation, Pagination } from 'swiper/modules';
+import 'swiper/css/navigation';
 
 const fetchCartItemCount = async (userId) => {
   try {
@@ -354,7 +357,9 @@ const Cart = () => {
                 </div>
                 <Link to="/product" className="view-all-btn">View All</Link>
               </div>
-              <div className="products-grid">
+              
+              {/* Desktop View (4 products grid) */}
+              <div className="products-grid d-none d-xl-grid">
                 {bestSellers.slice(0, 4).map(product => (
                   <div key={product._id} className="product-card-wrapper">
                     <BestSeller
@@ -366,6 +371,58 @@ const Cart = () => {
                     />
                   </div>
                 ))}
+              </div>
+
+              {/* Tablet View (2 products slider) */}
+              <div className="products-slider d-none d-md-block d-xl-none">
+                <Swiper
+                  modules={[Navigation, Pagination]}
+                  spaceBetween={20}
+                  slidesPerView={2}
+                  navigation
+                  pagination={{ clickable: true }}
+                  className="best-sellers-swiper"
+                >
+                  {bestSellers.map(product => (
+                    <SwiperSlide key={product._id}>
+                      <div className="product-card-wrapper">
+                        <BestSeller
+                          image={product.image_urls[0]}
+                          title={product.name}
+                          price={product.variants[0]?.price || 0}
+                          category={product.description}
+                          slug={product._id}
+                        />
+                      </div>
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+              </div>
+
+              {/* Mobile View (Single product slider) */}
+              <div className="products-slider d-block d-md-none">
+                <Swiper
+                  modules={[Navigation, Pagination]}
+                  spaceBetween={10}
+                  slidesPerView={1}
+                  navigation
+                  pagination={{ clickable: true }}
+                  className="best-sellers-swiper"
+                >
+                  {bestSellers.map(product => (
+                    <SwiperSlide key={product._id}>
+                      <div className="product-card-wrapper">
+                        <BestSeller
+                          image={product.image_urls[0]}
+                          title={product.name}
+                          price={product.variants[0]?.price || 0}
+                          category={product.description}
+                          slug={product._id}
+                        />
+                      </div>
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
               </div>
             </div>
           </div>

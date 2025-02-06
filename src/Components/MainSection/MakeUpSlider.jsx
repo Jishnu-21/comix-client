@@ -46,7 +46,7 @@ const MakeupSlider = () => {
     },
     {
       id: 2,
-      videoUrl: 'https://d5ap13rps3ht6.cloudfront.net/8a742554-d177-11ef-808e-8aae7afc63b8/daa7257f-d17a-11ef-877c-9a35e5f0f4dd/dad9706c-d17a-11ef-877c-9a35e5f0f4dd_video.mp4',
+      videoUrl: 'https://d5ap13rps3ht6.cloudfront.net/8a742554-d177-11ef-808e-8aae7afc63b8/0dd9914b-d17a-11ef-877c-9a35e5f0f4dd/0e05c8f8-d17a-11ef-877c-9a35e5f0f4dd_video.mp4',
       title: 'Natural Glow Skincare Routine',
       description: 'Achieve that perfect natural glow with our simple yet effective skincare routine! Using our premium skincare line for radiant, healthy-looking skin. ✨💫',
       products: [
@@ -64,7 +64,7 @@ const MakeupSlider = () => {
     },
     {
       id: 3,
-      videoUrl: 'https://d5ap13rps3ht6.cloudfront.net/8a742554-d177-11ef-808e-8aae7afc63b8/daa7257f-d17a-11ef-877c-9a35e5f0f4dd/dad9706c-d17a-11ef-877c-9a35e5f0f4dd_video.mp4',
+      videoUrl: 'https://d5ap13rps3ht6.cloudfront.net/f8e2b0ba-d342-11ef-a2c1-428544fd1e23/dcfc3a97-e1df-11ef-9065-ee87500dd548/dd381819-e1df-11ef-9065-ee87500dd548_video.mp4',
       title: 'Summer Vibes Makeup Tutorial',
       description: 'Get ready for the summer with our vibrant makeup tutorial! Featuring our best-selling products for a sun-kissed glow. ☀️💄',
       products: [
@@ -82,7 +82,7 @@ const MakeupSlider = () => {
     },
     {
       id: 4,
-      videoUrl: 'https://d5ap13rps3ht6.cloudfront.net/8a742554-d177-11ef-808e-8aae7afc63b8/daa7257f-d17a-11ef-877c-9a35e5f0f4dd/dad9706c-d17a-11ef-877c-9a35e5f0f4dd_video.mp4',
+      videoUrl: 'https://d5ap13rps3ht6.cloudfront.net/8a742554-d177-11ef-808e-8aae7afc63b8/317d8115-d17a-11ef-877c-9a35e5f0f4dd/31a4a3b0-d17a-11ef-877c-9a35e5f0f4dd_video.mp4',
       title: 'Get Ready with Me Morning Routine',
       description: 'Start your day off right with our morning routine! From skincare to makeup, we\'ve got you covered. ☀️💫',
       products: [
@@ -100,7 +100,7 @@ const MakeupSlider = () => {
     },
     {
       id: 5,
-      videoUrl: 'https://d5ap13rps3ht6.cloudfront.net/8a742554-d177-11ef-808e-8aae7afc63b8/daa7257f-d17a-11ef-877c-9a35e5f0f4dd/dad9706c-d17a-11ef-877c-9a35e5f0f4dd_video.mp4',
+      videoUrl: 'https://cdn.shopify.com/videos/c/o/v/34f3d466424f4b029d3c286642e2b5db.mp4',
       title: 'Nighttime Skincare Routine',
       description: 'Wind down with our nighttime skincare routine! From cleansing to moisturizing, we\'ve got the perfect products for a restful night\'s sleep. 🌙💤',
       products: [
@@ -118,7 +118,7 @@ const MakeupSlider = () => {
     },
     {
       id: 6,
-      videoUrl: 'https://d5ap13rps3ht6.cloudfront.net/8a742554-d177-11ef-808e-8aae7afc63b8/daa7257f-d17a-11ef-877c-9a35e5f0f4dd/dad9706c-d17a-11ef-877c-9a35e5f0f4dd_video.mp4',
+      videoUrl: 'https://cdn.shopify.com/videos/c/o/v/840587849a554f74bd6cb8fc3146e412.mp4',
       title: 'Get Ready with Me Morning Routine',
       description: 'Start your day off right with our morning routine! From skincare to makeup, we\'ve got you covered. ☀️💫',
       products: [

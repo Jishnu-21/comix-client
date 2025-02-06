@@ -87,10 +87,10 @@
   // Portrait mode adjustments
   @media (orientation: portrait) and (max-width: 768px) {
     height: 100vh; // Changed from 80vh to ensure full coverage
-    
+     display: none;
     .video-container {
       // Ensure video stays centered and covers container
-      display: flex;
+      display: none;
       align-items: center;
       justify-content: center;
       

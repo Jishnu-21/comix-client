@@ -253,8 +253,8 @@ const ProductDetail = () => {
         </>
         ) : (
           <>
-            {/* iPad Air and Mini Layout */}
-            <div className="ipad-air-mini-layout d-none d-md-block d-lg-none">
+            {/* Tablet Layout (iPad Air, Mini, and Pro) */}
+            <div className="tablet-layout d-block d-xl-none">
               <div className="row">
                 <div className="col-md-12">
                   <div className="product-content">
@@ -279,17 +279,34 @@ const ProductDetail = () => {
                           height="400px"
                         />
                       </div>
-                      
+                      <div className="icon-section">
+                        <div className="icon">
+                          <img src="/images/fda.png" alt="FDA Approved" />
+                          <span>FDA APPROVED</span>
+                        </div>
+                        <div className="icon">
+                          <img src="/images/sulphate.png" alt="Sulphate Free" />
+                          <span>SULPHATE FREE</span>
+                        </div>
+                        <div className="icon">
+                          <img src="/images/paraben.png" alt="Paraben Free" />
+                          <span>PARABEN FREE</span>
+                        </div>
+                        <div className="icon">
+                          <img src="/images/cruelty.png" alt="Cruelty Free" />
+                          <span>CRUELTY FREE</span>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Desktop and iPad Pro Layout */}
-            <div className="desktop-ipadpro-layout d-none d-lg-block">
+            {/* Desktop Layout */}
+            <div className="desktop-layout d-none d-xl-block">
               <div className="row">
-                <div className="col-xl-5 col-lg-6 col-md-12 col-sm-12">
+                <div className="col-xl-5">
                   <ProductImageGallery images={product.image_urls} />
                   <div className="image-comparison-container">
                     <h2 className='kavya'>Before and After</h2>
@@ -300,25 +317,25 @@ const ProductDetail = () => {
                     />
                   </div>
                   <div className="icon-section">
-                <div className="icon">
-                 <img src="/images/fda.png" alt="FDA Approved" />
-                 <span>FDA APPROVED</span>
-                 </div>
-                <div className="icon">
-                <img src="/images/sulphate.png" alt="Sulphate Free" />
-                  <span>SULPHATE FREE</span>
-               </div>
-               <div className="icon">
-               <img src="/images/paraben.png" alt="Paraben Free" />
-               <span>PARABEN FREE</span>
-               </div>
-              <div className="icon">
-              <img src="/images/cruelty.png" alt="Cruelty Free" />
-              <span>CRUELTY FREE</span>
-             </div>
-            </div>
+                    <div className="icon">
+                      <img src="/images/fda.png" alt="FDA Approved" />
+                      <span>FDA APPROVED</span>
+                    </div>
+                    <div className="icon">
+                      <img src="/images/sulphate.png" alt="Sulphate Free" />
+                      <span>SULPHATE FREE</span>
+                    </div>
+                    <div className="icon">
+                      <img src="/images/paraben.png" alt="Paraben Free" />
+                      <span>PARABEN FREE</span>
+                    </div>
+                    <div className="icon">
+                      <img src="/images/cruelty.png" alt="Cruelty Free" />
+                      <span>CRUELTY FREE</span>
+                    </div>
+                  </div>
                 </div>
-                <div className="col-xl-7 col-lg-6 col-md-12 col-sm-12">
+                <div className="col-xl-7">
                   <ProductDetailInfo product={product} />
                   <ProductDropdownInfo
                     description={product.description}
