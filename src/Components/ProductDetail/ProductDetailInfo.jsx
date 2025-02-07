@@ -10,6 +10,7 @@ import { addToGuestCart } from '../../services/guestCartService';
 import '../../Assets/Css/ProductDetail/ProductDetailInfo.scss';
 import { useNavigate } from 'react-router-dom';
 import CartNotification from '../Cart/CartNotification';
+import RelatedProducts from './RelatedProducts';
 
 const ProductDetailInfo = forwardRef(({ product, isMobile }, ref) => {
   const dispatch = useDispatch();
@@ -22,6 +23,7 @@ const ProductDetailInfo = forwardRef(({ product, isMobile }, ref) => {
   const [expandedOffers, setExpandedOffers] = useState({});
   const [deviceType, setDeviceType] = useState('desktop');
   const [showNotification, setShowNotification] = useState(false);
+  const [addedProduct, setAddedProduct] = useState(null);
 
   useEffect(() => {
     fetchOffers();
@@ -288,6 +290,19 @@ const ProductDetailInfo = forwardRef(({ product, isMobile }, ref) => {
           </div>
         </div>
 
+        {product.related_products && product.related_products.length > 0 && (
+        <div className="product-detail-info__related">
+          <RelatedProducts 
+            relatedProducts={product.related_products} 
+            bestResultsDescription={product.best_results_description}
+            onAddToCart={(product) => {
+              setAddedProduct(product);
+              setShowNotification(true);
+            }}
+          />
+        </div>
+      )}
+
         {offers && offers.length > 0 && (
           <div className="offers-section">
             <h3 className="section-title">AVAILABLE OFFER!</h3>
@@ -390,8 +405,11 @@ const ProductDetailInfo = forwardRef(({ product, isMobile }, ref) => {
       <CartNotification 
         isOpen={showNotification}
         onClose={() => setShowNotification(false)}
-        addedProduct={product}
+        addedProduct={addedProduct}
       />
+      
+      {/* Related Products Section */}
+
     </>
   );
 });

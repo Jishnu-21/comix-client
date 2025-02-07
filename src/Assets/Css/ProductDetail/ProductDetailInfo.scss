@@ -619,34 +619,9 @@
   }
 }
 
-:global(.Toastify__toast-container) {
-  z-index: 100000 !important;
-}
-
-:global(.Toastify__toast) {
-  background: #fff !important;
-  color: #000 !important;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
-  border-radius: 8px !important;
-  padding: 16px !important;
-
-  h4 {
-    font-size: 16px;
-    font-weight: 600;
-    margin-bottom: 8px;
-  }
-
-  p {
-    font-size: 14px;
-    margin: 4px 0;
-    color: #666;
-
-    &.mt-2 {
-      margin-top: 8px;
-      font-style: italic;
-      color: #ff4d4d;
-    }
-  }
+.product-detail-info__related {
+  margin-top: 2rem;
+  width: 100%;
 }
 
 @media (max-width: 768px) {

@@ -28,11 +28,97 @@ import RelatedProducts from '../Components/ProductDetail/RelatedProducts';
 const ProductDetail = () => {
   const { slug } = useParams();
   const productDetailRef = useRef(null);
+  const leftSectionRef = useRef(null);
+  const rightSectionRef = useRef(null);
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [recentlyVisited, setRecentlyVisited] = useState([]);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 767);
+  const [leftSectionHeight, setLeftSectionHeight] = useState(0);
+  const [rightSectionHeight, setRightSectionHeight] = useState(0);
+
+  useEffect(() => {
+    const updateLayout = () => {
+      if (!leftSectionRef.current || !rightSectionRef.current) return;
+
+      const leftHeight = leftSectionRef.current.offsetHeight;
+      const rightHeight = rightSectionRef.current.offsetHeight;
+      
+      if (leftHeight !== leftSectionHeight || rightHeight !== rightSectionHeight) {
+        setLeftSectionHeight(leftHeight);
+        setRightSectionHeight(rightHeight);
+      }
+    };
+
+    // Initial update
+    updateLayout();
+
+    // Update on resize
+    const resizeObserver = new ResizeObserver(() => {
+      requestAnimationFrame(updateLayout);
+    });
+
+    if (leftSectionRef.current) resizeObserver.observe(leftSectionRef.current);
+    if (rightSectionRef.current) resizeObserver.observe(rightSectionRef.current);
+
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, [product]);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!leftSectionRef.current || !rightSectionRef.current) return;
+
+      const leftSection = leftSectionRef.current;
+      const rightSection = rightSectionRef.current;
+      const leftRect = leftSection.getBoundingClientRect();
+      const rightRect = rightSection.getBoundingClientRect();
+      const container = leftSection.parentElement;
+      const containerRect = container.getBoundingClientRect();
+
+      // Calculate the scroll threshold where left section should start moving
+      const scrollThreshold = rightRect.height - leftRect.height;
+      
+      if (containerRect.top <= 0) {
+        // Container has reached the top of viewport
+        if (Math.abs(containerRect.top) > scrollThreshold) {
+          // Right section has been scrolled enough, let left section scroll
+          leftSection.style.position = 'relative';
+          leftSection.style.top = `${scrollThreshold}px`;
+          leftSection.style.width = '40%';
+        } else {
+          // Keep left section fixed while right section scrolls
+          leftSection.style.position = 'fixed';
+          leftSection.style.top = '20px';
+          leftSection.style.width = `${container.offsetWidth * 0.4}px`;
+        }
+      } else {
+        // Container hasn't reached viewport top yet
+        leftSection.style.position = 'relative';
+        leftSection.style.top = '0';
+        leftSection.style.width = '40%';
+      }
+    };
+
+    // Handle window resize
+    const handleResize = () => {
+      if (leftSectionRef.current && leftSectionRef.current.style.position === 'fixed') {
+        const container = leftSectionRef.current.parentElement;
+        leftSectionRef.current.style.width = `${container.offsetWidth * 0.4}px`;
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('resize', handleResize);
+    handleScroll(); // Initial check
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [leftSectionHeight, rightSectionHeight]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -150,11 +236,13 @@ const ProductDetail = () => {
           <>
           <div className="mobile-product-content">
             <MobileImageSlider images={product.image_urls} />
-            <ProductDetailInfo 
-              product={product} 
-              ref={productDetailRef}
-              isMobile={isMobile}
-            />
+            <div className="product-detail__info">
+              <ProductDetailInfo 
+                product={product} 
+                ref={productDetailRef}
+                isMobile={isMobile}
+              />
+            </div>
             <ProductDropdownInfo
               description={product.description}
               ingredients={product.ingredients}
@@ -217,10 +305,6 @@ const ProductDetail = () => {
       </div>
             <KeyIngredients ingredients={product.hero_ingredients} />
             <HowToUse steps={product.how_to_use} category={product.category_id} />
-            <RelatedProducts 
-              relatedProducts={product.related_products} 
-              bestResultsDescription={product.best_results_description}
-            />
             {recentlyVisited.length > 0 && (
               <div className="recently-viewed">
                 <SectionTitle title="SHOP FROM RECENTLY VIEWED" />
@@ -260,8 +344,8 @@ const ProductDetail = () => {
           <>
             {/* Tablet Layout (iPad Air, Mini, and Pro) */}
             <div className="tablet-layout d-block d-xl-none">
-              <div className="row">
-                <div className="col-md-12">
+              <div className="row g-0">
+                <div className="col-12">
                   <div className="product-content">
                     <div className="product-gallery-section">
                       <MobileImageSlider images={product.image_urls} />
@@ -310,8 +394,8 @@ const ProductDetail = () => {
 
             {/* Desktop Layout */}
             <div className="desktop-layout d-none d-xl-block">
-              <div className="row">
-                <div className="col-xl-5">
+              <div className="two-section-layout">
+                <div className="left-section" ref={leftSectionRef}>
                   <ProductImageGallery images={product.image_urls} />
                   <div className="image-comparison-container">
                     <h2 className='kavya'>Before and After</h2>
@@ -340,7 +424,7 @@ const ProductDetail = () => {
                     </div>
                   </div>
                 </div>
-                <div className="col-xl-7">
+                <div className="right-section" ref={rightSectionRef}>
                   <ProductDetailInfo product={product} />
                   <ProductDropdownInfo
                     description={product.description}
@@ -355,7 +439,7 @@ const ProductDetail = () => {
             </div>
           </>
         )}
-        {/* Recently Viewed Products Section - Visible on both mobile and desktop */}
+        {/* Recently Viewed Products Section (Desktop) */}
         {!isMobile && recentlyVisited.length > 0 && (
           <div className="recently-viewed-desktop">
             <SectionTitle title="SHOP FROM RECENTLY VIEWED" />
@@ -414,10 +498,6 @@ const ProductDetail = () => {
               5. Pat dry with a clean towel
             `} 
             category={product.category}
-          />
-          <RelatedProducts 
-            relatedProducts={product.related_products} 
-            bestResultsDescription={product.best_results_description}
           />
         </>
       )}

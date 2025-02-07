@@ -1102,3 +1102,264 @@
     }
   }
 }
+
+// Tablet layout
+.tablet-layout {
+  .product-content {
+    max-width: 100%;
+    overflow-x: hidden;
+    padding: 0 20px;
+  }
+
+  .product-gallery-section {
+    margin-bottom: 2rem;
+  }
+
+  .product-info-wrapper {
+    max-width: 100%;
+    margin: 0 auto;
+  }
+
+  .row.g-0 {
+    margin: 0;
+  }
+
+  .col-12 {
+    padding: 0;
+  }
+
+  .image-comparison-container {
+    margin: 2rem 0;
+  }
+
+  .icon-section {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin: 2rem 0;
+    padding: 0;
+
+    .icon {
+      text-align: center;
+      
+      img {
+        max-width: 50px;
+        height: auto;
+      }
+
+      span {
+        display: block;
+        margin-top: 0.5rem;
+        font-size: 0.8rem;
+      }
+    }
+  }
+}
+
+// Hide tablet layout on desktop
+@media (min-width: 1200px) {
+  .tablet-layout {
+    display: none !important;
+  }
+}
+
+// Show tablet layout on iPad devices
+@media (min-width: 768px) and (max-width: 1199px) {
+  .tablet-layout {
+    display: block !important;
+  }
+  
+  .desktop-layout {
+    display: none !important;
+  }
+}
+
+.desktop-layout {
+  padding-top: 2rem;
+
+  .two-section-layout {
+    display: flex;
+    gap: 3rem;
+    position: relative;
+    max-width: 100%;
+    margin: 0 auto;
+  }
+
+  .left-section {
+    flex: 0 0 40%;
+    position: relative;
+    width: 40%;
+    height: fit-content;
+    padding-right: 1rem;
+    transition: transform 0.2s ease-out;
+    will-change: transform, position;
+  }
+
+  .right-section {
+    flex: 0 0 55%;
+    position: relative;
+    min-height: 100vh;
+    margin-left: auto;
+    width: 55%;
+    padding-right: 2rem;
+
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: rgba(0, 0, 0, 0.3);
+      border-radius: 3px;
+
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.5);
+      }
+    }
+  }
+
+  .image-comparison-container {
+    margin: 2rem 0;
+  }
+
+  .icon-section {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+    margin: 2rem auto;
+    padding: 0 1rem;
+
+    .icon {
+      text-align: center;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      
+      img {
+        width: 70px;
+        height: auto;
+        margin-bottom: 1.5rem;
+      }
+
+      span {
+        display: block;
+        font-size: 1rem;
+        text-align: center;
+        font-weight: 500;
+      }
+    }
+  }
+}
+
+// Media queries
+@media (min-width: 1200px) {
+  .tablet-layout {
+    display: none !important;
+  }
+  .desktop-layout {
+    display: block !important;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1199px) {
+  .tablet-layout {
+    display: block !important;
+  }
+  .desktop-layout {
+    display: none !important;
+  }
+}
+
+// Tablet layout styles
+.tablet-layout {
+  .product-content {
+    max-width: 100%;
+    overflow-x: hidden;
+    padding: 0 20px;
+  }
+
+  .product-gallery-section {
+    margin-bottom: 2rem;
+  }
+
+  .product-info-wrapper {
+    max-width: 100%;
+    margin: 0 auto;
+  }
+
+  .row.g-0 {
+    margin: 0;
+  }
+
+  .col-12 {
+    padding: 0;
+  }
+
+  .image-comparison-container {
+    margin: 2rem 0;
+  }
+
+  .icon-section {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin: 2rem 0;
+    padding: 0;
+
+    .icon {
+      text-align: center;
+      
+      img {
+        max-width: 50px;
+        height: auto;
+      }
+
+      span {
+        display: block;
+        margin-top: 0.5rem;
+        font-size: 0.8rem;
+      }
+    }
+  }
+}
+
+// Media queries
+@media (min-width: 1200px) {
+  .tablet-layout {
+    display: none !important;
+  }
+  .desktop-layout {
+    display: block !important;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1199px) {
+  .tablet-layout {
+    display: block !important;
+  }
+  .desktop-layout {
+    display: none !important;
+  }
+}
+
+// iPad-specific styles for image comparison slider
+@media (min-width: 768px) and (max-width: 1199px) {
+  .image-comparison-container {
+    margin: 2rem auto !important;
+    padding: 0 !important;
+    max-width: 100% !important;
+
+    .comparison-slider {
+      width: 100% !important;
+    }
+
+    h2.kavya {
+      padding: 0 1rem;
+    }
+  }
+}
