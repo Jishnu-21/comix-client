@@ -24,7 +24,9 @@ const EditProductForm = ({ product, onClose, onUpdate }) => {
       price: variant.price || '',
       stock_quantity: variant.stock_quantity || ''
     })) || [{ name: '50ml', price: '', stock_quantity: '' }],
-    faqs: product?.faqs || [{ question: '', answer: '' }]
+    faqs: product?.faqs || [{ question: '', answer: '' }],
+    related_products: product?.related_products || [],
+    best_results_description: product?.best_results_description || ''
   });
 
   const [heroIngredients, setHeroIngredients] = useState([]);
@@ -43,10 +45,14 @@ const EditProductForm = ({ product, onClose, onUpdate }) => {
   const [categories, setCategories] = useState([]);
   const [subcategories, setSubcategories] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [allProducts, setAllProducts] = useState([]);
+  const [selectedRelatedProduct, setSelectedRelatedProduct] = useState('');
+  const [relatedProductDescription, setRelatedProductDescription] = useState('');
 
   useEffect(() => {
     fetchCategories();
     fetchHeroIngredients();
+    fetchAllProducts();
   }, []);
 
   useEffect(() => {
@@ -71,6 +77,15 @@ const EditProductForm = ({ product, onClose, onUpdate }) => {
       setCategories(response.data.categories);
     } catch (error) {
       console.error('Error fetching categories:', error);
+    }
+  };
+
+  const fetchAllProducts = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/products`);
+      setAllProducts(response.data.products || []);
+    } catch (error) {
+      console.error('Error fetching products:', error);
     }
   };
 
@@ -198,6 +213,30 @@ const EditProductForm = ({ product, onClose, onUpdate }) => {
     setImagePreview(prevPreviews => prevPreviews.filter((_, i) => i !== index));
   };
 
+  const handleAddRelatedProduct = () => {
+    if (selectedRelatedProduct && relatedProductDescription) {
+      setFormData(prev => ({
+        ...prev,
+        related_products: [
+          ...prev.related_products,
+          {
+            product: selectedRelatedProduct,
+            description: relatedProductDescription
+          }
+        ]
+      }));
+      setSelectedRelatedProduct('');
+      setRelatedProductDescription('');
+    }
+  };
+
+  const handleRemoveRelatedProduct = (index) => {
+    setFormData(prev => ({
+      ...prev,
+      related_products: prev.related_products.filter((_, i) => i !== index)
+    }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -223,6 +262,8 @@ const EditProductForm = ({ product, onClose, onUpdate }) => {
       formDataToSend.append('variants', JSON.stringify(formData.variants));
       formDataToSend.append('faqs', JSON.stringify(formData.faqs));
       formDataToSend.append('existing_images', JSON.stringify(existingImages));
+      formDataToSend.append('related_products', JSON.stringify(formData.related_products));
+      formDataToSend.append('best_results_description', formData.best_results_description);
 
       // Append new images
       newImages.forEach(image => {
@@ -255,290 +296,324 @@ const EditProductForm = ({ product, onClose, onUpdate }) => {
   };
 
   return (
-    <div className="form-container">
-      <div className="form-header">
-        <h2>Edit Product</h2>
-        <button onClick={onClose} className="close-button">
-          <FontAwesomeIcon icon={faTimes} />
-        </button>
-      </div>
-
-      <form onSubmit={handleSubmit} className="admin-form">
-        {/* Basic Information */}
-        <div className="form-section">
-          <h3>Basic Information</h3>
-          <input
-            type="text"
-            name="name"
-            value={formData.name}
-            onChange={handleInputChange}
-            placeholder="Product Name"
-            required
-          />
-          <textarea
-            name="description"
-            value={formData.description}
-            onChange={handleInputChange}
-            placeholder="Product Description"
-            required
-          />
-          <select
-            name="category_id"
-            value={formData.category_id}
-            onChange={handleCategoryChange}
-            required
-          >
-            <option value="">Select Category</option>
-            {categories.map(category => (
-              <option key={category._id} value={category._id}>
-                {category.name}
-              </option>
-            ))}
-          </select>
-
-          <select
-            name="subcategory_id"
-            value={formData.subcategory_id}
-            onChange={handleInputChange}
-            required
-            disabled={!formData.category_id}
-          >
-            <option value="">Select Subcategory</option>
-            {subcategories.map(subcategory => (
-              <option key={subcategory._id} value={subcategory._id}>
-                {subcategory.name}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        {/* Product Details */}
-        <div className="form-section">
-          <h3>Product Details</h3>
-          <textarea
-            name="ingredients"
-            value={formData.ingredients}
-            onChange={handleInputChange}
-            placeholder="Ingredients"
-            required
-          />
-          <textarea
-            name="how_to_use"
-            value={formData.how_to_use}
-            onChange={handleInputChange}
-            placeholder="How to Use"
-            required
-          />
-          <textarea
-            name="functions"
-            value={formData.functions}
-            onChange={handleInputChange}
-            placeholder="Functions"
-          />
-          <textarea
-            name="taglines"
-            value={formData.taglines}
-            onChange={handleInputChange}
-            placeholder="Taglines"
-          />
-          <textarea
-            name="additional_info"
-            value={formData.additional_info}
-            onChange={handleInputChange}
-            placeholder="Additional Information"
-          />
-        </div>
-
-        {/* Hero Ingredients */}
-        <div className="form-section">
-          <h3>Hero Ingredients</h3>
-          <select
-            onChange={(e) => {
-              const heroIngredient = heroIngredients.find(h => h._id === e.target.value);
-              if (heroIngredient) {
-                handleHeroIngredientSelect(heroIngredient);
-              }
-            }}
-            value=""
-          >
-            <option value="">Select Hero Ingredient</option>
-            {heroIngredients.map(hero => (
-              <option key={hero._id} value={hero._id}>
-                {hero.name}
-              </option>
-            ))}
-          </select>
-
-          {selectedHeroIngredients.map((item, index) => {
-            const heroIngredient = heroIngredients.find(h => h._id === item.ingredient);
-            return (
-              <div key={index} className="hero-ingredient-item">
-                <div className="hero-ingredient-header">
-                  <span>{heroIngredient?.name}</span>
-                  <button
-                    type="button"
-                    onClick={() => removeHeroIngredient(item.ingredient)}
-                    className="remove-button"
-                  >
-                    <FontAwesomeIcon icon={faTrash} />
-                  </button>
-                </div>
-                <textarea
-                  value={item.description}
-                  onChange={(e) => handleHeroIngredientDescription(item.ingredient, e.target.value)}
-                  placeholder="Description for this hero ingredient"
-                  required
-                />
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Variants */}
-        <div className="form-section">
-          <h3>Variants</h3>
-          {formData.variants.map((variant, index) => (
-            <div key={index} className="variant-item">
-              <select
-                value={variant.name}
-                onChange={(e) => handleVariantChange(index, 'name', e.target.value)}
-                required
-              >
-                <option value="">Select Size</option>
-                {VARIANT_SIZES.map(size => (
-                  <option key={size} value={size}>
-                    {size}
-                  </option>
-                ))}
-              </select>
-              <input
-                type="number"
-                value={variant.price}
-                onChange={(e) => handleVariantChange(index, 'price', e.target.value)}
-                placeholder="Price"
-                required
-                min="0"
-              />
-              <input
-                type="number"
-                value={variant.stock_quantity}
-                onChange={(e) => handleVariantChange(index, 'stock_quantity', e.target.value)}
-                placeholder="Stock Quantity"
-                required
-                min="0"
-              />
-              {index > 0 && (
-                <button
-                  type="button"
-                  onClick={() => removeVariant(index)}
-                  className="remove-button"
-                >
-                  <FontAwesomeIcon icon={faTrash} />
-                </button>
-              )}
-            </div>
-          ))}
-          {formData.variants.length < VARIANT_SIZES.length && (
-            <button
-              type="button"
-              onClick={addVariant}
-              className="add-button"
-            >
-              <FontAwesomeIcon icon={faPlus} /> Add Variant
-            </button>
-          )}
-        </div>
-
-        {/* FAQs */}
-        <div className="form-section">
-          <h3>FAQs</h3>
-          {formData.faqs.map((faq, index) => (
-            <div key={index} className="faq-item">
-              <input
-                type="text"
-                value={faq.question}
-                onChange={(e) => handleFaqChange(index, 'question', e.target.value)}
-                placeholder="Question"
-                required
-              />
-              <textarea
-                value={faq.answer}
-                onChange={(e) => handleFaqChange(index, 'answer', e.target.value)}
-                placeholder="Answer"
-                required
-              />
-              <button
-                type="button"
-                onClick={() => removeFaq(index)}
-                className="remove-button"
-              >
-                <FontAwesomeIcon icon={faTrash} />
-              </button>
-            </div>
-          ))}
-          <button
-            type="button"
-            onClick={addFaq}
-            className="add-button"
-          >
-            <FontAwesomeIcon icon={faPlus} /> Add FAQ
+    <div className="modal-overlay">
+      <div className="admin-form">
+        <div className="form-header">
+          <h2>Edit Product</h2>
+          <button onClick={onClose} className="close-button">
+            <FontAwesomeIcon icon={faTimes} />
           </button>
-        </div>
-
-        {/* Images */}
-        <div className="form-section">
-          <h3>Product Images</h3>
-          {/* Existing Images */}
-          <div className="image-preview-container">
-            {existingImages.map((url, index) => (
-              <div key={index} className="image-preview">
-                <img src={url} alt={`Existing ${index + 1}`} />
-                <button
-                  type="button"
-                  onClick={() => removeExistingImage(index)}
-                  className="remove-button"
-                >
-                  <FontAwesomeIcon icon={faTrash} />
-                </button>
-              </div>
-            ))}
-          </div>
-
-          {/* New Images */}
-          <input
-            type="file"
-            onChange={handleNewImageChange}
-            multiple
-            accept="image/*"
-          />
-          <div className="image-preview-container">
-            {imagePreview.map((preview, index) => (
-              <div key={index} className="image-preview">
-                <img src={preview} alt={`New ${index + 1}`} />
-                <button
-                  type="button"
-                  onClick={() => removeNewImage(index)}
-                  className="remove-button"
-                >
-                  <FontAwesomeIcon icon={faTrash} />
-                </button>
-              </div>
-            ))}
-          </div>
         </div>
 
         {error && <div className="error-message">{error}</div>}
         {success && <div className="success-message">{success}</div>}
 
-        <div className="form-actions">
-          <button type="submit" className="submit-button" disabled={isSubmitting}>
-            {isSubmitting ? 'Updating Product...' : 'Update Product'}
+        <form onSubmit={handleSubmit}>
+          {/* Basic Information */}
+          <div className="form-section">
+            <h3>Basic Information</h3>
+            <div className="form-grid">
+              <div className="form-group">
+                <label>Product Name</label>
+                <input
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>Category</label>
+                <select
+                  name="category_id"
+                  value={formData.category_id}
+                  onChange={handleCategoryChange}
+                  required
+                >
+                  <option value="">Select Category</option>
+                  {categories.map(category => (
+                    <option key={category._id} value={category._id}>
+                      {category.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="form-group">
+                <label>Subcategory</label>
+                <select
+                  name="subcategory_id"
+                  value={formData.subcategory_id}
+                  onChange={handleInputChange}
+                  required
+                  disabled={!formData.category_id}
+                >
+                  <option value="">Select Subcategory</option>
+                  {subcategories.map(subcategory => (
+                    <option key={subcategory._id} value={subcategory._id}>
+                      {subcategory.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label>Description</label>
+              <textarea
+                name="description"
+                value={formData.description}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
+          </div>
+
+          {/* Product Details */}
+          <div className="form-section">
+            <h3>Product Details</h3>
+            <div className="form-group">
+              <label>Ingredients</label>
+              <textarea
+                name="ingredients"
+                value={formData.ingredients}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label>How to Use</label>
+              <textarea
+                name="how_to_use"
+                value={formData.how_to_use}
+                onChange={handleInputChange}
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label>Functions</label>
+              <textarea
+                name="functions"
+                value={formData.functions}
+                onChange={handleInputChange}
+              />
+            </div>
+            <div className="form-group">
+              <label>Taglines</label>
+              <textarea
+                name="taglines"
+                value={formData.taglines}
+                onChange={handleInputChange}
+              />
+            </div>
+            <div className="form-group">
+              <label>Additional Information</label>
+              <textarea
+                name="additional_info"
+                value={formData.additional_info}
+                onChange={handleInputChange}
+              />
+            </div>
+          </div>
+
+          {/* Hero Ingredients */}
+          <div className="form-section">
+            <h3>Hero Ingredients</h3>
+            <div className="form-group">
+              <select
+                onChange={(e) => {
+                  const heroIngredient = heroIngredients.find(h => h._id === e.target.value);
+                  if (heroIngredient) {
+                    handleHeroIngredientSelect(heroIngredient);
+                  }
+                }}
+                value=""
+              >
+                <option value="">Select Hero Ingredient</option>
+                {heroIngredients.map(ingredient => (
+                  <option key={ingredient._id} value={ingredient._id}>
+                    {ingredient.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {selectedHeroIngredients.map((hi, index) => (
+              <div key={hi.ingredient} className="variant-row">
+                <div>
+                  {heroIngredients.find(h => h._id === hi.ingredient)?.name}
+                </div>
+                <input
+                  type="text"
+                  value={hi.description}
+                  onChange={(e) => handleHeroIngredientDescription(hi.ingredient, e.target.value)}
+                  placeholder="Description"
+                />
+                <button
+                  type="button"
+                  onClick={() => removeHeroIngredient(hi.ingredient)}
+                  className="action-button remove"
+                >
+                  <FontAwesomeIcon icon={faTrash} />
+                </button>
+              </div>
+            ))}
+          </div>
+
+          {/* Variants */}
+          <div className="form-section">
+            <h3>Variants</h3>
+            <div className="variant-section">
+              {formData.variants.map((variant, index) => (
+                <div key={index} className="variant-row">
+                  <select
+                    value={variant.name}
+                    onChange={(e) => handleVariantChange(index, 'name', e.target.value)}
+                    required
+                  >
+                    <option value="">Select Size</option>
+                    {VARIANT_SIZES.map(size => (
+                      <option key={size} value={size}>{size}</option>
+                    ))}
+                  </select>
+                  <input
+                    type="number"
+                    value={variant.price}
+                    onChange={(e) => handleVariantChange(index, 'price', e.target.value)}
+                    placeholder="Price"
+                    required
+                  />
+                  <input
+                    type="number"
+                    value={variant.stock_quantity}
+                    onChange={(e) => handleVariantChange(index, 'stock_quantity', e.target.value)}
+                    placeholder="Stock"
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => removeVariant(index)}
+                    className="action-button remove"
+                  >
+                    <FontAwesomeIcon icon={faTrash} />
+                  </button>
+                </div>
+              ))}
+              <button
+                type="button"
+                onClick={addVariant}
+                className="action-button add"
+                disabled={formData.variants.length >= VARIANT_SIZES.length}
+              >
+                <FontAwesomeIcon icon={faPlus} /> Add Variant
+              </button>
+            </div>
+          </div>
+
+          {/* Related Products */}
+          <div className="form-section">
+            <h3>Related Products</h3>
+            <div className="related-products-section">
+              <div className="form-group">
+                <select
+                  value={selectedRelatedProduct}
+                  onChange={(e) => setSelectedRelatedProduct(e.target.value)}
+                >
+                  <option value="">Select Related Product</option>
+                  {allProducts
+                    .filter(p => p._id !== product._id)
+                    .map(product => (
+                      <option key={product._id} value={product._id}>
+                        {product.name}
+                      </option>
+                    ))}
+                </select>
+              </div>
+              <div className="form-group">
+                <input
+                  type="text"
+                  value={relatedProductDescription}
+                  onChange={(e) => setRelatedProductDescription(e.target.value)}
+                  placeholder="Description of relationship"
+                />
+              </div>
+              <button
+                type="button"
+                onClick={handleAddRelatedProduct}
+                className="action-button add"
+                disabled={!selectedRelatedProduct || !relatedProductDescription}
+              >
+                <FontAwesomeIcon icon={faPlus} /> Add Related Product
+              </button>
+
+              {formData.related_products.map((rp, index) => (
+                <div key={index} className="related-product-row">
+                  <div>
+                    {allProducts.find(p => p._id === rp.product)?.name}
+                  </div>
+                  <div>{rp.description}</div>
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveRelatedProduct(index)}
+                    className="action-button remove"
+                  >
+                    <FontAwesomeIcon icon={faTrash} />
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Images */}
+          <div className="form-section">
+            <h3>Images</h3>
+            <div className="form-group">
+              <input
+                type="file"
+                onChange={handleNewImageChange}
+                multiple
+                accept="image/*"
+              />
+            </div>
+            
+            <div className="image-preview-grid">
+              {existingImages.map((url, index) => (
+                <div key={index} className="image-preview">
+                  <img src={url} alt={`Product ${index + 1}`} />
+                  <button
+                    type="button"
+                    onClick={() => removeExistingImage(index)}
+                    className="action-button remove"
+                  >
+                    <FontAwesomeIcon icon={faTrash} />
+                  </button>
+                </div>
+              ))}
+              
+              {imagePreview.map((url, index) => (
+                <div key={`new-${index}`} className="image-preview">
+                  <img src={url} alt={`New ${index + 1}`} />
+                  <button
+                    type="button"
+                    onClick={() => removeNewImage(index)}
+                    className="action-button remove"
+                  >
+                    <FontAwesomeIcon icon={faTrash} />
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            className="submit-button"
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? 'Updating...' : 'Update Product'}
           </button>
-          <button type="button" onClick={onClose} className="cancel-button">
-            Cancel
-          </button>
-        </div>
-      </form>
+        </form>
+      </div>
     </div>
   );
 };

@@ -23,6 +23,7 @@ import MobileHeader from '../Components/MobileHeader';
 import { useNavigate } from 'react-router-dom';
 import KeyIngredients from '../Components/ProductDetail/KeyIngredients';
 import HowToUse from '../Components/ProductDetail/HowToUse';
+import RelatedProducts from '../Components/ProductDetail/RelatedProducts';
 
 const ProductDetail = () => {
   const { slug } = useParams();
@@ -216,6 +217,10 @@ const ProductDetail = () => {
       </div>
             <KeyIngredients ingredients={product.hero_ingredients} />
             <HowToUse steps={product.how_to_use} category={product.category_id} />
+            <RelatedProducts 
+              relatedProducts={product.related_products} 
+              bestResultsDescription={product.best_results_description}
+            />
             {recentlyVisited.length > 0 && (
               <div className="recently-viewed">
                 <SectionTitle title="SHOP FROM RECENTLY VIEWED" />
@@ -409,6 +414,10 @@ const ProductDetail = () => {
               5. Pat dry with a clean towel
             `} 
             category={product.category}
+          />
+          <RelatedProducts 
+            relatedProducts={product.related_products} 
+            bestResultsDescription={product.best_results_description}
           />
         </>
       )}

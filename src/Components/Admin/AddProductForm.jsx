@@ -19,7 +19,9 @@ const AddProductForm = ({ onClose }) => {
     taglines: '',
     additional_info: '',
     variants: [{ name: '50ml', price: '', stock_quantity: '' }],
-    faqs: [{ question: '', answer: '' }]
+    faqs: [{ question: '', answer: '' }],
+    related_products: [],
+    best_results_description: ''
   });
 
   const [heroIngredients, setHeroIngredients] = useState([]);
@@ -31,10 +33,14 @@ const AddProductForm = ({ onClose }) => {
   const [subcategories, setSubcategories] = useState([]);
   const [imagePreview, setImagePreview] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [allProducts, setAllProducts] = useState([]);
+  const [selectedRelatedProduct, setSelectedRelatedProduct] = useState('');
+  const [relatedProductDescription, setRelatedProductDescription] = useState('');
 
   useEffect(() => {
     fetchCategories();
     fetchHeroIngredients();
+    fetchAllProducts();
   }, []);
 
   const fetchHeroIngredients = async () => {
@@ -52,6 +58,15 @@ const AddProductForm = ({ onClose }) => {
       setCategories(response.data.categories);
     } catch (error) {
       console.error('Error fetching categories:', error);
+    }
+  };
+
+  const fetchAllProducts = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/products`);
+      setAllProducts(response.data.products || []);
+    } catch (error) {
+      console.error('Error fetching products:', error);
     }
   };
 
@@ -175,6 +190,40 @@ const AddProductForm = ({ onClose }) => {
     setImagePreview(prevPreviews => prevPreviews.filter((_, i) => i !== index));
   };
 
+  const handleAddRelatedProduct = () => {
+    if (selectedRelatedProduct && relatedProductDescription) {
+      // Check if the product is already added
+      const isProductAlreadyAdded = formData.related_products.some(
+        (item) => item.product === selectedRelatedProduct
+      );
+
+      if (!isProductAlreadyAdded) {
+        setFormData(prev => ({
+          ...prev,
+          related_products: [
+            ...prev.related_products,
+            {
+              product: selectedRelatedProduct,
+              description: relatedProductDescription
+            }
+          ]
+        }));
+        setSelectedRelatedProduct('');
+        setRelatedProductDescription('');
+      } else {
+        setError('This product is already added as a related product');
+        setTimeout(() => setError(''), 3000);
+      }
+    }
+  };
+
+  const handleRemoveRelatedProduct = (index) => {
+    setFormData(prev => ({
+      ...prev,
+      related_products: prev.related_products.filter((_, i) => i !== index)
+    }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -195,6 +244,8 @@ const AddProductForm = ({ onClose }) => {
       formDataToSend.append('hero_ingredients', JSON.stringify(selectedHeroIngredients));
       formDataToSend.append('variants', JSON.stringify(formData.variants));
       formDataToSend.append('faqs', JSON.stringify(formData.faqs));
+      formDataToSend.append('related_products', JSON.stringify(formData.related_products));
+      formDataToSend.append('best_results_description', formData.best_results_description);
 
       images.forEach(image => {
         formDataToSend.append('files', image);
@@ -512,6 +563,67 @@ const AddProductForm = ({ onClose }) => {
             >
               <FontAwesomeIcon icon={faPlus} /> Add FAQ
             </button>
+          </div>
+
+          {/* Related Products */}
+          <div className="form-section">
+            <h3>Related Products</h3>
+            <div className="related-products-container">
+              <select
+                value={selectedRelatedProduct}
+                onChange={(e) => setSelectedRelatedProduct(e.target.value)}
+                className="form-input"
+              >
+                <option value="">Select a Related Product</option>
+                {allProducts
+                  .filter(product => product._id !== formData._id)
+                  .map(product => (
+                    <option key={product._id} value={product._id}>
+                      {product.name}
+                    </option>
+                  ))
+                }
+              </select>
+              <textarea
+                value={relatedProductDescription}
+                onChange={(e) => setRelatedProductDescription(e.target.value)}
+                placeholder="Enter description for this related product"
+                className="form-input"
+              />
+              <button
+                type="button"
+                onClick={handleAddRelatedProduct}
+                className="add-button"
+              >
+                <FontAwesomeIcon icon={faPlus} /> Add Related Product
+              </button>
+            </div>
+
+            {formData.related_products.map((relatedProduct, index) => (
+              <div key={index} className="related-product-item">
+                <span>{allProducts.find(p => p._id === relatedProduct.product)?.name}</span>
+                <p>{relatedProduct.description}</p>
+                <button
+                  type="button"
+                  onClick={() => handleRemoveRelatedProduct(index)}
+                  className="remove-button"
+                >
+                  <FontAwesomeIcon icon={faTrash} />
+                </button>
+              </div>
+            ))}
+          </div>
+
+          {/* Best Results Description */}
+          <div className="form-section">
+            <h3>Best Results Description</h3>
+            <textarea
+              name="best_results_description"
+              value={formData.best_results_description}
+              onChange={handleInputChange}
+              placeholder="Enter description for best results with other products"
+              className="form-input"
+            />
           </div>
 
           {/* Images */}
