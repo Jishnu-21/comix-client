@@ -1,0 +1,45 @@
+.my-orders-container {
+  max-width: 1200px;
+  margin: 0 auto;
+
+  .order-card {
+    transition: transform 0.2s;
+    
+    &:hover {
+      transform: translateY(-2px);
+    }
+
+    .order-header {
+      .order-status {
+        padding: 4px 12px;
+        border-radius: 12px;
+        font-size: 0.875rem;
+        font-weight: 500;
+      }
+    }
+
+    .item-card {
+      transition: background-color 0.2s;
+      
+      &:hover {
+        background-color: #f8f9fa;
+      }
+
+      img {
+        transition: transform 0.2s;
+        
+        &:hover {
+          transform: scale(1.05);
+        }
+      }
+    }
+  }
+}
+
+// Status colors
+.text-yellow-600 { color: #d97706; }
+.text-blue-600 { color: #2563eb; }
+.text-purple-600 { color: #7c3aed; }
+.text-green-600 { color: #059669; }
+.text-red-600 { color: #dc2626; }
+.text-gray-600 { color: #4b5563; }

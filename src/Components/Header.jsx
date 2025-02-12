@@ -189,20 +189,40 @@ const Header = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const fetchCartItemCount = async () => {
-    try {
-      const userString = localStorage.getItem('user');
-      if (!userString) return;
-      const user = JSON.parse(userString);
-      if (!user.user || !user.user.id) return;
-      const response = await axios.get(`${API_URL}/cart/${user.user.id}`);
-      const cartItems = response.data.cartItems || [];
-      const count = cartItems.reduce((sum, item) => sum + item.quantity, 0);
-      dispatch(updateCartItemCount(count));
-    } catch (error) {
-      console.error("Error fetching cart item count:", error);
-    }
-  };
+  useEffect(() => {
+    const fetchCartCount = async () => {
+      try {
+        const userString = localStorage.getItem('user');
+        if (!userString) {
+          // For guest users, get cart count from local storage
+          const guestCart = JSON.parse(localStorage.getItem('guestCart') || '[]');
+          const count = guestCart.reduce((sum, item) => sum + item.quantity, 0);
+          dispatch(updateCartItemCount(count));
+          return;
+        }
+
+        // For logged-in users
+        const user = JSON.parse(userString);
+        const userId = user._id || user.id || (user.user && (user.user._id || user.user.id));
+        
+        if (!userId) {
+          console.error('No user ID found:', user);
+          return;
+        }
+
+        const response = await axios.get(`${API_URL}/cart/count/${userId}`);
+        if (response.data.success) {
+          dispatch(updateCartItemCount(response.data.count));
+        } else {
+          console.error('Failed to fetch cart count:', response.data.message);
+        }
+      } catch (error) {
+        console.error('Error fetching cart count:', error);
+      }
+    };
+
+    fetchCartCount();
+  }, [dispatch, isAuthenticated]);
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);

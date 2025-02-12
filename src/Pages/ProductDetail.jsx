@@ -440,11 +440,11 @@ const ProductDetail = () => {
           </>
         )}
         {/* Recently Viewed Products Section (Desktop) */}
-        {!isMobile && recentlyVisited.length > 0 && (
+        {!isMobile && recentlyVisited.length > 3 && (
           <div className="recently-viewed-desktop">
             <SectionTitle title="SHOP FROM RECENTLY VIEWED" />
             <div className="row mt-5 mb-5">
-              {recentlyVisited.map((visit) => (
+              {recentlyVisited.slice(0, 4).map((visit) => (
                 <div key={visit.productId._id} className="col-lg-3 col-md-4 col-sm-6">
                   <CardComponent
                     image={visit.productId.image_urls[0]}

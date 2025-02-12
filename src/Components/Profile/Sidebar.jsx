@@ -28,13 +28,13 @@ const Sidebar = ({ activeSection, setActiveSection }) => {
           <li>
             <a 
               href="#" 
-              className={`sidebar-link ${activeSection === 'order-history' ? 'active' : ''}`}
+              className={`sidebar-link ${activeSection === 'orders' ? 'active' : ''}`}
               onClick={(e) => {
                 e.preventDefault();
-                setActiveSection('order-history');
+                setActiveSection('orders');
               }}
             >
-              Order History
+              My Orders
             </a>
           </li>
           <li>
@@ -46,7 +46,7 @@ const Sidebar = ({ activeSection, setActiveSection }) => {
                 setActiveSection('my-addresses');
               }}
             >
-              My addresses
+              My Addresses
             </a>
           </li>
           <li>

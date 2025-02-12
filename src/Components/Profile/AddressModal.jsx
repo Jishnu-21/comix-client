@@ -99,7 +99,7 @@ const AddressModal = ({ isOpen, onClose, onSave, addressToEdit }) => {
         <button className="close-btn" onClick={onClose}>
           <X size={24} />
         </button>
-        <h2>{addressToEdit ? 'Edit Address' : 'Add New Address'}</h2>
+        <h2>{addressToEdit ? 'Edit Address' : 'Add Address'}</h2>
         
         {errors.submit && (
           <div className="error-message submit-error">{errors.submit}</div>

@@ -22,7 +22,7 @@ const FallingElements = ({ imageSrc }) => {
       x: '-100vw',
       y: '50vh',
       scale: 0.5,
-      opacity: 0
+      opacity: 1
     });
 
     setTimeout(() => {

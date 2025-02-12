@@ -90,43 +90,50 @@
         padding: 20px;
         border-radius: 8px;
         margin-top: 20px;
-
+      
         h3 {
-            color: $black;
-            font-size: 1.2rem;
-            margin-bottom: 15px;
+          color: $black;
+          font-size: 1.2rem;
+          margin-bottom: 15px;
         }
-
+      
         .category-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-
-            .col-lg-6 {
-                flex: 0 0 calc(50% - 5px);
-                max-width: calc(50% - 5px);
+          display: flex;
+          flex-wrap: wrap;
+          gap: 10px;
+      
+          // Desktop layout - 2 columns
+          .subcategory-button {
+            flex: 0 0 calc(50% - 5px); // Account for gap
+            max-width: calc(50% - 5px);
+            text-align: center;
+            padding: 10px;
+            background-color: $header-bg;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+      
+            &:hover {
+              background-color: $highlight-color;
+              color: $black;
             }
-
-            .tag {
-                background-color: $header-bg;
-                color: white;
-                text-decoration: none;
-                text-align: center;
-                font-size: 0.9rem;
-                cursor: pointer;
-                display: block;
-                width: 100%;
-                padding: 10px;
-                border-radius: 5px;
-                transition: background-color 0.3s, color 0.3s;
-
-                &:hover {
-                    background-color: $highlight-color;
-                    color: $black;
-                }
+      
+            &.selected {
+              background-color: $highlight-color;
+              color: $black;
             }
+          }
+      
+          // Mobile layout
+          @media (max-width: 768px) {
+            .subcategory-button {
+              flex: 0 0 100%;
+              max-width: 100%;
+            }
+          }
         }
-    }
+      }
 }
 
 // Media query for smaller screens

@@ -36,8 +36,7 @@ const CartNotification = ({ isOpen, onClose, addedProduct }) => {
     setLoadingRecommended(true);
     try {
       const response = await axios.get(`${API_URL}/products/`);
-      console.log('products', response.data);
-      setRecommendedProducts(response.data.products.slice(0, 3)); // Show only 4 recommended products
+      setRecommendedProducts(response.data.products.slice(0, 3));
     } catch (error) {
       console.error('Error fetching recommended products:', error);
     } finally {
@@ -49,8 +48,23 @@ const CartNotification = ({ isOpen, onClose, addedProduct }) => {
     setLoading(true);
     try {
       if (user) {
-        const response = await axios.get(`${API_URL}/cart/${user.user.id}`);
-        setCartItems(response.data.items || []);
+        const userId = user.user?.id || user.id; // Handle both user structures
+        const response = await axios.get(`${API_URL}/cart/${userId}`);
+        
+        // Transform the cart items to match the expected format
+        const formattedItems = (response.data.cartItems || []).map(item => ({
+          _id: item.product_id._id + '-' + item.variant_name,
+          quantity: item.quantity,
+          product: {
+            _id: item.product_id._id,
+            name: item.product_id.name,
+            price: item.price,
+            image_urls: item.product_id.image_urls,
+            variant_name: item.variant_name
+          }
+        }));
+        
+        setCartItems(formattedItems);
       } else {
         const guestCart = getGuestCart();
         const formattedGuestCart = guestCart.map(item => ({
@@ -91,12 +105,17 @@ const CartNotification = ({ isOpen, onClose, addedProduct }) => {
     
     try {
       if (user) {
-        await axios.put(`${process.env.REACT_APP_API_URL}/cart/update`, {
-          userId: user.user.id,
-          itemId: itemId,
+        const userId = user.user?.id || user.id;
+        const [productId, variantName] = itemId.split('-');
+        
+        await axios.put(`${API_URL}/cart/update-quantity`, {
+          user_id: userId,
+          product_id: productId,
+          variant_name: variantName,
           quantity: newQuantity
         });
-        const newCount = await fetchCartItemCount(user.user.id);
+        
+        const newCount = await fetchCartItemCount(userId);
         dispatch(updateCartItemCount(newCount));
       } else {
         const [productId, variantName] = itemId.split('-');
@@ -118,13 +137,16 @@ const CartNotification = ({ isOpen, onClose, addedProduct }) => {
   const handleRemoveItem = async (itemId) => {
     try {
       if (user) {
-        await axios.delete(`${process.env.REACT_APP_API_URL}/cart/remove`, {
-          data: {
-            userId: user.user.id,
-            itemId: itemId
-          }
+        const userId = user.user?.id || user.id;
+        const [productId, variantName] = itemId.split('-');
+        
+        await axios.post(`${API_URL}/cart/remove`, {
+          user_id: userId,
+          product_id: productId,
+          variant_name: variantName
         });
-        const newCount = await fetchCartItemCount(user.user.id);
+        
+        const newCount = await fetchCartItemCount(userId);
         dispatch(updateCartItemCount(newCount));
       } else {
         const [productId, variantName] = itemId.split('-');
@@ -141,13 +163,14 @@ const CartNotification = ({ isOpen, onClose, addedProduct }) => {
     try {
       const defaultVariant = product.variants[0];
       if (user) {
-        await axios.post(`${process.env.REACT_APP_API_URL}/cart/add`, {
-          userId: user.user.id,
-          productId: product._id,
-          variantName: defaultVariant.name,
+        const userId = user.user?.id || user.id;
+        await axios.post(`${API_URL}/cart/add`, {
+          user_id: userId,
+          product_id: product._id,
+          variant_name: defaultVariant.name,
           quantity: 1
         });
-        const newCount = await fetchCartItemCount(user.user.id);
+        const newCount = await fetchCartItemCount(userId);
         dispatch(updateCartItemCount(newCount));
       } else {
         addToGuestCart(product, defaultVariant, 1);
@@ -168,7 +191,6 @@ const CartNotification = ({ isOpen, onClose, addedProduct }) => {
   }, 0);
 
   if (!isOpen) return null;
-
   return (
     <div className={`cart-notification ${isOpen ? 'open' : ''}`}>
       <div className="notification-header">

@@ -266,7 +266,7 @@ const ProductGridLayout = ({ searchTerm, sortOption, setSortOption }) => {
             pagination={{ clickable: true }}
             className="bestseller-swiper-ipad"
           >
-            {bestSellers.map((product) => (
+            {bestSellers.slice(0, 4).map((product) => (
               <SwiperSlide key={product._id}>
                 <div className="bestseller-card-ipad">
                   <BestSeller

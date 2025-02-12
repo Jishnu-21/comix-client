@@ -11,7 +11,7 @@ const RecentlyVisitedProducts = ({ userId }) => {
     const fetchRecentlyVisited = async () => {
       try {
         const response = await axios.get(`${API_URL}/recentlyVisited/${userId}`);
-        setRecentlyVisited(response.data.productVisits);
+        setRecentlyVisited(response.data.productVisits.slice(0, 3));
       } catch (error) {
         console.error('Error fetching recently visited products:', error);
       }

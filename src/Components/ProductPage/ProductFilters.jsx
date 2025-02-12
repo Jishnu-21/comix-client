@@ -160,12 +160,12 @@ const ProductFilters = ({ selectedFilters = {}, onFilterChange }) => {
       </div>
       <div className="browse-category">
         <h3>Browse by Popular Category</h3>
-        <div className="category-tags">
+        <div className="category-tags row">
           {popularSubcategories.map((subcategory) => (
             <span
               key={subcategory._id}
               onClick={() => handleSubcategorySelect(subcategory._id)}
-              className={`subcategory-button ${
+              className={`subcategory-button${
                 selectedSubcategories.includes(subcategory._id) ? 'selected' : ''
               }`}
             >

@@ -17,13 +17,6 @@ api.interceptors.request.use(
     const userToken = localStorage.getItem('accessToken');
     
     // Log request details
-    console.log('API Request:', {
-      url: config.url,
-      method: config.method,
-      isAdmin: config.url?.includes('/admin'),
-      hasAdminToken: !!adminToken,
-      hasUserToken: !!userToken
-    });
 
     if (config.url?.includes('/admin') && adminToken) {
       config.headers['Authorization'] = `Bearer ${adminToken}`;
@@ -42,11 +35,6 @@ api.interceptors.request.use(
 // Response interceptor
 api.interceptors.response.use(
   (response) => {
-    console.log('API Response:', {
-      url: response.config.url,
-      status: response.status,
-      success: response.data?.success
-    });
     return response;
   },
   async (error) => {

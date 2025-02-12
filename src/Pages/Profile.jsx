@@ -9,7 +9,7 @@ import Footer from '../Components/Footer';
 import ProfileBanner from '../Components/Profile/ProfileBanner';
 import Sidebar from '../Components/Profile/Sidebar';
 import PersonalInformation from '../Components/Profile/PersonalInformation';
-import OrderHistory from '../Components/Profile/OrderHistory';
+import MyOrders from '../Components/Profile/MyOrders';
 import MyAddresses from '../Components/Profile/MyAddresses';
 import Favorites from '../Components/Profile/Favorites';
 import DeleteAccount from '../Components/Profile/DeleteAccount';
@@ -100,8 +100,8 @@ const Profile = () => {
     switch (activeSection) {
       case 'personal-info':
         return <PersonalInformation user={userDetails} />;
-      case 'order-history':
-        return <OrderHistory userDetails={userDetails} />;
+      case 'orders':
+        return <MyOrders />;
       case 'my-addresses':
         return <MyAddresses userDetails={userDetails} />;
       case 'favorites':
@@ -116,7 +116,7 @@ const Profile = () => {
   const renderMobileContent = () => {
     const sections = [
       { key: 'personal-info', title: 'Personal Information' },
-      { key: 'order-history', title: 'Order History' },
+      { key: 'orders', title: 'Orders' },
       { key: 'my-addresses', title: 'My Addresses' },
       { key: 'favorites', title: 'Favorites' },
       { key: 'delete-account', title: 'Delete Account' },

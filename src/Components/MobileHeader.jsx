@@ -138,7 +138,7 @@ const MobileHeader = ({ cartItemCount, onMenuClick, marqueeText, onLogout }) => 
          
           <div className="nav-group center">
             <Link to="/" className="mobile-logo">
-              <img src={require('../Assets/Image/logo/Mask group.png')} alt="Logo" />
+              <img src={require('../Assets/Image/comix-logo.gif')} alt="Logo" />
             </Link>
           </div>
 

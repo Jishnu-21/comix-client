@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart } from '@fortawesome/free-regular-svg-icons';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
 import { toast } from 'sonner';
-import '../../Assets/Css/ProductPage/ProductCard.scss';
 import { API_URL } from '../../config/api';
 
 const ProductCard = ({ product }) => {
@@ -66,42 +65,67 @@ const ProductCard = ({ product }) => {
     if (product.slug) {
       navigate(`/product/${product.slug}`);
     } else {
-      // Fallback to name if slug is not available
       const fallbackSlug = product.name.toLowerCase().replace(/\s+/g, '-');
       navigate(`/product/${fallbackSlug}`);
     }
   };
 
-  // Find the 50ml variant or the first available variant
   const defaultVariant = product.variants.find(v => v.name === '50ml') || product.variants[0];
-
-  // Check if all variants are out of stock
   const isOutOfStock = product.variants.every(v => v.stock_quantity === 0);
-
-  const { name, image_urls, variants, category, rating = 4.8, slug } = product;
+  const { name, image_urls, variants, category, rating = 4.8 } = product;
   const price = variants && variants.length > 0 ? variants[0].price : 'N/A';
 
   return (
     <div className="col-xl-4 col-lg-4 col-md-6 col-sm-6 mb-4">
-      <div className="product-card" onClick={handleCardClick}>
-        <div className="card-image-container">
+      <div 
+        className={`bg-white relative mb-4 cursor-pointer group rounded-lg shadow-sm 
+                   hover:shadow-md transition-shadow duration-300 
+                   ${isOutOfStock ? 'opacity-70 pointer-events-none' : ''}`}
+        onClick={handleCardClick}
+      >
+        {/* Image Container */}
+        <div className="relative w-full aspect-square bg-gray-50 rounded-t-lg overflow-hidden">
           <img
             src={image_urls?.[0]}
-            className="card-image"
+            className="w-full h-full object-cover transition-transform duration-500 
+                     group-hover:scale-105"
             alt={name}
           />
-          <button className="wishlist-button" onClick={handleFavoriteClick}>
-            <FontAwesomeIcon icon={faHeart} />
+          <button 
+            className={`absolute top-3 right-3 p-2  backdrop-blur-sm rounded-full
+                     shadow-sm transition-all duration-200 
+                      active:scale-95 z-10 
+                     ${isOutOfStock ? 'pointer-events-auto' : ''}`}
+            onClick={handleFavoriteClick}
+          >
+            <FontAwesomeIcon 
+              icon={faHeart} 
+              className={`text-xl transition-colors duration-300 
+                       ${isFavorite ? 'text-red-500' : 'text-gray-500 hover:text-red-400'}`}
+            />
           </button>
         </div>
-        <div className="card-content">
-          <div className="category">{category}</div>
-          <h3 className="product-title">{name}</h3>
-          <div className="price-rating">
-            <span className="price">${Number(price).toFixed(2)}</span>
-            <div className="rating">
-              <FontAwesomeIcon icon={faStar} className="star-icon" />
-              <span>{rating}</span>
+
+        {/* Content */}
+        <div className="p-4">
+          {/* Category */}
+          <div className="text-sm text-gray-500 mb-1.5 capitalize tracking-wide">{category}</div>
+          
+          {/* Title */}
+          <h3 className="text-[16px] leading-normal font-bold text-gray-800 mb-2.5 
+                       min-h-[48px] line-clamp-2 font-poppins group-hover:text-yellow-600 
+                       transition-colors duration-200">
+            {name}
+          </h3>
+          
+          {/* Price and Rating */}
+          <div className="flex justify-between items-center">
+            <span className="text-lg font-medium text-gray-900">
+              ${Number(price).toFixed(2)}
+            </span>
+            <div className="flex items-center gap-1.5 bg-gray-50 px-2 py-1 rounded-full">
+              <FontAwesomeIcon icon={faStar} className="text-yellow-400 text-sm" />
+              <span className="text-sm font-medium text-gray-600">{rating}</span>
             </div>
           </div>
         </div>

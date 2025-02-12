@@ -42,7 +42,7 @@ const ProductSpotlight = () => {
     autoplay: !isMobileOrTablet,
     autoplaySpeed: 4000,
     pauseOnHover: true,
-    arrows: true,
+    arrows: false,
     responsive: [
       {
         breakpoint: 1800,

@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import { API_URL } from '../../config/api';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEdit, faTrash, faPlus } from '@fortawesome/free-solid-svg-icons';
 import '../../Assets/Css/Profile/AddressBook.scss';
+import api from '../../utils/api';
 
 const AddressBook = () => {
   const [addresses, setAddresses] = useState([]);
@@ -31,18 +31,20 @@ const AddressBook = () => {
   const fetchAddresses = async () => {
     try {
       const userString = localStorage.getItem('user');
-      if (!userString) {
+      const accessToken = localStorage.getItem('accessToken');
+      
+      if (!userString || !accessToken) {
         toast.error('Please log in to view addresses');
         return;
       }
 
-      const response = await axios.get(`${API_URL}/user/addresses`);
+      const response = await api.get('/user/addresses');
       if (response.data.success) {
         setAddresses(response.data.addresses || []);
       }
     } catch (error) {
       console.error('Error fetching addresses:', error);
-      toast.error('Failed to load addresses');
+      toast.error(error.response?.data?.message || 'Failed to load addresses');
     } finally {
       setIsLoading(false);
     }
@@ -60,10 +62,10 @@ const AddressBook = () => {
     e.preventDefault();
     try {
       if (editingAddress) {
-        await axios.put(`${API_URL}/user/address/${editingAddress._id}`, formData);
+        await api.put(`/user/address/${editingAddress._id}`, formData);
         toast.success('Address updated successfully');
       } else {
-        await axios.post(`${API_URL}/user/address`, formData);
+        await api.post('/user/address', formData);
         toast.success('Address added successfully');
       }
       
@@ -111,12 +113,12 @@ const AddressBook = () => {
     }
 
     try {
-      await axios.delete(`${API_URL}/user/address/${addressId}`);
+      await api.delete(`/user/address/${addressId}`);
       toast.success('Address deleted successfully');
       fetchAddresses();
     } catch (error) {
       console.error('Error deleting address:', error);
-      toast.error('Failed to delete address');
+      toast.error(error.response?.data?.message || 'Failed to delete address');
     }
   };
 
@@ -147,13 +149,13 @@ const AddressBook = () => {
             });
           }}
         >
-          <FontAwesomeIcon icon={faPlus} /> Add New Address
+          <FontAwesomeIcon icon={faPlus} /> Add Address
         </button>
       </div>
 
       {showAddForm && (
         <form onSubmit={handleSubmit} className="address-form">
-          <h3>{editingAddress ? 'Edit Address' : 'Add New Address'}</h3>
+          <h3>{editingAddress ? 'Edit Address' : 'Add Address'}</h3>
           
           <div className="form-row">
             <div className="form-group">

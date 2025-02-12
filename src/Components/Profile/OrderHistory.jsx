@@ -25,6 +25,8 @@ const OrderHistory = ({ userDetails }) => {
   const [selectedOrder, setSelectedOrder] = useState(null);
   const navigate = useNavigate();
 
+  console.log(userDetails , "userDetails ")
+
   // Move fetchOrders outside useEffect
   const fetchOrders = async () => {
     if (!userDetails) {

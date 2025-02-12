@@ -35,7 +35,7 @@
       
       .header-middle {
         top: 0;
-        background-color: rgba($header-bg, 0.95);
+        background-color: rgba($header-bg,0.95);
         backdrop-filter: blur(5px);
       }
     }
@@ -89,7 +89,7 @@
     justify-content: space-between;
     align-items: center;
     padding: 12px 15px;
-    background-color: #2C2E3A;
+    background-color: #2C2C38;
     flex-wrap: wrap;
     position: relative;
     z-index: 1000;

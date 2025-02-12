@@ -27,6 +27,7 @@ const MainSection = () => {
 
   return (
     <>
+    <SpinningWheel/>
       <section className="main-section">
         <MainSlider />
         <AnimatedNewLaunchedSection />
