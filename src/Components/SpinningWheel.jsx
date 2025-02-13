@@ -4,11 +4,11 @@ import { faTimes, faGift, faPhone } from '@fortawesome/free-solid-svg-icons';
 import { Wheel } from 'react-custom-roulette';
 
 const offers = [
-  { option: "Better luck next time", style: { backgroundColor: "#2C2E3A", textColor: "white" } },
-  { option: "5% OFF", style: { backgroundColor: "#EABE67", textColor: "#141519" } },
-  { option: "Free Delivery", style: { backgroundColor: "#2f3035", textColor: "white" } },
-  { option: "⁠10% off on next order", style: { backgroundColor: "#EABE67", textColor: "#141519" } },
-  { option: "⁠7% off on order above ₹1000", style: { backgroundColor: "#2C2E5A", textColor: "white" } },
+  { option: "Better luck next time.", style: { backgroundColor: "#2C2C38", textColor: "white" } },
+  { option: "⁠5% off", style: { backgroundColor: "#EABE67", textColor: "#141519" } },
+  { option: "⁠10% off on next order", style: { backgroundColor: "#2f3035", textColor: "white" } },
+  { option: "⁠7% off on order above ₹1000", style: { backgroundColor: "#EABE67", textColor: "#141519" } },
+  { option: "⁠Free delivery", style: { backgroundColor: "#FFFFFF", textColor: "black" } },
 ];
 
 const SpinningWheel = () => {
@@ -25,6 +25,10 @@ const SpinningWheel = () => {
     const handleResize = () => {
       setIsMobile(window.innerWidth <= 768);
     };
+
+    // Clear localStorage for testing
+    localStorage.removeItem('hasSeenSpinWheel');
+    localStorage.removeItem('wheelLastShown');
 
     const hasSeenWheel = localStorage.getItem('hasSeenSpinWheel');
     const lastShownTime = localStorage.getItem('wheelLastShown');
@@ -76,68 +80,58 @@ const SpinningWheel = () => {
     setIsSpinning(false);
     setTimeout(() => {
       setShowPrize(true);
-    }, 500);
+    }, 1000);
   };
 
   if (!isVisible) return null;
 
   return (
     <>
-      <div className={`fixed top-0 left-0 w-full h-screen bg-black/50 backdrop-blur-sm z-[9998] opacity-100 transition-opacity duration-300 ${!isVisible ? 'opacity-0 pointer-events-none' : ''}`} onClick={handleClose} />
-      <div className={`fixed top-0 left-0 w-full md:w-[90vw] lg:w-[700px] h-screen bg-[#f8f9fa] shadow-lg z-[9999] transform transition-all duration-500 ease-out ${!isVisible ? '-translate-x-full opacity-0 scale-95' : 'translate-x-0 opacity-100 scale-100'}`}>
-        <div className="relative w-full h-full flex flex-col">
-          <div className={`absolute top-0 left-0 w-full h-full bg-gradient-to-br from-[#EABE67]/5 to-transparent transition-opacity duration-500 ${!isVisible ? 'opacity-0' : 'opacity-100'}`}></div>
-          
-          <button className="absolute top-2 right-2 bg-transparent border-none text-lg cursor-pointer text-[#6c757d] hover:text-[#2C2E3A] hover:bg-black/5 p-2 rounded-full transition-all duration-200 z-10" onClick={handleClose}>
-            <FontAwesomeIcon icon={faTimes} />
+      <div className={`fixed top-0 left-0 w-full h-screen bg-black/50 backdrop-blur-sm z-[9998] ${!isVisible ? 'opacity-0 pointer-events-none' : 'opacity-100'}`} onClick={handleClose} />
+      <div className={`fixed top-0 left-0 w-full md:w-[600px] h-screen bg-[#F4F9F4] shadow-lg z-[9999] transform transition-all duration-500 ease-out ${!isVisible ? '-translate-x-full' : 'translate-x-0'}`}>
+        <div className="relative w-full h-full flex flex-col bg-[#ebf7f1]">
+          {/* Close button */}
+          <button 
+            className="absolute top-4 right-4 z-50 text-gray-600 hover:text-gray-800" 
+            onClick={handleClose}
+          >
+            <FontAwesomeIcon icon={faTimes} className="text-xl" />
           </button>
-          
-          <div className="p-3 md:p-4 flex-shrink-0 border-b border-black/5 relative">
-            <div className="flex items-center gap-2">
-              <FontAwesomeIcon icon={faGift} className="text-lg md:text-xl text-[#EABE67] animate-bounce" />
-              <div className="text-left">
-                <h2 className="m-0 text-lg md:text-xl text-[#2C2E3A] font-semibold">Spin & Win!</h2>
-                <p className="mt-0.5 text-xs md:text-sm text-[#6c757d]">Try your luck and win exciting offers</p>
+
+          {/* Main content */}
+          <div className="flex flex-col md:flex-row h-full w-full">
+            {/* Wheel Section */}
+            <div className="wheel-section relative w-full md:w-3/4 h-[40vh] md:h-full flex items-center overflow-hidden">
+              <div className="wheel-wrapper">
+                <Wheel
+                  mustStartSpinning={isSpinning}
+                  prizeNumber={prizeNumber}
+                  data={offers}
+                  onStopSpinning={onSpinComplete}
+                  outerBorderWidth={2}
+                  radiusLineWidth={1}
+                  fontSize={14}
+                  perpendicularText={true}
+                  textDistance={60}
+                  spinDuration={0.8}
+                  outerBorderColor="#EABE67"
+                  innerBorderColor="#2C2C38"
+                  innerBorderWidth={2}
+                  radiusLineColor="#2f3035"
+                  pointerProps={{
+                    src: null,
+                    style: {
+                      backgroundColor: 'red',
+                      clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)',
+                    }
+                  }}
+                />
               </div>
             </div>
-          </div>
 
-          <div className="flex-1 relative flex flex-col md:flex-row items-center justify-start md:justify-center h-[calc(100%-4rem)]">
-            <div className="w-full h-full flex flex-col md:flex-row items-center justify-between gap-4 md:gap-8">
-              <div className={`relative flex items-center justify-center w-full md:w-[550px] lg:w-[650px] ${
-                isMobile 
-                  ? 'h-[45vh] wheel-mobile' 
-                  : 'md:-ml-[75px] lg:-ml-[150px] wheel-desktop'
-              }`}>
-                <div className="wheel-container">
-                  <Wheel
-                    mustStartSpinning={isSpinning}
-                    prizeNumber={prizeNumber}
-                    data={offers}
-                    onStopSpinning={onSpinComplete}
-                    outerBorderWidth={2}
-                    radiusLineWidth={1}
-                    fontSize={isMobile ? 10 : 12}
-                    perpendicularText={true}
-                    textDistance={55}
-                    startingOptionIndex={2}
-                    spinDuration={0.8}
-                    outerBorderColor="#EABE67"
-                    innerBorderColor="#2C2E3A"
-                    innerBorderWidth={2}
-                    radiusLineColor="#2f3035"
-                    pointerProps={{
-                      src: null,
-                      style: {
-                        backgroundColor: '#EABE67',
-                        clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)',
-                      }
-                    }}
-                  />
-                </div>
-              </div>
-
-              <div className={`w-[92%] md:w-[320px] p-4 md:p-6 mx-auto md:mr-28 lg:mr-36 bg-white rounded-xl md:rounded-2xl shadow-lg md:self-center md:mt-[-50px] relative overflow-hidden transition-all duration-500 ${!isVisible ? 'translate-y-4 opacity-0' : 'translate-y-0 opacity-100'}`}>
+            {/* Form Section - Right side */}
+            <div className="w-full md:w-1/2 flex items-center justify-center p-6 md:p-8">
+              <div className={`w-full md:w-[320px] p-4 md:p-6 bg-white rounded-xl md:rounded-2xl shadow-lg relative overflow-hidden transition-all duration-500 order-1 md:order-2 ${!isVisible ? 'translate-y-4 opacity-0' : 'translate-y-0 opacity-100'}`}>
                 <div className="absolute top-0 left-0 w-full h-1 bg-[#EABE67]"></div>
                 {!hasSpun ? (
                   <div className="phone-input-section space-y-4">
@@ -166,74 +160,104 @@ const SpinningWheel = () => {
                     <p className="text-[11px] text-[#6c757d] text-center font-['Montserrat-SemiBold']">*By spinning you agree to our terms</p>
                   </div>
                 ) : (
-                  <div className={`prize-section text-center flex flex-col items-center gap-3 py-2 ${showPrize ? 'animate-fade-in' : ''}`}>
-                    <FontAwesomeIcon icon={faGift} className="text-3xl md:text-4xl text-[#EABE67]" />
-                    <div className="space-y-2">
-                      <h3 className="text-lg md:text-xl font-semibold text-[#2C2E3A] font-['Montserrat-SemiBold']">Congratulations!</h3>
-                      <p className="text-base md:text-lg text-[#EABE67] font-medium font-['Montserrat-SemiBold']">{offers[prizeNumber].option}</p>
-                      <small className="block text-xs text-[#6c757d] font-['Montserrat-SemiBold']">Coupon code will be sent to your mobile</small>
-                    </div>
-                  </div>
+                  <>
+                    {isSpinning ? (
+                      <div className="spinning-message text-center flex flex-col items-center gap-3 py-2 animate-bounce">
+                        <FontAwesomeIcon icon={faGift} className="text-3xl md:text-4xl text-[#EABE67] animate-spin" />
+                        <div className="space-y-2">
+                          <h3 className="text-lg md:text-xl font-semibold text-[#2C2E3A] font-['Montserrat-SemiBold']">Spinning...</h3>
+                          <p className="text-sm md:text-base text-[#6c757d] font-['Montserrat-SemiBold']">Good luck!</p>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className={`prize-section text-center flex flex-col items-center gap-3 py-2 ${showPrize ? 'animate-fade-in' : 'opacity-0'}`}>
+                        <FontAwesomeIcon icon={faGift} className="text-3xl md:text-4xl text-[#EABE67]" />
+                        <div className="space-y-2">
+                          <h3 className="text-lg md:text-xl font-semibold text-[#2C2E3A] font-['Montserrat-SemiBold']">Congratulations!</h3>
+                          <p className="text-sm md:text-base text-[#6c757d] font-['Montserrat-SemiBold']">You've won:</p>
+                          <p className="text-base md:text-lg font-semibold text-[#EABE67] font-['Montserrat-SemiBold']">{offers[prizeNumber].option}</p>
+                        </div>
+                      </div>
+                    )}
+                  </>
                 )}
               </div>
             </div>
           </div>
         </div>
       </div>
+
       <style jsx>{`
+        .wheel-section {
+          position: relative;
+        }
+
+        .wheel-wrapper {
+          position: absolute;
+          width: 200%;
+          height: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: flex-start;
+        }
+
         @media (min-width: 768px) {
-          .wheel-desktop {
-            position: relative;
-            overflow: visible;
-            height: 550px;
-            display: flex;
-            align-items: center;
+          .wheel-wrapper {
+            left: 0;
+            transform: translateX(-40%);
           }
-          .wheel-desktop .wheel-container {
-            clip-path: inset(0 0 0 25%);
-            transform: scale(1.3);
-            transform-origin: center right;
-            margin-left: -75px;
+
+          .wheel-wrapper > div {
+            transform: scale(1.2);
+          }
+
+          .wheel-wrapper :global(.rcs-custom-pointer) {
+            position: absolute;
+            right: 50% !important;
+            transform: translateX(50%) !important;
+            left: auto !important;
+          }
+        }
+
+        @media (min-width: 1024px) {
+          .wheel-wrapper {
+            transform: translateX(-35%);
           }
         }
         
         @media (max-width: 767px) {
-          .wheel-mobile {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-top: -20px;
+          .wheel-wrapper {
+            position: relative;
+            width: 100%;
+            transform: none;
           }
-          .wheel-mobile .wheel-container {
+
+          .wheel-wrapper > div {
             transform: scale(0.8);
-            transition: transform 0.5s ease-out;
+            margin: 0 auto;
+          }
+
+          .wheel-wrapper :global(.rcs-custom-pointer) {
+            right: 50% !important;
+            transform: translateX(50%) !important;
           }
         }
         
         @media (max-width: 374px) {
-          .wheel-mobile .wheel-container {
+          .wheel-wrapper > div {
             transform: scale(0.7);
           }
         }
-        
-        @media (min-width: 1024px) {
-          .wheel-desktop .wheel-container {
-            transform: scale(1.4);
-          }
-        }
-        
-        @media (min-width: 768px) and (max-width: 1023px) {
-          .wheel-desktop .wheel-container {
-            transform: scale(1.2);
-          }
+
+        .wheel-wrapper > div {
+          height: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
         }
 
-        @keyframes fade-in {
-          from { opacity: 0; transform: translateY(10px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        .animate-fade-in {
-          animation: fade-in 0.3s ease-out forwards;
+        .wheel-wrapper :global(.rcs-custom-pointer) {
+          z-index: 10;
         }
       `}</style>
     </>

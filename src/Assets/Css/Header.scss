@@ -323,7 +323,6 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            margin-bottom: 12px;
 
             h3 {
               font-size: 14px;
@@ -441,7 +440,6 @@
                 .title {
                   font-size: 14px;
                   color: #333;
-                  margin-bottom: 4px;
                 }
 
                 .price {
@@ -680,7 +678,6 @@
 
           h3 {
             color: $highlight-color;
-            margin-bottom: 15px;
             font-size: 14px;
             font-weight: 600;
           }
