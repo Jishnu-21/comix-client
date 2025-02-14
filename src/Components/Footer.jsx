@@ -136,10 +136,10 @@ const Footer = () => {
 
           <div className="footer-links d-flex flex-wrap justify-content-center">
             {[
-              { name: 'Stores', link: '/stores' },
-              { name: 'Elite', link: '/elite' },
-              { name: 'Terms', link: '/terms' },
-              { name: 'Returns', link: '/returns' },
+              { name: 'Shop', link: '/product' },
+              { name: 'Privacy', link: '/policy/privacy' },
+              { name: 'Refund', link: '/policy/refund' },
+              { name: 'Terms', link: '/policy/terms' },
               { name: 'FAQ', link: '/faq' },
               { name: 'About', link: '/about' }
             ].map((footerItem, index) => (

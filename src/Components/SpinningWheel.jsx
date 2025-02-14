@@ -12,7 +12,7 @@ const offers = [
 ];
 
 const SpinningWheel = () => {
-  const [isVisible, setIsVisible] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
   const [isSpinning, setIsSpinning] = useState(false);
   const [prizeNumber, setPrizeNumber] = useState(0);
   const [hasSpun, setHasSpun] = useState(false);
@@ -69,7 +69,6 @@ const SpinningWheel = () => {
 
         // Only show wheel if user is eligible
         const timer = setTimeout(() => {
-          setIsVisible(true);
         }, 2000);
         return () => clearTimeout(timer);
       } catch (err) {
@@ -96,7 +95,6 @@ const SpinningWheel = () => {
 
   // Don't render anything if user has already won or closed the wheel
   const userId = localStorage.getItem('userId') || localStorage.getItem('guestId');
-  if (!isVisible || localStorage.getItem(`wheel_closed_${userId}`) === 'true') return null;
 
   // If user has an active offer, show that instead of the wheel
   if (!isEligible && showPrize) {
