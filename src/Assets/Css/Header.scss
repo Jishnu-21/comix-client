@@ -927,6 +927,37 @@
   }
 }
 
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: .5;
+  }
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.bg-gray-200 {
+  background-color: #E5E7EB;
+}
+
+.header-transition {
+  transition: all 0.3s ease-in-out;
+}
+
+.header-loading {
+  pointer-events: none;
+  
+  .skeleton-item {
+    @extend .animate-pulse;
+    background-color: #E5E7EB;
+    border-radius: 0.25rem;
+  }
+}
+
 body {
   padding-top: 0;
 
@@ -1220,8 +1251,6 @@ footer {
   width: 90%;
 }
 
-
-
 .mobile-footer {
   display: none;
 }
@@ -1230,14 +1259,11 @@ footer {
   display: none;
 }
 
-
-
 @media (min-width: 769px) and (max-width: 1024px) {
   .header-content {
     padding: 10px; // Adjust padding for iPad
     font-size: 16px; // Slightly larger font size for better readability
   }
-
 
   .search-bar {
     width: 95%;

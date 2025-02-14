@@ -59,16 +59,15 @@
           justify-content: center;
           align-items: center;
           position: absolute;
-          top: -70px;
           z-index: 2;
           overflow: hidden;
 
           img {
-            width: 140%;
-            height: 160%;
-            object-fit: contain;
+            width: 360%; // Increase size to zoom in
+            height: 240%; // Increase size to zoom in
+            object-fit: cover;
             object-position: center;
-            transform: translateY(-8%);
+            transform: translateY(-6%); // Adjust vertical position
           }
         }
       }
@@ -241,16 +240,15 @@
       justify-content: center;
       align-items: center; // Changed from flex-start to center
       position: absolute;
-      top: -70px; // Changed from -80px to -60px to move logo lower
       z-index: 2; 
       overflow: hidden; // Add this to clip the image
 
       img {
-        width: 140%; // Increase size to zoom in
-        height: 160%; // Increase size to zoom in
-        object-fit: contain;
+        width: 360%; // Increase size to zoom in
+        height: 240%; // Increase size to zoom in
+        object-fit: cover;
         object-position: center;
-        transform: translateY(-8%); // Adjust vertical position
+        transform: translateY(-6%); // Adjust vertical position
       }
     }
   }
@@ -934,7 +932,6 @@
     
     .footer-top {
       .rounded-logo {
-        top : -90px;
         width: 100px;
         height: 120px;
         margin-bottom: 30px;

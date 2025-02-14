@@ -4,7 +4,6 @@ import { useMediaQuery } from 'react-responsive';
 import '../Assets/Css/Footer.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faInstagram, faFacebookF, faTwitter, faLinkedinIn, faYoutube } from '@fortawesome/free-brands-svg-icons';
-import { faEnvelope, faPhone } from '@fortawesome/free-solid-svg-icons';
 
 const Footer = () => {
   const [openDropdown, setOpenDropdown] = useState(null);
@@ -46,7 +45,7 @@ const Footer = () => {
           <div className="footer-top">
             <div className="rounded-logo">
               <img
-                src={`${process.env.PUBLIC_URL}/images/logo.gif`}
+                src="https://res.cloudinary.com/dkgjl08a5/image/upload/v1739452378/Logo_ani_Chng1_ua1uxw.gif"
                 alt="Footer logo"
                 className="footer-logo"
               />
@@ -98,7 +97,7 @@ const Footer = () => {
           <div className="footer-top text-center">
             <div className="rounded-logo">
               <img
-                src={`${process.env.PUBLIC_URL}/images/logo.gif`}
+                src="https://res.cloudinary.com/dkgjl08a5/image/upload/v1739452378/Logo_ani_Chng1_ua1uxw.gif"
                 alt="Top logo"
                 className="footer-logo"
               />

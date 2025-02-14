@@ -20,60 +20,172 @@ const SpinningWheel = () => {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [isValidPhone, setIsValidPhone] = useState(false);
   const [showPrize, setShowPrize] = useState(false);
+  const [error, setError] = useState('');
+  const [isEligible, setIsEligible] = useState(true);
 
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth <= 768);
     };
 
-    // Clear localStorage for testing
-    localStorage.removeItem('hasSeenSpinWheel');
-    localStorage.removeItem('wheelLastShown');
+    // Get or create guest ID from localStorage
+    const guestId = localStorage.getItem('guestId') || 
+      `guest_${Math.random().toString(36).substring(2)}${Date.now()}`;
+    localStorage.setItem('guestId', guestId);
 
-    const hasSeenWheel = localStorage.getItem('hasSeenSpinWheel');
-    const lastShownTime = localStorage.getItem('wheelLastShown');
-    const currentTime = new Date().getTime();
-    
-    // Show wheel if never seen before or last shown more than 24 hours ago
-    const shouldShowWheel = !hasSeenWheel || 
-      (lastShownTime && (currentTime - parseInt(lastShownTime)) > 24 * 60 * 60 * 1000);
+    // Check if user has already won
+    const checkEligibility = async () => {
+      try {
+        const userId = localStorage.getItem('userId') || guestId;
+        const response = await fetch('http://localhost:5000/api/wheel-offers/check-eligibility', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ 
+            userId, 
+            phoneNumber: localStorage.getItem('lastPhoneNumber') 
+          }),
+        });
+        
+        if (!response.ok) {
+          console.error('Error checking eligibility:', await response.text());
+          return;
+        }
 
-    if (shouldShowWheel) {
-      const timer = setTimeout(() => {
-        setIsVisible(true);
-        localStorage.setItem('hasSeenSpinWheel', 'true');
-        localStorage.setItem('wheelLastShown', currentTime.toString());
-      }, 2000);
-      return () => clearTimeout(timer);
-    }
+        const data = await response.json();
+        
+        if (!data.eligible) {
+          setError(data.message);
+          setIsEligible(false);
+          if (data.offer) {
+            setShowPrize(true);
+            setPrizeNumber(offers.findIndex(o => o.option === data.offer.offer));
+            setHasSpun(true);
+            setPhoneNumber(data.offer.phoneNumber);
+          }
+          return; // Don't show wheel if user has an offer
+        }
 
+        // Only show wheel if user is eligible
+        const timer = setTimeout(() => {
+          setIsVisible(true);
+        }, 2000);
+        return () => clearTimeout(timer);
+      } catch (err) {
+        console.error('Error checking eligibility:', err);
+      }
+    };
+
+    checkEligibility();
     handleResize();
     window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
   }, []);
+
+  const handleClose = (e) => {
+    e.stopPropagation();
+    setIsVisible(false);
+    // Store that user has seen and closed the wheel
+    const userId = localStorage.getItem('userId') || localStorage.getItem('guestId');
+    localStorage.setItem(`wheel_closed_${userId}`, 'true');
+  };
+
+  // Don't render anything if user has already won or closed the wheel
+  const userId = localStorage.getItem('userId') || localStorage.getItem('guestId');
+  if (!isVisible || localStorage.getItem(`wheel_closed_${userId}`) === 'true') return null;
+
+  // If user has an active offer, show that instead of the wheel
+  if (!isEligible && showPrize) {
+    return (
+      <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+        <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+          <div className="text-center">
+            <h3 className="text-xl font-semibold text-[#2C2E3A] mb-4">Your Active Offer</h3>
+            <p className="text-lg font-bold text-[#EABE67] mb-4">{offers[prizeNumber].option}</p>
+            <p className="text-sm text-[#6c757d] mb-4">You can redeem this offer on your next purchase</p>
+            <button
+              onClick={handleClose}
+              className="bg-[#2C2C38] text-white px-6 py-2 rounded-lg hover:bg-[#EABE67] transition-colors duration-200"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   const handlePhoneChange = (e) => {
     const value = e.target.value.replace(/\D/g, '');
     setPhoneNumber(value);
     setIsValidPhone(value.length === 10);
+    setError(''); // Clear any previous errors
   };
 
-  const handleSpinClick = () => {
+  const handleSpinClick = async () => {
     if (!isSpinning && !hasSpun && isValidPhone) {
-      const newPrizeNumber = Math.floor(Math.random() * offers.length);
-      setPrizeNumber(newPrizeNumber);
-      setIsSpinning(true);
-      setShowPrize(false);
-      setHasSpun(true);
-      // Store the phone number and prize in local storage
-      localStorage.setItem('spinWheelPhone', phoneNumber);
-      localStorage.setItem('spinWheelPrize', offers[newPrizeNumber].option);
-    }
-  };
+      try {
+        const userId = localStorage.getItem('userId') || localStorage.getItem('guestId');
+        
+        // Check eligibility again before spinning
+        const eligibilityCheck = await fetch('http://localhost:5000/api/wheel-offers/check-eligibility', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ userId, phoneNumber }),
+        });
 
-  const handleClose = (e) => {
-    e.stopPropagation();
-    setIsVisible(false);
+        if (!eligibilityCheck.ok) {
+          const errorText = await eligibilityCheck.text();
+          console.error('Eligibility check failed:', errorText);
+          setError('Error checking eligibility. Please try again.');
+          return;
+        }
+
+        const eligibilityData = await eligibilityCheck.json();
+        
+        if (!eligibilityData.eligible) {
+          setError(eligibilityData.message);
+          return;
+        }
+
+        const newPrizeNumber = Math.floor(Math.random() * offers.length);
+        setPrizeNumber(newPrizeNumber);
+        setIsSpinning(true);
+        setShowPrize(false);
+        setHasSpun(true);
+
+        // Save the offer to backend
+        const createResponse = await fetch('http://localhost:5000/api/wheel-offers/create', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            userId,
+            phoneNumber,
+            offer: offers[newPrizeNumber].option
+          }),
+        });
+
+        if (!createResponse.ok) {
+          const errorText = await createResponse.text();
+          console.error('Create offer failed:', errorText);
+          throw new Error('Failed to save offer');
+        }
+
+        // Store phone number for future reference
+        localStorage.setItem('lastPhoneNumber', phoneNumber);
+      } catch (err) {
+        console.error('Error creating offer:', err);
+        setError('Something went wrong. Please try again later.');
+      }
+    }
   };
 
   const onSpinComplete = () => {
@@ -82,8 +194,6 @@ const SpinningWheel = () => {
       setShowPrize(true);
     }, 1000);
   };
-
-  if (!isVisible) return null;
 
   return (
     <>
@@ -135,29 +245,35 @@ const SpinningWheel = () => {
                 <div className="absolute top-0 left-0 w-full h-1 bg-[#EABE67]"></div>
                 {!hasSpun ? (
                   <div className="phone-input-section space-y-4">
-                    <h3 className="text-base md:text-lg text-[#2C2E3A] font-semibold text-center relative pb-3 font-['Montserrat-SemiBold']">
-                      Enter mobile number to spin
-                      <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-12 h-0.5 bg-[#EABE67] rounded"></span>
-                    </h3>
-                    <div className="relative">
-                      <FontAwesomeIcon icon={faPhone} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#6c757d] text-sm" />
-                      <input
-                        type="tel"
-                        placeholder="Enter your mobile number"
-                        value={phoneNumber}
-                        onChange={handlePhoneChange}
-                        maxLength={10}
-                        className="w-full py-2.5 md:py-3 px-10 border border-gray-200 bg-white rounded-lg text-[#2C2E3A] placeholder-[#6c757d] focus:outline-none focus:border-[#EABE67] focus:ring-1 focus:ring-[#EABE67] transition-colors duration-200 text-[15px] font-['Montserrat-SemiBold']"
-                      />
+                    <div className="text-center mb-4">
+                      <h3 className="text-lg font-semibold text-[#2C2E3A] mb-2">Enter your phone number to spin</h3>
+                      <p className="text-sm text-[#6c757d]">Try your luck and win exciting offers!</p>
                     </div>
-                    <button 
-                      className={`w-full py-2.5 md:py-3 px-6 rounded-lg bg-[#2C2E3A] text-white font-medium transition-all duration-200 text-[15px] shadow-sm hover:shadow-md font-['Montserrat-SemiBold'] ${(!isValidPhone || isSpinning) ? 'opacity-50 cursor-not-allowed' : 'hover:bg-[#141519] active:scale-[0.98]'}`}
+                    {error && (
+                      <div className="text-red-500 text-sm text-center mb-2">
+                        {error}
+                      </div>
+                    )}
+                    <input
+                      type="tel"
+                      value={phoneNumber}
+                      onChange={handlePhoneChange}
+                      placeholder="Enter your phone number"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-[#EABE67] text-center"
+                      maxLength="10"
+                    />
+                    <button
                       onClick={handleSpinClick}
                       disabled={!isValidPhone || isSpinning}
+                      className={`w-full py-2 rounded-lg text-white font-semibold transition-all duration-200 ${
+                        isValidPhone && !isSpinning
+                          ? 'bg-[#2C2C38] hover:bg-[#EABE67]'
+                          : 'bg-gray-400 cursor-not-allowed'
+                      }`}
                     >
-                      {isSpinning ? 'Spinning...' : 'SPIN NOW'}
+                      {isSpinning ? 'Spinning...' : 'Spin Now'}
                     </button>
-                    <p className="text-[11px] text-[#6c757d] text-center font-['Montserrat-SemiBold']">*By spinning you agree to our terms</p>
+                    <p className="text-[11px] text-[#6c757d] text-center">*By spinning you agree to our terms</p>
                   </div>
                 ) : (
                   <>

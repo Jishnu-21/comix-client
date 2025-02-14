@@ -69,8 +69,6 @@ const Header = () => {
     { title: 'Gifting', image: './images/lip5.jpg' }
   ];
 
-
-
   useEffect(() => {
     const fetchBestSellers = async () => {
       try {
@@ -89,6 +87,14 @@ const Header = () => {
     };
 
     fetchBestSellers();
+  }, []);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 1500);
+
+    return () => clearTimeout(timer);
   }, []);
 
   const handleSearchChange = (e) => {
@@ -478,6 +484,40 @@ const Header = () => {
   const handleTouchEnd = () => {
     clearTimeout(dropdownTimeout.current);
   };
+
+  const HeaderSkeleton = () => (
+    <header className="bg-white shadow-md">
+      <div className="container mx-auto px-4">
+        <div className="flex items-center justify-between h-16">
+          {/* Logo skeleton */}
+          <div className="animate-pulse">
+            <div className="h-8 w-24 bg-gray-200 rounded"></div>
+          </div>
+
+          {/* Search bar skeleton */}
+          <div className="hidden md:flex flex-1 mx-8 animate-pulse">
+            <div className="h-10 w-full max-w-xl bg-gray-200 rounded-lg"></div>
+          </div>
+
+          {/* Navigation items skeleton */}
+          <div className="hidden md:flex items-center space-x-6 animate-pulse">
+            <div className="h-8 w-8 bg-gray-200 rounded-full"></div>
+            <div className="h-8 w-8 bg-gray-200 rounded-full"></div>
+            <div className="h-8 w-20 bg-gray-200 rounded"></div>
+          </div>
+
+          {/* Mobile menu button skeleton */}
+          <div className="md:hidden animate-pulse">
+            <div className="h-8 w-8 bg-gray-200 rounded"></div>
+          </div>
+        </div>
+      </div>
+    </header>
+  );
+
+  if (isLoading) {
+    return <HeaderSkeleton />;
+  }
 
   return (
     <>

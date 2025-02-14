@@ -25,7 +25,7 @@ const CardComponent = ({ image, title, price, category, slug }) => {
           {title}
         </h3>
         <div className="text-base font-medium text-gray-900">
-          ${typeof price === 'number' ? price.toFixed(2) : price}
+          Rs.{typeof price === 'number' ? price.toFixed(2) : price}
         </div>
       </div>
     </Link>
