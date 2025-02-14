@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTimes, faGift, faPhone } from '@fortawesome/free-solid-svg-icons';
 import { Wheel } from 'react-custom-roulette';
+import { API_URL } from '../config/api';
 
 const offers = [
   { option: "Better luck next time.", style: { backgroundColor: "#2C2C38", textColor: "white" } },
@@ -37,7 +38,7 @@ const SpinningWheel = () => {
     const checkEligibility = async () => {
       try {
         const userId = localStorage.getItem('userId') || guestId;
-        const response = await fetch('http://localhost:5000/api/wheel-offers/check-eligibility', {
+        const response = await fetch(`${API_URL}/api/wheel-offers/check-eligibility`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -130,7 +131,7 @@ const SpinningWheel = () => {
         const userId = localStorage.getItem('userId') || localStorage.getItem('guestId');
         
         // Check eligibility again before spinning
-        const eligibilityCheck = await fetch('http://localhost:5000/api/wheel-offers/check-eligibility', {
+        const eligibilityCheck = await fetch(`${API_URL}/wheel-offers/check-eligibility`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
