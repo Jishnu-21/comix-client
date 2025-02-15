@@ -227,13 +227,6 @@ const SpinningWheel = () => {
                   innerBorderColor="#2C2C38"
                   innerBorderWidth={2}
                   radiusLineColor="#2f3035"
-                  pointerProps={{
-                    src: null,
-                    style: {
-                      backgroundColor: 'red',
-                      clipPath: 'polygon(50% 0%, 0% 100%, 100% 100%)',
-                    }
-                  }}
                 />
               </div>
             </div>
